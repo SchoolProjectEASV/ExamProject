@@ -5,9 +5,7 @@ VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderAPI", "OrderAPI\OrderAPI.csproj", "{7C3A19C3-30F9-4811-B214-CB334CF7EDD2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "packages", "packages", "{98E9B31B-2784-4DBC-83A3-02F7A38B7748}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoggingService", "LoggingService\LoggingService.csproj", "{14F6D6CE-1567-4A69-B3E8-AF1342303D21}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoggingService", "packages\LoggingService\LoggingService.csproj", "{663BBE60-7076-4771-A8E0-A55FB39E099A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,16 +17,13 @@ Global
 		{7C3A19C3-30F9-4811-B214-CB334CF7EDD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C3A19C3-30F9-4811-B214-CB334CF7EDD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C3A19C3-30F9-4811-B214-CB334CF7EDD2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{14F6D6CE-1567-4A69-B3E8-AF1342303D21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{14F6D6CE-1567-4A69-B3E8-AF1342303D21}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{14F6D6CE-1567-4A69-B3E8-AF1342303D21}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{14F6D6CE-1567-4A69-B3E8-AF1342303D21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{663BBE60-7076-4771-A8E0-A55FB39E099A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{663BBE60-7076-4771-A8E0-A55FB39E099A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{663BBE60-7076-4771-A8E0-A55FB39E099A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{663BBE60-7076-4771-A8E0-A55FB39E099A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{14F6D6CE-1567-4A69-B3E8-AF1342303D21} = {98E9B31B-2784-4DBC-83A3-02F7A38B7748}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {04CAD979-FFFD-4BAB-95E1-F4A8F6F9AFAE}
