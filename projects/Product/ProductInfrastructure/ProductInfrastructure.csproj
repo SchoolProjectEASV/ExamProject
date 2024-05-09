@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Domain\Domain.csproj" />
-    <ProjectReference Include="..\..\..\MongoClient\MongoClient.csproj" />
+    <ProjectReference Include="..\..\..\packages\MongoClient\MongoClient.csproj" />
   </ItemGroup>
 
 </Project>

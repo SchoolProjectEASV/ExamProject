@@ -1,4 +1,4 @@
-﻿using Domain;
+﻿using Domain.MongoEntities;
 using Microsoft.EntityFrameworkCore;
 using MongoClient;
 using MongoDB.Driver;
@@ -18,7 +18,7 @@ namespace ProductInfrastructure
 
         public ProductDbContext(Client customClient, string databaseName)
         {
-            _database = customClient.GetDatabase(databaseName);
+            _database = customClient.GetDatabase(databaseName) ?? throw new ArgumentNullException(nameof(databaseName), "Database could not be found.");
         }
 
         public DbSet<Product> Products { get; set; }
@@ -40,6 +40,11 @@ namespace ProductInfrastructure
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Product>().ToCollection("products");
+        }
+
+        public IMongoCollection<T> GetCollection<T>(string collectionName)
+        {
+            return _database.GetCollection<T>(collectionName);
         }
     }
 }
