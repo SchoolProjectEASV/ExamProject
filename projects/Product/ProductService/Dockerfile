@@ -9,13 +9,13 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["projects/Product/ProductService/ProductService.csproj", "ProductService/"]
-COPY ["projects/Product/ProductApplication/ProductApplication.csproj", "ProductApplication/"]
+COPY ["projects/Product/ProductService/ProductService.csproj", "projects/Product/ProductService/"]
+COPY ["projects/Product/ProductApplication/ProductApplication.csproj", "projects/Product/ProductApplication/"]
+COPY ["projects/Product/ProductInfrastructure/ProductInfrastructure.csproj", "projects/Product/ProductInfrastructure/"]
 COPY ["Domain/Domain.csproj", "Domain/"]
-COPY ["projects/Product/ProductInfrastructure/ProductInfrastructure.csproj", "ProductInfrastructure/"]
-RUN dotnet restore "./ProductService/ProductService.csproj"
+RUN dotnet restore "./projects/Product/ProductService/ProductService.csproj"
 COPY . .
-WORKDIR "/src/ProductService"
+WORKDIR "/src/projects/Product/ProductService"
 RUN dotnet build "./ProductService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
