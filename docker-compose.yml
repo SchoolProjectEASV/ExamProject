@@ -17,10 +17,28 @@ services:
       dockerfile: ./projects/Product/ProductService/Dockerfile
     ports:
       - "8080:8080"
+      - "8443:443"
     depends_on:
       - productdb
     environment:
       - MONGO_CONNECTION_STRING=placeholder
 
+  zipkin:
+    image: openzipkin/zipkin:latest
+    ports:
+      - "9411:9411"
+    restart: unless-stopped
+
+  seq:
+    image: datalust/seq:latest
+    ports:
+      - "5342:80"
+      - "5341:5341"
+    volumes:
+      - seq_data:/data
+    environment:
+      ACCEPT_EULA: "Y"
+
 volumes:
   mongodb_data:
+  seq_data:
