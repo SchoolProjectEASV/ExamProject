@@ -8,6 +8,9 @@ using ProductInfrastructure;
 using ProductInfrastructure.Interfaces;
 using System.Diagnostics.Metrics;
 using Domain;
+using TracingService;
+using OpenTelemetry.Trace;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +36,23 @@ var mapper = new MapperConfiguration(config =>
 builder.Services.AddSingleton(mapper);
 #endregion
 
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .Enrich.FromLogContext()
+    .WriteTo.Seq("http://seq:5341")
+    .WriteTo.Console()
+    .CreateLogger();
+
+#region
+builder.Services.AddOpenTelemetry().Setup("ProductService");
+builder.Services.AddSingleton(TracerProvider.Default.GetTracer("ProductService"));
+#endregion
+
+builder.Services.AddLogging(logBuilder =>
+{
+    logBuilder.AddSeq("http://seq:5341");
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -42,7 +62,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
