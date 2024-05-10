@@ -6,7 +6,7 @@ namespace TracingService;
 
     public static class TracingService
     {
-        public static OpenTelemetryBuilder Setup(this OpenTelemetryBuilder builder, string serviceName)
+        public static IOpenTelemetryBuilder Setup(this IOpenTelemetryBuilder builder, string serviceName)
         {
             return builder.WithTracing(t =>
             { 

@@ -10,6 +10,11 @@ namespace ProductApplication.Interfaces
 {
     public interface IProductService
     {
-        Task<Product> AddProductAsync(CreateProductDTO createProductDTO); 
+        Task<Product> AddProductAsync(CreateProductDTO createProductDTO);
+        Task<IEnumerable<Product>> GetAllProductsAsync();
+        Task<Product> GetProductByIdAsync(string id);
+        Task<Product> UpdateProductAsync(string id, UpdateProductDTO updateProductDTO);
+        Task<Product> DeleteProductAsync(string id);
+
     }
 }

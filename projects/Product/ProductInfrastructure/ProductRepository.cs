@@ -1,5 +1,6 @@
 ﻿using Domain.MongoEntities;
-using MongoClient;
+using Microsoft.EntityFrameworkCore;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using ProductInfrastructure.Interfaces;
 
@@ -7,17 +8,70 @@ namespace ProductInfrastructure
 {
     public class ProductRepository : IProductRepository
     {
-        private readonly IMongoCollection<Product> _productCollection;
+        private readonly ProductDbContext _context;
 
         public ProductRepository(ProductDbContext dbContext) 
         {
-            _productCollection = dbContext.GetCollection<Product>("products");
+            _context = dbContext;
         }
 
         public async Task<Product> AddProductAsync(Product product)
         {
-            await _productCollection.InsertOneAsync(product);
-            return product; 
+            _context.Products.Add(product);
+            _context.SaveChanges();
+            return product;
         }
+
+        public async Task<Product> DeleteProductAsync(string id)
+        {
+            if (!ObjectId.TryParse(id, out var objectId))
+            {
+                throw new ArgumentException($"Invalid product ID: {id}");
+            }
+
+            var product = await _context.Products.FirstOrDefaultAsync(p => p._id == objectId);
+
+            if (product == null)
+            {
+                throw new KeyNotFoundException($"No product found with the given ID: {id}");
+            }
+
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
+
+            return product;
+        }
+
+        public async Task<IEnumerable<Product>> GetAllProductsAsync()
+        {
+            return await _context.Products.ToListAsync();
+        }
+
+        public async Task<Product> GetProductByIdAsync(string id)
+        {
+            var objectId = new ObjectId(id);
+            var product = await _context.Products.FirstOrDefaultAsync(p => p._id == objectId);
+            return product ?? throw new KeyNotFoundException($"No product could be found with the given id {id}");
+        }
+
+        public async Task<Product> UpdateProductAsync(string id, Product updatedProduct)
+        {
+            var productToUpdate = await GetProductByIdAsync(id);
+            if (productToUpdate == null)
+            {
+                throw new KeyNotFoundException($"No product found with the given ID: {id}");
+            }
+
+            productToUpdate.Name = updatedProduct.Name;
+            productToUpdate.Description = updatedProduct.Description;
+            productToUpdate.Price = updatedProduct.Price;
+            productToUpdate.Quantity = updatedProduct.Quantity;
+
+            _context.Products.Update(productToUpdate);
+            await _context.SaveChangesAsync();
+
+            return productToUpdate;
+        }
+
     }
 }
