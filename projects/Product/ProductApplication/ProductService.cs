@@ -25,5 +25,29 @@ namespace ProductApplication
 
             return await _productRepository.AddProductAsync(product);
         }
+
+        public async Task<Product> DeleteProductAsync(string id)
+        {
+            return await _productRepository.DeleteProductAsync(id);
+        }
+
+        public async Task<IEnumerable<Product>> GetAllProductsAsync()
+        {
+            return await _productRepository.GetAllProductsAsync();
+        }
+
+        public async Task<Product> GetProductByIdAsync(string id)
+        {
+            return await _productRepository.GetProductByIdAsync(id);
+        }
+
+        public async Task<Product> UpdateProductAsync(string id, UpdateProductDTO updateProductDTO)
+        {
+            var updatedProduct = _mapper.Map<Product>(updateProductDTO);
+            updatedProduct._id = new MongoDB.Bson.ObjectId(id);
+
+            return await _productRepository.UpdateProductAsync(id, updatedProduct);
+        }
+
     }
 }

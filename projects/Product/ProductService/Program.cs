@@ -28,6 +28,7 @@ builder.Services.AddScoped<IProductService, ProductApplication.ProductService>()
 var mapper = new MapperConfiguration(config =>
 {
     config.CreateMap<CreateProductDTO, Domain.MongoEntities.Product>();
+    config.CreateMap<UpdateProductDTO, Domain.MongoEntities.Product>();
 }).CreateMapper();
 builder.Services.AddSingleton(mapper);
 #endregion
