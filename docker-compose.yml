@@ -1,2 +1,26 @@
 version: '3.8'
 
+services:
+  productdb:
+    image: 'mongo:latest'
+    container_name: mongodb
+    restart: always
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb_data:/data/db
+
+  productservice:
+    image: productservice
+    build:
+      context: .
+      dockerfile: ./projects/Product/ProductService/Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - productdb
+    environment:
+      - MONGO_CONNECTION_STRING=placeholder
+
+volumes:
+  mongodb_data:
