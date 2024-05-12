@@ -10,37 +10,34 @@ namespace ProductInfrastructure.Interfaces
     public interface IProductRepository
     {
         /// <summary>
-        /// Adds a new product to the database
+        /// Adds a product
         /// </summary>
         /// <param name="product"></param>
         /// <returns></returns>
-        Task<Product> AddProductAsync(Product product);
-
+        Task<bool> AddProductAsync(Product product);
         /// <summary>
-        /// Gets all the products from the database
+        /// Gets all products
         /// </summary>
         /// <returns></returns>
         Task<IEnumerable<Product>> GetAllProductsAsync();
-
         /// <summary>
-        /// Gets the product by id
+        /// Gets a product by its id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         Task<Product> GetProductByIdAsync(string id);
-
         /// <summary>
         /// Updates the product
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="product"></param>
         /// <returns></returns>
-        Task<Product> UpdateProductAsync(string id, Product product);
-
+        Task<bool> UpdateProductAsync(string id, Product product);
         /// <summary>
-        /// Deletes the product from the database
+        /// Deletes a product
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<Product> DeleteProductAsync(string id);
+        Task<bool> DeleteProductAsync(string id);
     }
 }

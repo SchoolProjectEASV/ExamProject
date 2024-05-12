@@ -15,14 +15,14 @@ namespace ProductInfrastructure
             _context = dbContext;
         }
 
-        public async Task<Product> AddProductAsync(Product product)
+        public async Task<bool> AddProductAsync(Product product)
         {
             _context.Products.Add(product);
-            _context.SaveChanges();
-            return product;
+            await _context.SaveChangesAsync();
+            return true;
         }
 
-        public async Task<Product> DeleteProductAsync(string id)
+        public async Task<bool> DeleteProductAsync(string id)
         {
             if (!ObjectId.TryParse(id, out var objectId))
             {
@@ -33,13 +33,13 @@ namespace ProductInfrastructure
 
             if (product == null)
             {
-                throw new KeyNotFoundException($"No product found with the given ID: {id}");
+                return false;
             }
 
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
 
-            return product;
+            return true;
         }
 
         public async Task<IEnumerable<Product>> GetAllProductsAsync()
@@ -54,7 +54,7 @@ namespace ProductInfrastructure
             return product ?? throw new KeyNotFoundException($"No product could be found with the given id {id}");
         }
 
-        public async Task<Product> UpdateProductAsync(string id, Product updatedProduct)
+        public async Task<bool> UpdateProductAsync(string id, Product updatedProduct)
         {
             var productToUpdate = await GetProductByIdAsync(id);
             if (productToUpdate == null)
@@ -70,7 +70,7 @@ namespace ProductInfrastructure
             _context.Products.Update(productToUpdate);
             await _context.SaveChangesAsync();
 
-            return productToUpdate;
+            return true;
         }
 
     }
