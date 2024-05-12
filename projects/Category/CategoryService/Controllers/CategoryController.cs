@@ -26,7 +26,7 @@ namespace CategoryService.Controllers
         {
             if (!ModelState.IsValid)
             {
-                Log.Warning("Invalid model state");
+                Log.Error("Invalid model state");
                 return BadRequest(ModelState);
             }
 
@@ -45,7 +45,7 @@ namespace CategoryService.Controllers
             }
             catch (Exception ex)
             {
-                Log.Warning("Failed to add a category");
+                Log.Error("Failed to add a category");
                 return BadRequest(new { Message = "Error adding category", Error = ex.Message });
             }
 
@@ -79,7 +79,7 @@ namespace CategoryService.Controllers
             }
             catch (KeyNotFoundException e)
             {
-                Log.Warning("Category not found with ID: {CategoryId}", id);
+                Log.Error("Category not found with ID: {CategoryId}", id);
                 return NotFound(new { Message = e.Message });
             }
         }
@@ -109,12 +109,12 @@ namespace CategoryService.Controllers
             }
             catch (KeyNotFoundException e)
             {
-                Log.Warning("Category not found for update with ID: {CategoryId}", id);
+                Log.Error("Category not found for update with ID: {CategoryId}", id);
                 return NotFound(new { Message = e.Message });
             }
             catch (ArgumentException e)
             {
-                Log.Warning("Argument error for category update: {ErrorMessage}", e.Message);
+                Log.Error("Argument error for category update: {ErrorMessage}", e.Message);
                 return BadRequest(new { Message = e.Message });
             }
         }
@@ -138,7 +138,7 @@ namespace CategoryService.Controllers
             }
             catch (KeyNotFoundException e)
             {
-                Log.Warning("Category not found for deletion with ID: {CategoryId}", id);
+                Log.Error("Category not found for deletion with ID: {CategoryId}", id);
                 return NotFound(new { Message = e.Message });
             }
         }
@@ -150,14 +150,17 @@ namespace CategoryService.Controllers
             try
             {
                 await _categoryService.AddProductToCategory(categoryId, productId);
+                Log.Information("Product {ProductId} added to category with id {CategoryId}", productId, categoryId);
                 return Ok(new { Message = "Product added to category successfully." });
             }
             catch (KeyNotFoundException ex)
             {
+                Log.Error("Failed to add product with {ProductId} to category with {CategoryId}", productId, categoryId);
                 return NotFound(new { Message = ex.Message });
             }
             catch (Exception ex)
             {
+                Log.Error("Failed to add product with id {ProductId} to category with id {CategoryId}", productId, categoryId);
                 return BadRequest(new { Message = "Failed to add product to category.", Error = ex.Message });
             }
         }
@@ -169,18 +172,19 @@ namespace CategoryService.Controllers
             try
             {
                 await _categoryService.RemoveProductFromCategory(categoryId, productId);
+                Log.Information("Product with id {ProductId} removed from category with id {CategoryId}", productId, categoryId);
                 return Ok(new { Message = "Product removed from category successfully." });
             }
             catch (KeyNotFoundException ex)
             {
+                Log.Error("Failed to remove product with id {ProductId} from category with id {CategoryId}", productId, categoryId);
                 return NotFound(new { Message = ex.Message });
             }
             catch (Exception ex)
             {
+                Log.Error("Failed to remove product with id {ProductId} from category with id {CategoryId}", productId, categoryId);
                 return BadRequest(new { Message = "Failed to remove product from category.", Error = ex.Message });
             }
         }
-
-
     }
 }
