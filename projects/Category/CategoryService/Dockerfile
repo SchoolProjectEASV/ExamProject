@@ -9,10 +9,15 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["CategoryService/CategoryService.csproj", "CategoryService/"]
-RUN dotnet restore "./CategoryService/CategoryService.csproj"
+COPY ["projects/Category/CategoryService/CategoryService.csproj", "projects/Category/CategoryService/"]
+COPY ["packages/LoggingService/LoggingService.csproj", "packages/LoggingService/"]
+COPY ["packages/TracingService/TracingService.csproj", "packages/TracingService/"]
+COPY ["projects/Category/CategoryApplication/CategoryApplication.csproj", "projects/Category/CategoryApplication/"]
+COPY ["projects/Category/CategoryInfrastructure/CategoryInfrastructure.csproj", "projects/Category/CategoryInfrastructure/"]
+COPY ["Domain/Domain.csproj", "Domain/"]
+RUN dotnet restore "./projects/Category/CategoryService/CategoryService.csproj"
 COPY . .
-WORKDIR "/src/CategoryService"
+WORKDIR "/src/projects/Category/CategoryService"
 RUN dotnet build "./CategoryService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish

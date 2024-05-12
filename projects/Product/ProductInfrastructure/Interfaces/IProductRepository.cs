@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace ProductInfrastructure.Interfaces
 {
+    /// <summary>
+    /// Interface containing the methods implemented in ProductRepository
+    /// </summary>
     public interface IProductRepository
     {
         /// <summary>

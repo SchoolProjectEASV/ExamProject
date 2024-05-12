@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace ProductApplication.Interfaces
 {
+    /// <summary>
+    /// Interface containing the methods implemented in ProductService
+    /// </summary>
     public interface IProductService
     {
         /// <summary>

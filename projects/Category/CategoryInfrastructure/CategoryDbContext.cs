@@ -4,6 +4,9 @@ using MongoDB.EntityFrameworkCore.Extensions;
 
 namespace CategoryInfrastructure
 {
+    /// <summary>
+    /// Represents the database context for Category
+    /// </summary>
     public class CategoryDbContext : DbContext
     {
 
@@ -11,7 +14,7 @@ namespace CategoryInfrastructure
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMongoDB("placeholder", "Category");
+            optionsBuilder.UseMongoDB("Placeholder", "Category");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

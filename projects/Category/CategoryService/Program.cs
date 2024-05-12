@@ -1,3 +1,5 @@
+using AutoMapper;
+using CategoryApplication.DTO;
 using CategoryApplication.Interfaces;
 using CategoryInfrastructure;
 using CategoryInfrastructure.Interfaces;
@@ -14,7 +16,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
 builder.Services.AddDbContext<CategoryDbContext>();
 
 #region DI
@@ -23,7 +24,12 @@ builder.Services.AddScoped<ICategoryService, CategoryApplication.CategoryService
 #endregion
 
 #region Automapper 
-
+var mapper = new MapperConfiguration(config =>
+{
+    config.CreateMap<CreateCategoryDTO, Domain.MongoEntities.Category>();
+    config.CreateMap<UpdateCategoryDTO, Domain.MongoEntities.Category>();
+}).CreateMapper();
+builder.Services.AddSingleton(mapper);
 #endregion
 
 #region Logging

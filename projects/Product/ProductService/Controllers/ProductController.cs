@@ -5,6 +5,9 @@ using Serilog;
 
 namespace ProductService.Controllers
 {
+    /// <summary>
+    /// Class used for handling the http requests regarding the product crud operations
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class ProductController : ControllerBase

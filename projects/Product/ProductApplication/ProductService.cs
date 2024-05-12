@@ -6,6 +6,9 @@ using ProductInfrastructure.Interfaces;
 
 namespace ProductApplication
 {
+    /// <summary>
+    /// Class containing the logic for the product crud operations
+    /// </summary>
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
