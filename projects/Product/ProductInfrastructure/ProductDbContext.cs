@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace ProductInfrastructure
 {
+    /// <summary>
+    /// Represents the database context for Product
+    /// </summary>
     public class ProductDbContext : DbContext
     {
 
@@ -18,7 +21,7 @@ namespace ProductInfrastructure
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMongoDB("placeholder", "Product");
+            optionsBuilder.UseMongoDB("Placeholder", "Product");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

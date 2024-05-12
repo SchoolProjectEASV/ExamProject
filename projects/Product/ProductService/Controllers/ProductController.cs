@@ -5,6 +5,9 @@ using Serilog;
 
 namespace ProductService.Controllers
 {
+    /// <summary>
+    /// Class used for handling the http requests regarding the product crud operations
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class ProductController : ControllerBase
@@ -26,9 +29,25 @@ namespace ProductService.Controllers
                 return BadRequest(ModelState);
             }
 
-            var createdProduct = await _productService.AddProductAsync(productDTO);
-            Log.Information("Product added successfully with ID: {ProductId}", createdProduct._id);
-            return Ok(new { Message = "Product added successfully", Product = createdProduct });
+            try
+            {
+                bool success = await _productService.AddProductAsync(productDTO);
+                if (success)
+                {
+                    Log.Information("Product added successfully.");
+                    return Ok(new { Message = "Product added successfully" });
+                }
+                else
+                {
+                    return BadRequest(new { Message = "Failed to add product" });
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Warning("Failed to add a product");
+                return BadRequest(new { Message = "Error adding product", Error = ex.Message });
+            }
+
         }
 
         [HttpGet]
@@ -37,7 +56,6 @@ namespace ProductService.Controllers
         {
             var products = await _productService.GetAllProductsAsync();
             Log.Information("Fetched {ProductCount} products", products.Count());
-
             return Ok(products);
         }
 
@@ -48,8 +66,15 @@ namespace ProductService.Controllers
             try
             {
                 var product = await _productService.GetProductByIdAsync(id);
-                Log.Information("Product found: {ProductId}", product._id);
-                return Ok(product);
+                if (product != null)
+                {
+                    Log.Information("Product found: {ProductId}", product._id);
+                    return Ok(product);
+                }
+                else
+                {
+                    return NotFound(new { Message = "Product not found" });
+                }
             }
             catch (KeyNotFoundException e)
             {
@@ -70,10 +95,16 @@ namespace ProductService.Controllers
 
             try
             {
-                var updatedProduct = await _productService.UpdateProductAsync(id, updateProductDTO);
-                Log.Information("Product updated successfully: {ProductId}", updatedProduct._id);
-
-                return Ok(new { Message = "Product updated successfully", Product = updatedProduct });
+                bool updated = await _productService.UpdateProductAsync(id, updateProductDTO);
+                if (updated)
+                {
+                    Log.Information("Product updated successfully: {ProductId}", id);
+                    return Ok(new { Message = "Product updated successfully" });
+                }
+                else
+                {
+                    return NotFound(new { Message = "Product not found for update" });
+                }
             }
             catch (KeyNotFoundException e)
             {
@@ -93,10 +124,16 @@ namespace ProductService.Controllers
         {
             try
             {
-                var deletedProduct = await _productService.DeleteProductAsync(id);
-                Log.Information("Product deleted successfully: {ProductId}", deletedProduct._id);
-
-                return Ok(new { Message = "Product deleted successfully", Product = deletedProduct });
+                bool deleted = await _productService.DeleteProductAsync(id);
+                if (deleted)
+                {
+                    Log.Information("Product deleted successfully: {ProductId}", id);
+                    return Ok(new { Message = "Product deleted successfully" });
+                }
+                else
+                {
+                    return NotFound(new { Message = "Product not found for deletion" });
+                }
             }
             catch (KeyNotFoundException e)
             {

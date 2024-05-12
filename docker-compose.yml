@@ -10,6 +10,15 @@ services:
     volumes:
       - mongodb_data:/data/db
 
+  categorydb:
+    image: 'mongo:latest'
+    container_name: category_mongodb
+    restart: always
+    ports:
+      - '27018:27017'
+    volumes:
+      - categorydb_data:/data/db
+
   productservice:
     image: productservice
     build:
@@ -20,8 +29,17 @@ services:
       - "8443:443"
     depends_on:
       - productdb
-    environment:
-      - MONGO_CONNECTION_STRING=placeholder
+
+  categoryservice:
+    image: categoryservice
+    build:
+      context: .
+      dockerfile: ./projects/Category/CategoryService/Dockerfile
+    ports:
+      - "8090:8080"
+      - "8444:443"
+    depends_on:
+      - categorydb
 
   zipkin:
     image: openzipkin/zipkin:latest
@@ -41,4 +59,5 @@ services:
 
 volumes:
   mongodb_data:
+  categorydb_data:
   seq_data:

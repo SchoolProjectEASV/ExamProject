@@ -1,0 +1,58 @@
+﻿using Domain.MongoEntities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CategoryInfrastructure.Interfaces
+{
+    public interface ICategoryRepository
+    {
+        /// <summary>
+        /// Adds a category
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        Task<bool> AddCategoryAsync(Category category);
+        /// <summary>
+        /// Gets all categories
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<Category>> GetAllCategoriesAsync();
+        /// <summary>
+        /// Gets a category by its id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<Category> GetCategoryByIdAsync(string id);
+        /// <summary>
+        /// Updates the category
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        Task<bool> UpdateCategoryAsync(string id, Category category);
+        /// <summary>
+        /// Deletes a category
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<bool> DeleteCategoryAsync(string id);
+        /// <summary>
+        /// Adds a product to a category
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <param name="productId"></param>
+        /// <returns></returns>
+        Task<bool> AddProductToCategory(string categoryId, string productId);
+        /// <summary>
+        /// Removes a product from a category
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <param name="productId"></param>
+        /// <returns></returns>
+        Task<bool> RemoveProductFromCategory(string categoryId, string productId);
+
+    }
+}
