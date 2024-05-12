@@ -78,5 +78,38 @@ namespace CategoryInfrastructure
 
             return true;
         }
+
+        public async Task<bool> AddProductToCategory(string categoryId, string productId)
+        {
+            var objectId = new ObjectId(categoryId);
+            var category = await _context.Categories.FindAsync(objectId);
+            if (category == null)
+                return false;
+
+            var productObjectId = new ObjectId(productId); 
+            if (!category.ProductIds.Contains(productObjectId))
+            {
+                category.ProductIds.Add(productObjectId);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> RemoveProductFromCategory(string categoryId, string productId)
+        {
+            var objectId = new ObjectId(categoryId);
+            var category = await _context.Categories.FindAsync(objectId);
+            if (category == null)
+                return false;
+
+            var productObjectId = new ObjectId(productId); 
+            if (category.ProductIds.Remove(productObjectId))
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
     }
 }

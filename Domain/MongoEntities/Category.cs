@@ -28,5 +28,9 @@ namespace Domain.MongoEntities
         /// The description of the category
         /// </summary>
         public string? Description { get; set; }
+        /// <summary>
+        /// List to hold productIds
+        /// </summary>
+        public List<ObjectId> ProductIds { get; set; } = new List<ObjectId>();  
     }
 }

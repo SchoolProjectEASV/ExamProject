@@ -39,6 +39,20 @@ namespace CategoryInfrastructure.Interfaces
         /// <param name="id"></param>
         /// <returns></returns>
         Task<bool> DeleteCategoryAsync(string id);
+        /// <summary>
+        /// Adds a product to a category
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <param name="productId"></param>
+        /// <returns></returns>
+        Task<bool> AddProductToCategory(string categoryId, string productId);
+        /// <summary>
+        /// Removes a product from a category
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <param name="productId"></param>
+        /// <returns></returns>
+        Task<bool> RemoveProductFromCategory(string categoryId, string productId);
 
     }
 }

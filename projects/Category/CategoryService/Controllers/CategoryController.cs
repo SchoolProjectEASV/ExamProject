@@ -143,5 +143,44 @@ namespace CategoryService.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("{categoryId}/add/{productId}")]
+        public async Task<IActionResult> AddProductToCategory(string categoryId, string productId)
+        {
+            try
+            {
+                await _categoryService.AddProductToCategory(categoryId, productId);
+                return Ok(new { Message = "Product added to category successfully." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = "Failed to add product to category.", Error = ex.Message });
+            }
+        }
+
+        [HttpDelete]
+        [Route("{categoryId}/remove/{productId}")]
+        public async Task<IActionResult> RemoveProductFromCategory(string categoryId, string productId)
+        {
+            try
+            {
+                await _categoryService.RemoveProductFromCategory(categoryId, productId);
+                return Ok(new { Message = "Product removed from category successfully." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = "Failed to remove product from category.", Error = ex.Message });
+            }
+        }
+
+
     }
 }

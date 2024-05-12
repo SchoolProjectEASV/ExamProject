@@ -14,7 +14,7 @@ namespace CategoryInfrastructure
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMongoDB("Placeholder", "Category");
+            optionsBuilder.UseMongoDB("placeholder", "Category");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

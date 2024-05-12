@@ -1,9 +1,12 @@
-﻿using AutoMapper;
+﻿using Amazon.Runtime;
+using AutoMapper;
 using CategoryApplication.DTO;
 using CategoryApplication.Interfaces;
 using CategoryInfrastructure.Interfaces;
 using Domain.MongoEntities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.Net.Http;
 
 namespace CategoryApplication
 {
@@ -14,12 +17,39 @@ namespace CategoryApplication
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
+        private readonly string? _productServiceUrl;
+        private readonly HttpClient _httpClient;
 
-        public CategoryService(ICategoryRepository categoryRepository, IMapper mapper)
+        public CategoryService(ICategoryRepository categoryRepository, IMapper mapper, IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _categoryRepository = categoryRepository;
             _mapper = mapper;
+            _productServiceUrl = configuration["ProductService:Url"];
+            _httpClient = httpClientFactory.CreateClient();
+            _httpClient.BaseAddress = new Uri(_productServiceUrl);
         }
+
+
+        public async Task AddProductToCategory(string categoryId, string productId)
+        {
+            var response = await _httpClient.GetAsync($"/Product/{productId}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new KeyNotFoundException($"Product with the id {productId} was not found.");
+            }
+
+            await _categoryRepository.AddProductToCategory(categoryId, productId);
+        }
+
+        public async Task RemoveProductFromCategory(string categoryId, string productId)
+        {
+            var removedSuccessfully = await _categoryRepository.RemoveProductFromCategory(categoryId, productId);
+            if (!removedSuccessfully)
+            {
+                throw new KeyNotFoundException($"Product with the id {productId} was not found in the category {categoryId}.");
+            }
+        }
+
 
         public async Task<bool> AddCategoryAsync(CreateCategoryDTO createCategoryDTO)
         {
