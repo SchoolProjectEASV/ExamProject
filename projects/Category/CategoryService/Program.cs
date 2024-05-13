@@ -6,8 +6,11 @@ using CategoryInfrastructure.Interfaces;
 using OpenTelemetry.Trace;
 using Serilog;
 using TracingService;
+using VaultService;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<VaultSettings>(builder.Configuration.GetSection("Vault"));
 
 // Add services to the container.
 
