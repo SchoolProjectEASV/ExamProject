@@ -13,6 +13,7 @@ COPY ["projects/Product/ProductService/ProductService.csproj", "projects/Product
 COPY ["projects/Product/ProductApplication/ProductApplication.csproj", "projects/Product/ProductApplication/"]
 COPY ["projects/Product/ProductInfrastructure/ProductInfrastructure.csproj", "projects/Product/ProductInfrastructure/"]
 COPY ["Domain/Domain.csproj", "Domain/"]
+COPY ["packages/VaultService/VaultService.csproj", "packages/VaultService/"]
 RUN dotnet restore "./projects/Product/ProductService/ProductService.csproj"
 COPY . .
 WORKDIR "/src/projects/Product/ProductService"

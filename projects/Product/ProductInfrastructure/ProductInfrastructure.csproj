@@ -12,6 +12,7 @@
 
   <ItemGroup>
 	  <ProjectReference Include="..\..\..\Domain\Domain.csproj" />
+	  <ProjectReference Include="..\..\..\packages\VaultService\VaultService.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,7 @@
 ﻿using Domain.MongoEntities;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
+using MongoDB.Driver.Core.Configuration;
 using MongoDB.EntityFrameworkCore.Extensions;
 using System;
 using System.Collections.Generic;
@@ -15,10 +16,17 @@ namespace ProductInfrastructure
 
         public DbSet<Product> Products { get; set; }
 
+        private readonly string? _connectionString;
+
+        public ProductDbContext(IVaultFactory vaultFactory)
+        {
+            _connectionString = vaultFactory.GetSecretAsync("path", "key").Result;
+        }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMongoDB("placeholder", "Product");
+            optionsBuilder.UseMongoDB(_connectionString, "Product");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
