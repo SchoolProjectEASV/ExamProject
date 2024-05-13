@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace ProductInfrastructure
 {
+    /// <summary>
+    /// Represents the database context for Product
+    /// </summary>
     public class ProductDbContext : DbContext
     {
 

@@ -8,13 +8,41 @@ using System.Threading.Tasks;
 
 namespace ProductApplication.Interfaces
 {
+    /// <summary>
+    /// Interface containing the methods implemented in ProductService
+    /// </summary>
     public interface IProductService
     {
-        Task<Product> AddProductAsync(CreateProductDTO createProductDTO);
+        /// <summary>
+        /// Add a product
+        /// </summary>
+        /// <param name="createProductDTO"></param>
+        /// <returns></returns>
+        Task<bool> AddProductAsync(CreateProductDTO createProductDTO);
+        /// <summary>
+        /// Gets all the products
+        /// </summary>
+        /// <returns></returns>
         Task<IEnumerable<Product>> GetAllProductsAsync();
+        /// <summary>
+        /// Gets a product by its Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         Task<Product> GetProductByIdAsync(string id);
-        Task<Product> UpdateProductAsync(string id, UpdateProductDTO updateProductDTO);
-        Task<Product> DeleteProductAsync(string id);
+        /// <summary>
+        /// Updates the product
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="updateProductDTO"></param>
+        /// <returns></returns>
+        Task<bool> UpdateProductAsync(string id, UpdateProductDTO updateProductDTO);
+        /// <summary>
+        /// Deletes a product
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<bool> DeleteProductAsync(string id);
 
     }
 }

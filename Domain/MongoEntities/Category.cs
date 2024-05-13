@@ -1,36 +1,36 @@
 ﻿using MongoDB.Bson;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Domain.MongoEntities
 {
     /// <summary>
-    /// The product entity used with mongodb
+    /// The category entity used with mongodb
     /// </summary>
-    public class Product
+    public class Category
     {
         /// <summary>
-        /// Unique identifier
+        /// Unique identifier 
         /// </summary>
         public ObjectId _id { get; set; }
         /// <summary>
-        /// The date the product was created / added
+        /// The date the category was created/added
         /// </summary>
         public DateTime CreatedAt { get; set; }
         /// <summary>
-        /// The product name
+        /// The name of the category
         /// </summary>
         public string? Name { get; set; }
         /// <summary>
-        /// The product description
+        /// The description of the category
         /// </summary>
         public string? Description { get; set; }
         /// <summary>
-        /// The product price
+        /// List to hold productIds
         /// </summary>
-        public float Price { get; set; }
-        /// <summary>
-        /// The product quantity
-        /// </summary>
-        public int Quantity { get; set; }
-
+        public List<ObjectId> ProductIds { get; set; } = new List<ObjectId>();  
     }
 }

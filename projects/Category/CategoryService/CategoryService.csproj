@@ -1,10 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>f3782200-bac7-487a-b97c-84b93f23296f</UserSecretsId>
+    <UserSecretsId>2d113406-b596-4f4f-b183-a07e8e028cf0</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..\..</DockerfileContext>
   </PropertyGroup>
@@ -18,7 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\packages\LoggingService\LoggingService.csproj" />
     <ProjectReference Include="..\..\..\packages\TracingService\TracingService.csproj" />
-    <ProjectReference Include="..\ProductApplication\ProductApplication.csproj" />
+    <ProjectReference Include="..\CategoryApplication\CategoryApplication.csproj" />
   </ItemGroup>
 
 </Project>

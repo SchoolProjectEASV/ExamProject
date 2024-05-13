@@ -2,9 +2,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using ProductApplication.DTO;
 using ProductApplication.Interfaces;
+using Serilog;
 
 namespace ProductService.Controllers
 {
+    /// <summary>
+    /// Class used for handling the http requests regarding the product crud operations
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class ProductController : ControllerBase
@@ -27,11 +31,29 @@ namespace ProductService.Controllers
         {
             if (!ModelState.IsValid)
             {
+                Log.Warning("Invalid model state");
                 return BadRequest(ModelState);
             }
 
-            var createdProduct = await _productService.AddProductAsync(productDTO);
-            return Ok(new { Message = "Product added successfully", Product = createdProduct });
+            try
+            {
+                bool success = await _productService.AddProductAsync(productDTO);
+                if (success)
+                {
+                    Log.Information("Product added successfully.");
+                    return Ok(new { Message = "Product added successfully" });
+                }
+                else
+                {
+                    return BadRequest(new { Message = "Failed to add product" });
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Warning("Failed to add a product");
+                return BadRequest(new { Message = "Error adding product", Error = ex.Message });
+            }
+
         }
 
         [HttpGet]
@@ -46,6 +68,7 @@ namespace ProductService.Controllers
         public async Task<IActionResult> GetAllProducts()
         {
             var products = await _productService.GetAllProductsAsync();
+            Log.Information("Fetched {ProductCount} products", products.Count());
             return Ok(products);
         }
 
@@ -56,10 +79,19 @@ namespace ProductService.Controllers
             try
             {
                 var product = await _productService.GetProductByIdAsync(id);
-                return Ok(product);
+                if (product != null)
+                {
+                    Log.Information("Product found: {ProductId}", product._id);
+                    return Ok(product);
+                }
+                else
+                {
+                    return NotFound(new { Message = "Product not found" });
+                }
             }
             catch (KeyNotFoundException e)
             {
+                Log.Warning("Product not found with ID: {ProductId}", id);
                 return NotFound(new { Message = e.Message });
             }
         }
@@ -70,20 +102,31 @@ namespace ProductService.Controllers
         {
             if (!ModelState.IsValid)
             {
+                Log.Warning("Invalid model state for product update");
                 return BadRequest(ModelState);
             }
 
             try
             {
-                var updatedProduct = await _productService.UpdateProductAsync(id, updateProductDTO);
-                return Ok(new { Message = "Product updated successfully", Product = updatedProduct });
+                bool updated = await _productService.UpdateProductAsync(id, updateProductDTO);
+                if (updated)
+                {
+                    Log.Information("Product updated successfully: {ProductId}", id);
+                    return Ok(new { Message = "Product updated successfully" });
+                }
+                else
+                {
+                    return NotFound(new { Message = "Product not found for update" });
+                }
             }
             catch (KeyNotFoundException e)
             {
+                Log.Warning("Product not found for update with ID: {ProductId}", id);
                 return NotFound(new { Message = e.Message });
             }
             catch (ArgumentException e)
             {
+                Log.Warning("Argument error for product update: {ErrorMessage}", e.Message);
                 return BadRequest(new { Message = e.Message });
             }
         }
@@ -94,11 +137,20 @@ namespace ProductService.Controllers
         {
             try
             {
-                var deletedProduct = await _productService.DeleteProductAsync(id);
-                return Ok(new { Message = "Product deleted successfully", Product = deletedProduct });
+                bool deleted = await _productService.DeleteProductAsync(id);
+                if (deleted)
+                {
+                    Log.Information("Product deleted successfully: {ProductId}", id);
+                    return Ok(new { Message = "Product deleted successfully" });
+                }
+                else
+                {
+                    return NotFound(new { Message = "Product not found for deletion" });
+                }
             }
             catch (KeyNotFoundException e)
             {
+                Log.Warning("Product not found for deletion with ID: {ProductId}", id);
                 return NotFound(new { Message = e.Message });
             }
         }

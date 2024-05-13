@@ -1,54 +1,53 @@
 using AutoMapper;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using ProductApplication;
-using ProductApplication.DTO;
-using ProductApplication.Interfaces;
-using ProductInfrastructure;
-using ProductInfrastructure.Interfaces;
-using System.Diagnostics.Metrics;
-using Domain;
-using VaultService;
-using TracingService;
+using CategoryApplication.DTO;
+using CategoryApplication.Interfaces;
+using CategoryInfrastructure;
+using CategoryInfrastructure.Interfaces;
 using OpenTelemetry.Trace;
 using Serilog;
+using TracingService;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.Configure<VaultSettings>(builder.Configuration.GetSection("Vault"));
+// Add services to the container.
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<ProductDbContext>();
+builder.Services.AddDbContext<CategoryDbContext>();
 
 #region DI
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<IProductService, ProductApplication.ProductService>();
-builder.Services.AddScoped<IVaultFactory, VaultFactory>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICategoryService, CategoryApplication.CategoryService>();
 #endregion
 
-#region AutoMapper
+#region Automapper 
 var mapper = new MapperConfiguration(config =>
 {
-    config.CreateMap<CreateProductDTO, Domain.MongoEntities.Product>();
-    config.CreateMap<UpdateProductDTO, Domain.MongoEntities.Product>();
+    config.CreateMap<CreateCategoryDTO, Domain.MongoEntities.Category>();
+    config.CreateMap<UpdateCategoryDTO, Domain.MongoEntities.Category>();
 }).CreateMapper();
 builder.Services.AddSingleton(mapper);
 #endregion
 
+#region Logging
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
     .Enrich.FromLogContext()
     .WriteTo.Seq("http://seq:5341")
     .WriteTo.Console()
     .CreateLogger();
+#endregion
 
 #region
-builder.Services.AddOpenTelemetry().Setup("ProductService");
-builder.Services.AddSingleton(TracerProvider.Default.GetTracer("ProductService"));
+builder.Services.AddOpenTelemetry().Setup("CategoryService");
+builder.Services.AddSingleton(TracerProvider.Default.GetTracer("CategoryService"));
+#endregion
+
+#region httpclient
+builder.Services.AddHttpClient();
 #endregion
 
 builder.Services.AddLogging(logBuilder =>
@@ -64,7 +63,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 
 app.UseAuthorization();
 

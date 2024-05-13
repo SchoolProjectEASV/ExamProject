@@ -6,6 +6,9 @@ using ProductInfrastructure.Interfaces;
 
 namespace ProductApplication
 {
+    /// <summary>
+    /// Class containing the logic for the product crud operations
+    /// </summary>
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
@@ -18,7 +21,7 @@ namespace ProductApplication
             _mapper = mapper;
         }
 
-        public async Task<Product> AddProductAsync(CreateProductDTO createProductDTO)
+        public async Task<bool> AddProductAsync(CreateProductDTO createProductDTO)
         {
             var product = _mapper.Map<Product>(createProductDTO);
             product.CreatedAt = DateTime.UtcNow;
@@ -26,7 +29,7 @@ namespace ProductApplication
             return await _productRepository.AddProductAsync(product);
         }
 
-        public async Task<Product> DeleteProductAsync(string id)
+        public async Task<bool> DeleteProductAsync(string id)
         {
             return await _productRepository.DeleteProductAsync(id);
         }
@@ -41,7 +44,7 @@ namespace ProductApplication
             return await _productRepository.GetProductByIdAsync(id);
         }
 
-        public async Task<Product> UpdateProductAsync(string id, UpdateProductDTO updateProductDTO)
+        public async Task<bool> UpdateProductAsync(string id, UpdateProductDTO updateProductDTO)
         {
             var updatedProduct = _mapper.Map<Product>(updateProductDTO);
             updatedProduct._id = new MongoDB.Bson.ObjectId(id);
