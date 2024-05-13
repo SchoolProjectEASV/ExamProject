@@ -33,7 +33,7 @@ public class VaultFactory : IVaultFactory
 
     public async Task<string> GetConnectionStringProduct()
     {
-        VaultResponse<KvV2ReadResponse> response = vaultClient.Secrets.KvV2Read("secret", "connectionstring");
+        VaultResponse<KvV2ReadResponse> response = vaultClient.Secrets.KvV2Read("secretPolicy", "connectionstring");
 
         JObject data = (JObject) response.Data.Data;
 
@@ -41,8 +41,4 @@ public class VaultFactory : IVaultFactory
 
         return _vaultSettings.CONNECTIONSTRING_PRODUCT_MONGODB;
     }
-
-
-
-   
 }

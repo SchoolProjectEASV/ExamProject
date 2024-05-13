@@ -12,6 +12,7 @@ using VaultService;
 using TracingService;
 using OpenTelemetry.Trace;
 using Serilog;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 var builder = WebApplication.CreateBuilder(args);
 
