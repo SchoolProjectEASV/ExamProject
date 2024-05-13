@@ -6,8 +6,11 @@ using CategoryInfrastructure.Interfaces;
 using OpenTelemetry.Trace;
 using Serilog;
 using TracingService;
+using VaultService;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<VaultSettings>(builder.Configuration.GetSection("Vault"));
 
 // Add services to the container.
 
@@ -21,6 +24,7 @@ builder.Services.AddDbContext<CategoryDbContext>();
 #region DI
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryApplication.CategoryService>();
+builder.Services.AddScoped<IVaultFactory, VaultFactory>();
 #endregion
 
 #region Automapper 

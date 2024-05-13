@@ -57,13 +57,6 @@ namespace ProductService.Controllers
         }
 
         [HttpGet]
-        [Route("Value")]
-        public async Task<IActionResult> GetConnectionString()
-        {
-            var connectionString = await vaultFactory.GetConnectionStringAsync();
-            return Ok(connectionString);
-        }
-        [HttpGet]
         [Route("all")]
         public async Task<IActionResult> GetAllProducts()
         {

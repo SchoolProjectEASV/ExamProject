@@ -11,8 +11,9 @@ namespace VaultService
         public string Address { get; set; }
         public UserPassSettings UserPass { get; set; }
 
-        public string CONNECTIONSTRING_MONGODB { get; set; }
+        public string CONNECTIONSTRING_PRODUCT_MONGODB { get; set; }
 
+        public string CONNECTIONSTRING_CATEGORY_MONGODB { get; set; }
 
         public class UserPassSettings
         {

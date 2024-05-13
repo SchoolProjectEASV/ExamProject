@@ -19,14 +19,26 @@ public class VaultFactory : IVaultFactory
         vaultClient.SetToken(auth.ResponseAuth.ClientToken);
     }
 
-    public async Task<string> GetConnectionStringAsync()
+    public async Task<string> GetConnectionStringCategory()
     {
         VaultResponse<KvV2ReadResponse> response = vaultClient.Secrets.KvV2Read("secret", "connectionstring");
+        
+        JObject data = (JObject)response.Data.Data;
+
+        _vaultSettings = data.ToObject<VaultSettings>();
+
+        return _vaultSettings.CONNECTIONSTRING_CATEGORY_MONGODB;
+
+    }
+
+    public async Task<string> GetConnectionStringProduct()
+    {
+        VaultResponse<KvV2ReadResponse> response = vaultClient.Secrets.KvV2Read("secretPolicy", "connectionstring");
 
         JObject data = (JObject) response.Data.Data;
 
         _vaultSettings = data.ToObject<VaultSettings>();
 
-        return _vaultSettings.CONNECTIONSTRING_MONGODB;
+        return _vaultSettings.CONNECTIONSTRING_PRODUCT_MONGODB;
     }
 }
