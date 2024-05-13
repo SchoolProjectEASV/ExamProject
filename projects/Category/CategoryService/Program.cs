@@ -44,6 +44,7 @@ Log.Logger = new LoggerConfiguration()
 #region
 builder.Services.AddOpenTelemetry().Setup("CategoryService");
 builder.Services.AddSingleton(TracerProvider.Default.GetTracer("CategoryService"));
+builder.Services.AddScoped<IVaultFactory, VaultFactory>();
 #endregion
 
 #region httpclient
