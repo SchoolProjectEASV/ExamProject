@@ -1,6 +1,6 @@
 ﻿namespace UserApplication
 {
-    public class UserService
+    public class UserService: IUserService
     {
 
     }

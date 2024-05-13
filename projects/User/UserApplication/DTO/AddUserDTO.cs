@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UserInfrastructure
+namespace UserApplication.DTO
 {
-    public class UserDbContext
+    public class AddUserDTO
     {
     }
 }
