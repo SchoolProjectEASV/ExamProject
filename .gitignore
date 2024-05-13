@@ -483,3 +483,5 @@ $RECYCLE.BIN/
 # Vim temporary swap files
 *.swp
 /vault
+projects/Product/ProductService/appsettings.json
+projects/Category/CategoryService/appsettings.json
