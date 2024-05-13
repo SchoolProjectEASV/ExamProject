@@ -28,7 +28,6 @@ services:
     depends_on:
       - productdb
 
-
   categoryservice:
     image: categoryservice
     build:
@@ -73,32 +72,29 @@ services:
       - ./vault/data:/vault/data
     command: vault server -config vault/config/local.json
 
-   userdb:
-      image: postgres
-      restart: always
-      environment:
-        POSTGRES_PASSWORD: example
-      ports:
-        - "5432:5432"
-      volumes:
-        - postgres-data:/var/lib/postgresql/data
+  userdb:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
 
-
-    userservice:
-      image: userservice
-      build:
-        context: .
-        dockerfile: ./projects/User/UserService/Dockerfile
-      ports:
-        - "8070:8080"
-        - "8445:443"
-      depends_on:
-        - userdb
-
+  userservice:
+    image: userservice
+    build:
+      context: .
+      dockerfile: ./projects/User/UserService/Dockerfile
+    ports:
+      - "8070:8080"
+      - "8445:443"
+    depends_on:
+      - userdb
 
 volumes:
-  mongodb_data:
-  categorydb_data:
-  seq_data:
-  postgres-data:
-
+  mongodb_data: {}
+  categorydb_data: {}
+  seq_data: {}
+  postgres-data: {}

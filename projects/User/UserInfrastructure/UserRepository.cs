@@ -16,14 +16,33 @@ namespace UserInfrastructure
         public UserRepository(string connectionString)
         {
             _connectionString = connectionString;
+            CreateUsersTableIfNotExists();
         }
+
 
         private IDbConnection CreateConnection()
         {
             return new NpgsqlConnection(_connectionString);
         }
 
-        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        private void CreateUsersTableIfNotExists()
+        {
+            using (var connection = CreateConnection())
+            {
+                var query = @"
+            CREATE TABLE IF NOT EXISTS users (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                email VARCHAR(255) NOT NULL UNIQUE
+            );
+        ";
+
+                connection.Execute(query);
+            }
+        }
+
+
+            public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
             using (var connection = CreateConnection())
             {
