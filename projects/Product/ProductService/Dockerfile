@@ -10,9 +10,12 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["projects/Product/ProductService/ProductService.csproj", "projects/Product/ProductService/"]
+COPY ["packages/LoggingService/LoggingService.csproj", "packages/LoggingService/"]
+COPY ["packages/TracingService/TracingService.csproj", "packages/TracingService/"]
 COPY ["projects/Product/ProductApplication/ProductApplication.csproj", "projects/Product/ProductApplication/"]
 COPY ["projects/Product/ProductInfrastructure/ProductInfrastructure.csproj", "projects/Product/ProductInfrastructure/"]
 COPY ["Domain/Domain.csproj", "Domain/"]
+COPY ["packages/VaultService/VaultService.csproj", "packages/VaultService/"]
 RUN dotnet restore "./projects/Product/ProductService/ProductService.csproj"
 COPY . .
 WORKDIR "/src/projects/Product/ProductService"

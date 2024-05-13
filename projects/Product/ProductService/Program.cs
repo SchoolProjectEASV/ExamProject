@@ -8,12 +8,14 @@ using ProductInfrastructure;
 using ProductInfrastructure.Interfaces;
 using System.Diagnostics.Metrics;
 using Domain;
+using VaultService;
 using TracingService;
 using OpenTelemetry.Trace;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.Configure<VaultSettings>(builder.Configuration.GetSection("Vault"));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -25,6 +27,7 @@ builder.Services.AddDbContext<ProductDbContext>();
 #region DI
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductApplication.ProductService>();
+builder.Services.AddScoped<IVaultFactory, VaultFactory>();
 #endregion
 
 #region AutoMapper
