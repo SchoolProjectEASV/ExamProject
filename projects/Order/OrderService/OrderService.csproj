@@ -4,13 +4,20 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>c1f89aca-92cd-4847-abc3-4f35bdd0e464</UserSecretsId>
+    <UserSecretsId>0b58afeb-03ee-4e29-a75e-6fde46653724</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.2" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OrderApplication\OrderApplication.csproj" />
+    <ProjectReference Include="..\OrderInfrastructure\OrderInfrastructure.csproj" />
   </ItemGroup>
 
 </Project>
