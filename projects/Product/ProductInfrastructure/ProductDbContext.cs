@@ -16,17 +16,25 @@ namespace ProductInfrastructure
 
         public DbSet<Product> Products { get; set; }
 
-        private readonly string? _connectionString;
+        private  string? _connectionString;
+
+        IVaultFactory _vaultFactory;
 
         public ProductDbContext(IVaultFactory vaultFactory)
         {
-            _connectionString = vaultFactory.GetSecretAsync("path", "key").Result;
+            _vaultFactory = vaultFactory;
         }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMongoDB(_connectionString, "Product");
+            optionsBuilder.UseMongoDB(GetConnectionString(), "Product");
+        }
+
+        public string GetConnectionString()
+        {
+            _connectionString = _vaultFactory.GetConnectionStringAsync().Result;
+            return _connectionString;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

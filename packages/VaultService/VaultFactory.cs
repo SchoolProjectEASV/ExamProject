@@ -1,27 +1,32 @@
 ﻿using Microsoft.Extensions.Options;
-using Microsoft.VisualBasic.FileIO;
+using Newtonsoft.Json.Linq;
+using Vault;
+using Vault.Client;
+using Vault.Model;
 using VaultService;
-using VaultSharp;
-using VaultSharp.V1.AuthMethods;
-using VaultSharp.V1.AuthMethods.AppRole;
-using VaultSharp.V1.AuthMethods.UserPass;
 
-public class VauiltFactory: IVaultFactory
+public class VaultFactory : IVaultFactory
 {
-    private IVaultClient vaultClient;
-    private readonly VaultSettings _vaultSettings;
+    private VaultClient vaultClient;
+    private  VaultSettings _vaultSettings;
 
-    public VauiltFactory(IOptions<VaultSettings> settings )
+    public VaultFactory(IOptions<VaultSettings> settings)
     {
         _vaultSettings = settings.Value;
-        IAuthMethodInfo authMethod = new AppRoleAuthMethodInfo(_vaultSettings.AppRole.RoleId, _vaultSettings.AppRole.SecretId);
-        var vaultClientSettings = new VaultClientSettings(_vaultSettings.Address, authMethod);
-        vaultClient = new VaultClient(vaultClientSettings);
+        VaultConfiguration vaultConfiguration = new VaultConfiguration(_vaultSettings.Address);
+        vaultClient = new VaultClient(vaultConfiguration);
+        var auth = vaultClient.Auth.UserpassLogin(_vaultSettings.UserPass.Username, new UserpassLoginRequest(_vaultSettings.UserPass.Password));
+        vaultClient.SetToken(auth.ResponseAuth.ClientToken);
     }
 
-    public async Task<string> GetSecretAsync(string path, string key)
+    public async Task<string> GetConnectionStringAsync()
     {
-        var secret = await vaultClient.V1.Secrets.KeyValue.V2.ReadSecretAsync(path);
-        return secret.Data.Data.TryGetValue(key, out object? value) ? value?.ToString() : null;
+        VaultResponse<KvV2ReadResponse> response = vaultClient.Secrets.KvV2Read("secret", "connectionstring");
+
+        JObject data = (JObject) response.Data.Data;
+
+        _vaultSettings = data.ToObject<VaultSettings>();
+
+        return _vaultSettings.CONNECTIONSTRING_MONGODB;
     }
 }

@@ -9,14 +9,10 @@ namespace VaultService
     public class VaultSettings
     {
         public string Address { get; set; }
-        public AppRoleSettings AppRole { get; set; }
         public UserPassSettings UserPass { get; set; }
 
-        public class AppRoleSettings
-        {
-            public string RoleId { get; set; }
-            public string SecretId { get; set; }
-        }
+        public string CONNECTIONSTRING_MONGODB { get; set; }
+
 
         public class UserPassSettings
         {

@@ -24,7 +24,7 @@ builder.Services.AddDbContext<ProductDbContext>();
 #region
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductApplication.ProductService>();
-builder.Services.AddScoped<IVaultFactory, VauiltFactory>();
+builder.Services.AddScoped<IVaultFactory, VaultFactory>();
 #endregion
 
 #region AutoMapper

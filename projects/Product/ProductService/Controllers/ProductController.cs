@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using ProductApplication.DTO;
 using ProductApplication.Interfaces;
 
@@ -10,9 +11,14 @@ namespace ProductService.Controllers
     {
         private readonly IProductService _productService;
 
-        public ProductController(IProductService productService)
+        private readonly IVaultFactory vaultFactory;
+
+            
+
+        public ProductController(IProductService productService, IVaultFactory vaultFactory)
         {
             _productService = productService;
+            this.vaultFactory = vaultFactory;
         }
 
         [HttpPost]
@@ -28,6 +34,13 @@ namespace ProductService.Controllers
             return Ok(new { Message = "Product added successfully", Product = createdProduct });
         }
 
+        [HttpGet]
+        [Route("Value")]
+        public async Task<IActionResult> GetConnectionString()
+        {
+            var connectionString = await vaultFactory.GetConnectionStringAsync();
+            return Ok(connectionString);
+        }
         [HttpGet]
         [Route("all")]
         public async Task<IActionResult> GetAllProducts()

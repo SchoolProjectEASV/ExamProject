@@ -17,11 +17,9 @@ services:
       - "8080:8080"
     depends_on:
       - productdb
-    environment:
-      - MONGO_CONNECTION_STRING=placeholder
 
   vault:
-    image: vault:1.13.3
+    image: hashicorp/vault
     healthcheck:
       retries: 5
     restart: always
