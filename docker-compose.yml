@@ -66,34 +66,7 @@ services:
       - 8200:8200
     environment:
       VAULT_ADDR: 'http://0.0.0.0:8200'
-      VAULT_LOCAL_CONFIG: >
-        {
-          "listener": [
-            {
-              "tcp": {
-                "address": "0.0.0.0:8200",
-                "tls_disable": "1"
-              }
-            }
-          ],
-          "ui": true,
-          "storage": {
-            "file": {
-              "path": "/vault/data"
-            }
-          },
-          "rate_limit": {
-            "default": {
-              "rate": 500,
-              "burst": 1000
-            }
-          },
-          "audit": {
-            "file": {
-              "file_path": "/vault/logs/audit.log"
-            }
-          }
-        }
+      VAULT_LOCAL_CONFIG: '{"listener": [{"tcp": {"address": "0.0.0.0:8200","tls_disable": "1"}}],"ui": true,"storage": {"file": {"path": "/vault/data"}},"rate_limit": {"default": {"rate": 500,"burst": 1000},"path_rate_limiter": {"/v1/secret/data/*": {"rate": 1000,"burst": 2000},"/v1/sys/*": {"rate": 100,"burst": 200}}},"audit": {"file": {"file_path": "/vault/logs/audit.log"}}}'
     cap_add:
       - IPC_LOCK
     volumes:
