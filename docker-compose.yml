@@ -1,3 +1,5 @@
+version: '3.7'
+
 services:
   productdb:
     image: 'mongo:latest'
@@ -63,14 +65,42 @@ services:
     ports:
       - 8200:8200
     environment:
-      VAULT_ADDR: 'https://0.0.0.0:8200'
-      VAULT_LOCAL_CONFIG: '{"listener": [{"tcp":{"address": "0.0.0.0:8200","tls_disable":"1"}}], "ui": true, "storage": [{"file": {"path":"/vault/data"}}]}'
+      VAULT_ADDR: 'http://0.0.0.0:8200'
+      VAULT_LOCAL_CONFIG: >
+        {
+          "listener": [
+            {
+              "tcp": {
+                "address": "0.0.0.0:8200",
+                "tls_disable": "1"
+              }
+            }
+          ],
+          "ui": true,
+          "storage": {
+            "file": {
+              "path": "/vault/data"
+            }
+          },
+          "rate_limit": {
+            "default": {
+              "rate": 500,
+              "burst": 1000
+            }
+          },
+          "audit": {
+            "file": {
+              "file_path": "/vault/logs/audit.log"
+            }
+          }
+        }
     cap_add:
       - IPC_LOCK
     volumes:
       - ./vault/config:/vault/config
       - ./vault/data:/vault/data
-    command: vault server -config vault/config/local.json
+      - ./vault/logs:/vault/logs
+    command: vault server -config=/vault/config/local.json
 
   userdb:
     image: postgres
@@ -98,3 +128,5 @@ volumes:
   categorydb_data: {}
   seq_data: {}
   postgres-data: {}
+  vault_data: {}
+  vault_logs: {}
