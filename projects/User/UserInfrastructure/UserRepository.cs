@@ -25,7 +25,7 @@ namespace UserInfrastructure
 
         private string GetConnectionStringFromVault()
         {
-            var connection = _vaultFactory.GetConnectionStringUser().Result;
+            var connection = _vaultFactory.GetConnectionStringUser();
             return connection;
         }
         private IDbConnection CreateConnection()

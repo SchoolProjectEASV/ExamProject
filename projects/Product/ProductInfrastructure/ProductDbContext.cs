@@ -36,7 +36,7 @@ namespace ProductInfrastructure
 
         public string GetConnectionString()
         {
-            _connectionString = _vaultFactory.GetConnectionStringProduct().Result;
+            _connectionString = _vaultFactory.GetConnectionStringProduct();
             return _connectionString;
         }
 

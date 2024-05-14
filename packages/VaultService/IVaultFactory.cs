@@ -1,9 +1,9 @@
 ﻿
 public interface IVaultFactory
 {
-    public Task<string> GetConnectionStringProduct();
+    public string GetConnectionStringProduct();
 
-    public Task<string> GetConnectionStringCategory();
-    public Task<string> GetConnectionStringUser();
+    public string GetConnectionStringCategory();
+    public string GetConnectionStringUser();
 
 }
