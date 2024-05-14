@@ -31,7 +31,6 @@ namespace OrderInfrastructure
                         user_id INTEGER NOT NULL,
                         total_price DECIMAL(18, 2) NOT NULL,
                         shipping_address VARCHAR(255) NOT NULL,
-                        products JSONB
                     );
                     ";
 
@@ -61,7 +60,7 @@ namespace OrderInfrastructure
         {
             using (var connection = CreateConnection())
             {
-                var query = "INSERT INTO orders (created_at, user_id, total_price, shipping_address, products) VALUES (@CreatedAt, @UserId, @TotalPrice, @ShippingAddress, @Products) RETURNING id;";
+                var query = "INSERT INTO orders (created_at, user_id, total_price, shipping_address, ) VALUES (@CreatedAt, @UserId, @TotalPrice, @ShippingAddress) RETURNING id;";
                 var orderId = await connection.ExecuteScalarAsync<int>(query, order);
                 return orderId;
             }
@@ -82,7 +81,7 @@ namespace OrderInfrastructure
         {
             using (var connection = CreateConnection())
             {
-                var query = "UPDATE orders SET created_at = @CreatedAt, user_id = @UserId, total_price = @TotalPrice, shipping_address = @ShippingAddress, products = @Products WHERE id = @Id";
+                var query = "UPDATE orders SET created_at = @CreatedAt, user_id = @UserId, total_price = @TotalPrice, shipping_address = @ShippingAddress WHERE id = @Id";
                 var affectedRows = await connection.ExecuteAsync(query, order);
                 return affectedRows > 0;
             }

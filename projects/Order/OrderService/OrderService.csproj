@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OrderApplication\OrderApplication.csproj" />
-    <ProjectReference Include="..\OrderInfrastructure\OrderInfrastructure.csproj" />
   </ItemGroup>
 
 </Project>

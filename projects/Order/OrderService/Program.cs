@@ -17,6 +17,9 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderService, OrderApplication.OrderService>();
 #endregion
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddSingleton(connectionString);
+
 #region AutoMapper
 var mapper = new MapperConfiguration(config =>
 {

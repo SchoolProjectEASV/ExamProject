@@ -12,6 +12,5 @@ namespace OrderApplication.DTO
         public int UserId { get; set; }
         public decimal TotalPrice { get; set; }
         public string ShippingAddress { get; set; }
-        public List<Product> Products { get; set; }
     }
 }
