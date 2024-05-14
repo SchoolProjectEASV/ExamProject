@@ -4,6 +4,7 @@ using UserApplication;
 using UserApplication.DTO;
 using UserInfrastructure;
 using UserInfrastructure.Interfaces;
+using VaultService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,12 +14,14 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddSingleton(connectionString); // Add this line
-#region DI
 
+builder.Services.Configure<VaultSettings>(builder.Configuration.GetSection("Vault"));
+
+
+#region DI
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserApplication.UserService>();
+builder.Services.AddScoped<IVaultFactory, VaultFactory>();
 #endregion
 
 #region AutoMapper

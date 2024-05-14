@@ -13,6 +13,7 @@ COPY ["projects/User/UserService/UserService.csproj", "projects/User/UserService
 COPY ["projects/User/UserApplication/UserApplication.csproj", "projects/User/UserApplication/"]
 COPY ["projects/User/UserInfrastructure/UserInfrastructure.csproj", "projects/User/UserInfrastructure/"]
 COPY ["Domain/Domain.csproj", "Domain/"]
+COPY ["packages/VaultService/VaultService.csproj", "packages/VaultService/"]
 RUN dotnet restore "./projects/User/UserService/UserService.csproj"
 COPY . .
 WORKDIR "/src/projects/User/UserService"

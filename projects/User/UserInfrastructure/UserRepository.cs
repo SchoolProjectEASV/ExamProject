@@ -13,13 +13,21 @@ namespace UserInfrastructure
     {
         private readonly string _connectionString;
 
-        public UserRepository(string connectionString)
+        private IVaultFactory _vaultFactory;
+
+        public UserRepository( IVaultFactory vaultFactory)
         {
-            _connectionString = connectionString;
+            _vaultFactory = vaultFactory;
+            _connectionString = GetConnectionStringFromVault();
             CreateUsersTableIfNotExists();
         }
 
 
+        private string GetConnectionStringFromVault()
+        {
+            var connection = _vaultFactory.GetConnectionStringUser().Result;
+            return connection;
+        }
         private IDbConnection CreateConnection()
         {
             return new NpgsqlConnection(_connectionString);
@@ -40,6 +48,8 @@ namespace UserInfrastructure
                 connection.Execute(query);
             }
         }
+
+
 
 
             public async Task<IEnumerable<User>> GetAllUsersAsync()

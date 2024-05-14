@@ -27,18 +27,29 @@ public class VaultFactory : IVaultFactory
 
         _vaultSettings = data.ToObject<VaultSettings>();
 
-        return _vaultSettings.CONNECTIONSTRING_CATEGORY_MONGODB;
+        return _vaultSettings.CONNECTIONSTRING_MONGODB;
 
     }
 
     public async Task<string> GetConnectionStringProduct()
     {
-        VaultResponse<KvV2ReadResponse> response = vaultClient.Secrets.KvV2Read("secretPolicy", "connectionstring");
+        VaultResponse<KvV2ReadResponse> response = vaultClient.Secrets.KvV2Read("secret", "connectionstring");
 
         JObject data = (JObject) response.Data.Data;
 
         _vaultSettings = data.ToObject<VaultSettings>();
 
-        return _vaultSettings.CONNECTIONSTRING_PRODUCT_MONGODB;
+        return _vaultSettings.CONNECTIONSTRING_MONGODB;
+    }
+
+    public async Task<string> GetConnectionStringUser()
+    {
+        VaultResponse<KvV2ReadResponse> response = vaultClient.Secrets.KvV2Read("secretUser", "connectionstring");
+
+        JObject data = (JObject) response.Data.Data;
+
+        _vaultSettings = data.ToObject<VaultSettings>();
+
+        return _vaultSettings.CONNECTIONSTRING_USER_POSTGRESS;
     }
 }
