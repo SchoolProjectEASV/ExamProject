@@ -1,5 +1,4 @@
-﻿using Amazon.Runtime;
-using AutoMapper;
+﻿using AutoMapper;
 using CategoryApplication.DTO;
 using CategoryApplication.Interfaces;
 using CategoryInfrastructure.Interfaces;
@@ -81,6 +80,18 @@ namespace CategoryApplication
             updatedCategory._id = new MongoDB.Bson.ObjectId(id);
 
             return await _categoryRepository.UpdateCategoryAsync(id, updatedCategory);
+        }
+
+        public async Task RemoveProductFromAllCategories(string productId)
+        {
+            var categories = await _categoryRepository.GetAllCategoriesAsync();
+            foreach (var category in categories)
+            {
+                if (category.ProductIds.Contains(new MongoDB.Bson.ObjectId(productId)))
+                {
+                    await _categoryRepository.RemoveProductFromCategory(category._id.ToString(), productId);
+                }
+            }
         }
     }
 }
