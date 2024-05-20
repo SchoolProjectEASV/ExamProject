@@ -1,8 +1,11 @@
-﻿using AutoMapper;
+﻿using Amazon.Runtime;
+using AutoMapper;
 using Domain.MongoEntities;
+using Microsoft.Extensions.Configuration;
 using ProductApplication.DTO;
 using ProductApplication.Interfaces;
 using ProductInfrastructure.Interfaces;
+using System.Net.Http;
 
 namespace ProductApplication
 {
@@ -13,12 +16,16 @@ namespace ProductApplication
     {
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
+        private readonly string _categoryServiceUrl;
+        private readonly HttpClient _httpClient;
 
-
-        public ProductService(IProductRepository productRepository, IMapper mapper)
+        public ProductService(IProductRepository productRepository, IMapper mapper, IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _productRepository = productRepository;
             _mapper = mapper;
+            _httpClient = httpClientFactory.CreateClient();
+            _categoryServiceUrl = configuration["CategoryService:Url"];
+            _httpClient.BaseAddress = new Uri(_categoryServiceUrl);
         }
 
         public async Task<bool> AddProductAsync(CreateProductDTO createProductDTO)
@@ -31,6 +38,18 @@ namespace ProductApplication
 
         public async Task<bool> DeleteProductAsync(string id)
         {
+            var product = await _productRepository.GetProductByIdAsync(id);
+            if (product == null)
+            {
+                throw new KeyNotFoundException($"Product with the id {id} was not found");
+            }
+
+            var response = await _httpClient.DeleteAsync($"/Category/removeProduct/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Failed to remove product with id {id}");
+            }
+
             return await _productRepository.DeleteProductAsync(id);
         }
 

@@ -1,3 +1,5 @@
+version: '3.7'
+
 services:
   productdb:
     image: 'mongo:latest'
@@ -38,6 +40,7 @@ services:
     depends_on:
       - orderdb
 
+
   categoryservice:
     image: categoryservice
     build:
@@ -73,14 +76,15 @@ services:
     ports:
       - 8200:8200
     environment:
-      VAULT_ADDR: 'https://0.0.0.0:8200'
-      VAULT_LOCAL_CONFIG: '{"listener": [{"tcp":{"address": "0.0.0.0:8200","tls_disable":"1"}}], "ui": true, "storage": [{"file": {"path":"/vault/data"}}]}'
+      VAULT_ADDR: 'http://0.0.0.0:8200'
+      VAULT_LOCAL_CONFIG: '{"listener": [{"tcp": {"address": "0.0.0.0:8200","tls_disable": "1"}}],"ui": true,"storage": {"file": {"path": "/vault/data"}},"rate_limit": {"default": {"rate": 500,"burst": 1000},"path_rate_limiter": {"/v1/secret/data/*": {"rate": 1000,"burst": 2000},"/v1/sys/*": {"rate": 100,"burst": 200}}},"audit": {"file": {"file_path": "/vault/logs/audit.log"}}}'
     cap_add:
       - IPC_LOCK
     volumes:
       - ./vault/config:/vault/config
       - ./vault/data:/vault/data
-    command: vault server -config vault/config/local.json
+      - ./vault/logs:/vault/logs
+    command: vault server -config=/vault/config/local.json
 
   orderdb:
     image: postgres
@@ -93,8 +97,32 @@ services:
     volumes:
       - orderdb_data:/var/lib/postgresql/data
 
+
+  userdb:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  userservice:
+    image: userservice
+    build:
+      context: .
+      dockerfile: ./projects/User/UserService/Dockerfile
+    ports:
+      - "8070:8080"
+      - "8445:443"
+    depends_on:
+      - userdb
+
 volumes:
-  mongodb_data:
-  categorydb_data:
-  seq_data:
-  orderdb_data:
+  mongodb_data: {}
+  categorydb_data: {}
+  seq_data: {}
+  postgres-data: {}
+  vault_data: {}
+  vault_logs: {}

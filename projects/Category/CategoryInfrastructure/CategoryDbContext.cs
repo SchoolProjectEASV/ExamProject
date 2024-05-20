@@ -29,7 +29,7 @@ namespace CategoryInfrastructure
 
         public string GetConnectionString()
         {
-            _connectionString = _vaultFactory.GetConnectionStringCategory().Result;
+            _connectionString = _vaultFactory.GetConnectionStringCategory();
             return _connectionString;
         }
 

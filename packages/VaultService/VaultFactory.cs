@@ -4,11 +4,14 @@ using Vault;
 using Vault.Client;
 using Vault.Model;
 using VaultService;
+using Polly;
+using Polly.Retry;
 
 public class VaultFactory : IVaultFactory
 {
     private VaultClient vaultClient;
-    private  VaultSettings _vaultSettings;
+    private VaultSettings _vaultSettings;
+    private readonly AsyncRetryPolicy _retryPolicy;
 
     public VaultFactory(IOptions<VaultSettings> settings)
     {
@@ -17,28 +20,39 @@ public class VaultFactory : IVaultFactory
         vaultClient = new VaultClient(vaultConfiguration);
         var auth = vaultClient.Auth.UserpassLogin(_vaultSettings.UserPass.Username, new UserpassLoginRequest(_vaultSettings.UserPass.Password));
         vaultClient.SetToken(auth.ResponseAuth.ClientToken);
+        _retryPolicy = PollyPolicy.GetRetryPolicy();
     }
 
-    public async Task<string> GetConnectionStringCategory()
+    public string GetConnectionStringCategory()
     {
-        VaultResponse<KvV2ReadResponse> response = vaultClient.Secrets.KvV2Read("secret", "connectionstring");
-        
-        JObject data = (JObject)response.Data.Data;
-
-        _vaultSettings = data.ToObject<VaultSettings>();
-
-        return _vaultSettings.CONNECTIONSTRING_CATEGORY_MONGODB;
-
+        return _retryPolicy.ExecuteAsync(async () =>
+        {
+            VaultResponse<KvV2ReadResponse> response = await vaultClient.Secrets.KvV2ReadAsync("secret", "connectionstring");
+            JObject data = (JObject)response.Data.Data;
+            _vaultSettings = data.ToObject<VaultSettings>();
+            return _vaultSettings.CONNECTIONSTRING_MONGODB;
+        }).GetAwaiter().GetResult();
     }
 
-    public async Task<string> GetConnectionStringProduct()
+    public string GetConnectionStringProduct()
     {
-        VaultResponse<KvV2ReadResponse> response = vaultClient.Secrets.KvV2Read("secretPolicy", "connectionstring");
+        return _retryPolicy.ExecuteAsync(async () =>
+        {
+            VaultResponse<KvV2ReadResponse> response = await vaultClient.Secrets.KvV2ReadAsync("secret", "connectionstring");
+            JObject data = (JObject)response.Data.Data;
+            _vaultSettings = data.ToObject<VaultSettings>();
+            return _vaultSettings.CONNECTIONSTRING_MONGODB;
+        }).GetAwaiter().GetResult();
+    }
 
-        JObject data = (JObject) response.Data.Data;
-
-        _vaultSettings = data.ToObject<VaultSettings>();
-
-        return _vaultSettings.CONNECTIONSTRING_PRODUCT_MONGODB;
+    public string GetConnectionStringUser()
+    {
+        return _retryPolicy.ExecuteAsync(async () =>
+        {
+            VaultResponse<KvV2ReadResponse> response = await vaultClient.Secrets.KvV2ReadAsync("secretUser", "connectionstring");
+            JObject data = (JObject)response.Data.Data;
+            _vaultSettings = data.ToObject<VaultSettings>();
+            return _vaultSettings.CONNECTIONSTRING_USER_POSTGRESS;
+        }).GetAwaiter().GetResult();
     }
 }
