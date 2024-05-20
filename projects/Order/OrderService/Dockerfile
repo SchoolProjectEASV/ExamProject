@@ -13,6 +13,7 @@ COPY ["projects/Order/OrderService/OrderService.csproj", "projects/Order/OrderSe
 COPY ["projects/Order/OrderApplication/OrderApplication.csproj", "projects/Order/OrderApplication/"]
 COPY ["Domain/Domain.csproj", "Domain/"]
 COPY ["projects/Order/OrderInfrastructure/OrderInfrastructure.csproj", "projects/Order/OrderInfrastructure/"]
+COPY ["packages/VaultService/VaultService.csproj", "packages/VaultService/"]
 RUN dotnet restore "./projects/Order/OrderService/OrderService.csproj"
 COPY . .
 WORKDIR "/src/projects/Order/OrderService"
