@@ -15,6 +15,12 @@ namespace VaultService
 
         public string CONNECTIONSTRING_CATEGORY_MONGODB { get; set; }
 
+        public string CONNECTIONSTRING_USER_POSTGRESS { get; set; }
+
+        public string CONNECTIONSTRING_MONGODB { get; set; }
+
+        public string CONNECTIONSTRING_ORDER_POSTGRESS { get; set; }
+
         public class UserPassSettings
         {
             public string Username { get; set; }

@@ -52,6 +52,10 @@ builder.Services.AddOpenTelemetry().Setup("ProductService");
 builder.Services.AddSingleton(TracerProvider.Default.GetTracer("ProductService"));
 #endregion
 
+#region httpclient
+builder.Services.AddHttpClient();
+#endregion
+
 builder.Services.AddLogging(logBuilder =>
 {
     logBuilder.AddSeq("http://seq:5341");

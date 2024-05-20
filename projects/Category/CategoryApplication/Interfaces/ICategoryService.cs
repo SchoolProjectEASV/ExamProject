@@ -57,6 +57,14 @@ namespace CategoryApplication.Interfaces
         /// <param name="productId"></param>
         /// <returns></returns>
         Task RemoveProductFromCategory(string categoryId, string productId);
+        /// <summary>
+        /// Removes a product from any category it is added to
+        /// Used when deleting a product to ensure it is deleted from the categories it is added to
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns></returns>
+        Task RemoveProductFromAllCategories(string productId);
+
 
     }
 }

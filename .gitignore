@@ -486,3 +486,4 @@ $RECYCLE.BIN/
 projects/Product/ProductService/appsettings.json
 projects/Category/CategoryService/appsettings.json
 projects/Order/OrderService/appsettings.json
+projects/User/UserService/appsettings.json

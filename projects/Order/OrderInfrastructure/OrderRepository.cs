@@ -8,18 +8,25 @@ namespace OrderInfrastructure
 {
     public class OrderRepository : IOrderRepository
     {
-        //private readonly string _connectionString;
-        public OrderRepository(/*string connectionString*/)
+
+        private IVaultFactory _vaultFactory;
+
+        public OrderRepository(IVaultFactory vaultFactory)
         {
-            //_connectionString = connectionString;
             CreateOrderTableIfNotExists();
+            _vaultFactory = vaultFactory;
         }
 
         private IDbConnection CreateConnection()
         {
-            return new NpgsqlConnection("Host=orderdb;Port=5432;Database=Order_db;User ID=postgres;Password=SuperSecret7!");
+            return new NpgsqlConnection(GetConnectionStringFromVault());
         }
 
+        private string GetConnectionStringFromVault()
+        {
+            var connection = _vaultFactory.GetConnectionStringOrder();
+            return connection;
+        }
         private void CreateOrderTableIfNotExists()
         {
             using (var connection = CreateConnection())

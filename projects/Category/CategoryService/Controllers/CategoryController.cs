@@ -186,5 +186,22 @@ namespace CategoryService.Controllers
                 return BadRequest(new { Message = "Failed to remove product from category.", Error = ex.Message });
             }
         }
+
+        [HttpDelete]
+        [Route("removeProduct/{productId}")]
+        public async Task<IActionResult> RemoveProductFromAllCategories(string productId)
+        {
+            try
+            {
+                await _categoryService.RemoveProductFromAllCategories(productId);
+                Log.Information("Product with id {ProductId} removed from all categories", productId);
+                return Ok(new { Message = "Product removed from all categories successfully." });
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Failed to remove product with id {ProductId} from all categories", productId);
+                return BadRequest(new { Message = "Failed to remove product from all categories.", Error = ex.Message });
+            }
+        }
     }
 }
