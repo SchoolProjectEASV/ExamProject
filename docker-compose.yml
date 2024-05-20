@@ -30,6 +30,17 @@ services:
     depends_on:
       - productdb
 
+  orderservice:
+    image: orderservice
+    build:
+      context: .
+      dockerfile: ./projects/Order/OrderService/Dockerfile
+    ports:
+      - "8091:8080"
+    depends_on:
+      - orderdb
+
+
   categoryservice:
     image: categoryservice
     build:
@@ -75,6 +86,18 @@ services:
       - ./vault/logs:/vault/logs
     command: vault server -config=/vault/config/local.json
 
+  orderdb:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: SuperSecret7!
+      POSTGRES_DB: Order_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - orderdb_data:/var/lib/postgresql/data
+
+
   userdb:
     image: postgres
     restart: always
@@ -101,5 +124,6 @@ volumes:
   categorydb_data: {}
   seq_data: {}
   postgres-data: {}
+  orderdb_data: {}
   vault_data: {}
   vault_logs: {}

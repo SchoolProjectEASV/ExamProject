@@ -15,14 +15,9 @@ namespace ProductService.Controllers
     {
         private readonly IProductService _productService;
 
-        private readonly IVaultFactory vaultFactory;
-
-            
-
-        public ProductController(IProductService productService, IVaultFactory vaultFactory)
+        public ProductController(IProductService productService)
         {
             _productService = productService;
-            this.vaultFactory = vaultFactory;
         }
 
         [HttpPost]

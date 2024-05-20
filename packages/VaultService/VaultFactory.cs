@@ -55,4 +55,15 @@ public class VaultFactory : IVaultFactory
             return _vaultSettings.CONNECTIONSTRING_USER_POSTGRESS;
         }).GetAwaiter().GetResult();
     }
+
+    public string GetConnectionStringOrder()
+    {
+        return _retryPolicy.ExecuteAsync(async () =>
+        {
+            VaultResponse<KvV2ReadResponse> response = await vaultClient.Secrets.KvV2ReadAsync("secretOrder", "connectionstring");
+            JObject data = (JObject)response.Data.Data;
+            _vaultSettings = data.ToObject<VaultSettings>();
+            return _vaultSettings.CONNECTIONSTRING_ORDER_POSTGRESS;
+        }).GetAwaiter().GetResult();
+    }
 }
