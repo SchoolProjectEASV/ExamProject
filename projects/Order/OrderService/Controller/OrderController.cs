@@ -42,14 +42,14 @@ namespace OrderService.Controller
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateOrder(int id, [FromBody] Order order)
+        public async Task<IActionResult> UpdateOrder(int id, [FromBody] UpdateOrderDTO updateOrderDTO)
         {
-            if (id != order.Id)
+            if (id != updateOrderDTO.Id)
             {
                 return BadRequest();
             }
 
-            var success = await _orderService.UpdateOrderAsync(order);
+            var success = await _orderService.UpdateOrderAsync(updateOrderDTO);
             if (!success)
             {
                 return NotFound();

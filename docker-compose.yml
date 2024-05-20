@@ -89,7 +89,7 @@ services:
       POSTGRES_PASSWORD: SuperSecret7!
       POSTGRES_DB: Order_db
     ports:
-      - "5431:5431"
+      - "5433:5432"
     volumes:
       - orderdb_data:/var/lib/postgresql/data
 

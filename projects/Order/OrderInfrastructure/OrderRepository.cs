@@ -8,16 +8,16 @@ namespace OrderInfrastructure
 {
     public class OrderRepository : IOrderRepository
     {
-        private readonly string _connectionString;
-        public OrderRepository(string connectionString)
+        //private readonly string _connectionString;
+        public OrderRepository(/*string connectionString*/)
         {
-            _connectionString = connectionString;
+            //_connectionString = connectionString;
             CreateOrderTableIfNotExists();
         }
 
         private IDbConnection CreateConnection()
         {
-            return new NpgsqlConnection(_connectionString);
+            return new NpgsqlConnection("Host=orderdb;Port=5432;Database=Order_db;User ID=postgres;Password=SuperSecret7!");
         }
 
         private void CreateOrderTableIfNotExists()
@@ -30,7 +30,7 @@ namespace OrderInfrastructure
                         created_at TIMESTAMP NOT NULL,
                         user_id INTEGER NOT NULL,
                         total_price DECIMAL(18, 2) NOT NULL,
-                        shipping_address VARCHAR(255) NOT NULL,
+                        shipping_address VARCHAR(255) NOT NULL
                     );
                     ";
 
@@ -60,7 +60,7 @@ namespace OrderInfrastructure
         {
             using (var connection = CreateConnection())
             {
-                var query = "INSERT INTO orders (created_at, user_id, total_price, shipping_address, ) VALUES (@CreatedAt, @UserId, @TotalPrice, @ShippingAddress) RETURNING id;";
+                var query = "INSERT INTO orders (created_at, user_id, total_price, shipping_address ) VALUES (@CreatedAt, @UserId, @TotalPrice, @ShippingAddress) RETURNING id;";
                 var orderId = await connection.ExecuteScalarAsync<int>(query, order);
                 return orderId;
             }
@@ -81,7 +81,7 @@ namespace OrderInfrastructure
         {
             using (var connection = CreateConnection())
             {
-                var query = "UPDATE orders SET created_at = @CreatedAt, user_id = @UserId, total_price = @TotalPrice, shipping_address = @ShippingAddress WHERE id = @Id";
+                var query = $"UPDATE orders SET user_id = @UserId, total_price = @TotalPrice, shipping_address = @ShippingAddress WHERE id = {order.Id}";
                 var affectedRows = await connection.ExecuteAsync(query, order);
                 return affectedRows > 0;
             }

@@ -6,6 +6,7 @@ using OrderInfrastructure.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllers();
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -17,13 +18,12 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderService, OrderApplication.OrderService>();
 #endregion
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddSingleton(connectionString);
 
 #region AutoMapper
 var mapper = new MapperConfiguration(config =>
 {
     config.CreateMap<AddOrderDTO, Domain.Order>();
+    config.CreateMap<UpdateOrderDTO, Domain.Order>();
 }).CreateMapper();
 builder.Services.AddSingleton(mapper);
 #endregion

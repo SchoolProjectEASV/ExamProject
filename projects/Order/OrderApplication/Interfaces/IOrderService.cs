@@ -14,6 +14,6 @@ namespace OrderApplication.Interfaces
         Task<Order> GetOrderByIdAsync(int id);
         Task<int> AddOrderAsync(AddOrderDTO orderDTO);
         Task<bool> DeleteOrderAsync(int id);
-        Task<bool> UpdateOrderAsync(Order order);
+        Task<bool> UpdateOrderAsync(UpdateOrderDTO updateOrderDTO);
     }
 }
