@@ -6,4 +6,7 @@ public interface IVaultFactory
     public string GetConnectionStringCategory();
     public string GetConnectionStringUser();
 
+    public string GetConnectionStringOrder();
+
+
 }
