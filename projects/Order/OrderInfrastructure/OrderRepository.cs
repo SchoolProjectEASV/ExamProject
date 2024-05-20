@@ -11,15 +11,18 @@ namespace OrderInfrastructure
 
         private IVaultFactory _vaultFactory;
 
+        private readonly string _connectionString;
+
         public OrderRepository(IVaultFactory vaultFactory)
         {
-            CreateOrderTableIfNotExists();
             _vaultFactory = vaultFactory;
+            _connectionString = GetConnectionStringFromVault();
+            CreateOrderTableIfNotExists();
         }
 
         private IDbConnection CreateConnection()
         {
-            return new NpgsqlConnection(GetConnectionStringFromVault());
+            return new NpgsqlConnection(_connectionString);
         }
 
         private string GetConnectionStringFromVault()
