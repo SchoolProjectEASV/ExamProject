@@ -1,18 +1,12 @@
 using AutoMapper;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using ProductApplication;
 using ProductApplication.DTO;
 using ProductApplication.Interfaces;
 using ProductInfrastructure;
 using ProductInfrastructure.Interfaces;
-using System.Diagnostics.Metrics;
-using Domain;
 using VaultService;
 using TracingService;
 using OpenTelemetry.Trace;
 using Serilog;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 var builder = WebApplication.CreateBuilder(args);
 

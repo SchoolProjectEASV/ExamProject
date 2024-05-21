@@ -2,7 +2,6 @@
 using Domain;
 using OrderApplication.DTO;
 using OrderApplication.Interfaces;
-using OrderInfrastructure;
 using OrderInfrastructure.Interfaces;
 
 namespace OrderApplication

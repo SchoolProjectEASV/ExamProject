@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Domain.PostgressEntities;
 using UserApplication.DTO;
 using UserApplication;
+using Serilog;
 
 namespace UserService.Controllers
 {
@@ -21,57 +22,111 @@ namespace UserService.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
-            var users = await _userService.GetAllUsersAsync();
-            return Ok(users);
+            try
+            {
+                var users = await _userService.GetAllUsersAsync();
+                Log.Information("Fetched users", users);
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error fetching users: {ErrorMessage}", ex.Message);
+                return StatusCode(500, new { Message = "Error fetching users", Error = ex.Message });
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
-            var user = await _userService.GetUserByIdAsync(id);
-            if (user == null)
+            try
             {
-                return NotFound();
-            }
+                var user = await _userService.GetUserByIdAsync(id);
+                if (user == null)
+                {
+                    Log.Warning("User not found with ID: {UserId}", id);
+                    return NotFound(new { Message = "User not found" });
+                }
 
-            return Ok(user);
+                Log.Information("User found: {UserId}", id);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error fetching user by ID: {UserId}, Error: {ErrorMessage}", id, ex.Message);
+                return StatusCode(500, new { Message = "Error fetching user", Error = ex.Message });
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> AddUser([FromBody] AddUserDTO userDTO)
         {
-            var userId = await _userService.AddUserAsync(userDTO);
-            return CreatedAtAction(nameof(GetUserById), new { id = userId }, userId);
-        }
+            if (!ModelState.IsValid)
+            {
+                Log.Warning("Invalid model state for adding user");
+                return BadRequest(ModelState);
+            }
 
+            try
+            {
+                var userId = await _userService.AddUserAsync(userDTO);
+                Log.Information("User added successfully: {UserId}", userId);
+                return CreatedAtAction(nameof(GetUserById), new { id = userId }, userId);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error adding user: {ErrorMessage}", ex.Message);
+                return StatusCode(500, new { Message = "Error adding user", Error = ex.Message });
+            }
+        }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] User user)
         {
             if (id != user.Id)
             {
-                return BadRequest();
+                Log.Warning("User ID mismatch for update. Provided ID: {UserId}, User ID: {ProvidedUserId}", id, user.Id);
+                return BadRequest(new { Message = "User ID mismatch" });
             }
 
-            var success = await _userService.UpdateUserAsync(user);
-            if (!success)
+            try
             {
-                return NotFound();
-            }
+                var success = await _userService.UpdateUserAsync(user);
+                if (!success)
+                {
+                    Log.Warning("User not found for update with ID: {UserId}", id);
+                    return NotFound(new { Message = "User not found" });
+                }
 
-            return NoContent();
+                Log.Information("User updated successfully: {UserId}", id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error updating user: {UserId}, Error: {ErrorMessage}", id, ex.Message);
+                return StatusCode(500, new { Message = "Error updating user", Error = ex.Message });
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var success = await _userService.DeleteUserAsync(id);
-            if (!success)
+            try
             {
-                return NotFound();
-            }
+                var success = await _userService.DeleteUserAsync(id);
+                if (!success)
+                {
+                    Log.Warning("User not found for deletion with ID: {UserId}", id);
+                    return NotFound(new { Message = "User not found" });
+                }
 
-            return NoContent();
+                Log.Information("User deleted successfully: {UserId}", id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error deleting user: {UserId}, Error: {ErrorMessage}", id, ex.Message);
+                return StatusCode(500, new { Message = "Error deleting user", Error = ex.Message });
+            }
         }
     }
 }

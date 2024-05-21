@@ -1,11 +1,9 @@
-﻿using Amazon.Runtime;
-using AutoMapper;
+﻿using AutoMapper;
 using Domain.MongoEntities;
 using Microsoft.Extensions.Configuration;
 using ProductApplication.DTO;
 using ProductApplication.Interfaces;
 using ProductInfrastructure.Interfaces;
-using System.Net.Http;
 
 namespace ProductApplication
 {

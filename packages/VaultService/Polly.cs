@@ -1,8 +1,6 @@
 ﻿using Polly;
 using Polly.RateLimit;
 using Polly.Retry;
-using System;
-using System.Net.Http;
 
 public static class PollyPolicy
 {
