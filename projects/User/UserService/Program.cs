@@ -1,5 +1,8 @@
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
+using OpenTelemetry.Trace;
+using Serilog;
+using TracingService;
 using UserApplication;
 using UserApplication.DTO;
 using UserInfrastructure;
@@ -31,6 +34,21 @@ var mapper = new MapperConfiguration(config =>
     config.CreateMap<AddUserDTO, Domain.PostgressEntities.User>();
 }).CreateMapper();
 builder.Services.AddSingleton(mapper);
+#endregion
+
+
+#region Logging
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .Enrich.FromLogContext()
+    .WriteTo.Seq("http://seq:5341")
+    .WriteTo.Console()
+    .CreateLogger();
+#endregion
+
+#region
+builder.Services.AddOpenTelemetry().Setup("UserService");
+builder.Services.AddSingleton(TracerProvider.Default.GetTracer("UserService"));
 #endregion
 
 var app = builder.Build();

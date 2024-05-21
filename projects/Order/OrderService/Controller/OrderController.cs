@@ -1,9 +1,9 @@
-﻿using Domain;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OrderApplication.DTO;
 using OrderApplication.Interfaces;
+using Serilog;
 
-namespace OrderService.Controller
+namespace OrderService.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -19,26 +19,61 @@ namespace OrderService.Controller
         [HttpGet]
         public async Task<IActionResult> GetAllOrders()
         {
-            var orders = await _orderService.GetAllOrdersAsync();
-            return Ok(orders);
+            try
+            {
+                var orders = await _orderService.GetAllOrdersAsync();
+                Log.Information("Fetched orders", orders);
+                return Ok(orders);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error fetching orders: {ErrorMessage}", ex.Message);
+                return StatusCode(500, new { Message = "Error fetching orders", Error = ex.Message });
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOrderById(int id)
         {
-            var order = await _orderService.GetOrderByIdAsync(id);
-            if (order == null)
+            try
             {
-                return NotFound();
+                var order = await _orderService.GetOrderByIdAsync(id);
+                if (order == null)
+                {
+                    Log.Warning("Order not found with ID: {OrderId}", id);
+                    return NotFound(new { Message = "Order not found" });
+                }
+
+                Log.Information("Order found: {OrderId}", id);
+                return Ok(order);
             }
-            return Ok(order);
+            catch (Exception ex)
+            {
+                Log.Error("Error fetching order by ID: {OrderId}, Error: {ErrorMessage}", id, ex.Message);
+                return StatusCode(500, new { Message = "Error fetching order", Error = ex.Message });
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> AddOrder([FromBody] AddOrderDTO orderDTO)
         {
-            var orderId = await _orderService.AddOrderAsync(orderDTO);
-            return CreatedAtAction(nameof(GetOrderById), new { id = orderId }, orderId);
+            if (!ModelState.IsValid)
+            {
+                Log.Warning("Invalid model state for adding order");
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var orderId = await _orderService.AddOrderAsync(orderDTO);
+                Log.Information("Order added successfully: {OrderId}", orderId);
+                return CreatedAtAction(nameof(GetOrderById), new { id = orderId }, orderId);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error adding order: {ErrorMessage}", ex.Message);
+                return StatusCode(500, new { Message = "Error adding order", Error = ex.Message });
+            }
         }
 
         [HttpPut("{id}")]
@@ -46,27 +81,49 @@ namespace OrderService.Controller
         {
             if (id != updateOrderDTO.Id)
             {
-                return BadRequest();
+                Log.Warning("Order ID mismatch for update. Provided ID: {OrderId}, Update DTO ID: {UpdateOrderId}", id, updateOrderDTO.Id);
+                return BadRequest(new { Message = "Order ID mismatch" });
             }
 
-            var success = await _orderService.UpdateOrderAsync(updateOrderDTO);
-            if (!success)
+            try
             {
-                return NotFound();
+                var success = await _orderService.UpdateOrderAsync(updateOrderDTO);
+                if (!success)
+                {
+                    Log.Warning("Order not found for update with ID: {OrderId}", id);
+                    return NotFound(new { Message = "Order not found" });
+                }
+
+                Log.Information("Order updated successfully: {OrderId}", id);
+                return NoContent();
             }
-            return NoContent();
+            catch (Exception ex)
+            {
+                Log.Error("Error updating order: {OrderId}, Error: {ErrorMessage}", id, ex.Message);
+                return StatusCode(500, new { Message = "Error updating order", Error = ex.Message });
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {
-            var success = await _orderService.DeleteOrderAsync(id);
-            if (!success)
+            try
             {
-                return NotFound();
-            }
+                var success = await _orderService.DeleteOrderAsync(id);
+                if (!success)
+                {
+                    Log.Warning("Order not found for deletion with ID: {OrderId}", id);
+                    return NotFound(new { Message = "Order not found" });
+                }
 
-            return NoContent();
+                Log.Information("Order deleted successfully: {OrderId}", id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error deleting order: {OrderId}, Error: {ErrorMessage}", id, ex.Message);
+                return StatusCode(500, new { Message = "Error deleting order", Error = ex.Message });
+            }
         }
     }
 }

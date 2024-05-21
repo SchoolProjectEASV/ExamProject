@@ -10,6 +10,8 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["projects/Order/OrderService/OrderService.csproj", "projects/Order/OrderService/"]
+COPY ["packages/LoggingService/LoggingService.csproj", "packages/LoggingService/"]
+COPY ["packages/TracingService/TracingService.csproj", "packages/TracingService/"]
 COPY ["projects/Order/OrderApplication/OrderApplication.csproj", "projects/Order/OrderApplication/"]
 COPY ["Domain/Domain.csproj", "Domain/"]
 COPY ["projects/Order/OrderInfrastructure/OrderInfrastructure.csproj", "projects/Order/OrderInfrastructure/"]

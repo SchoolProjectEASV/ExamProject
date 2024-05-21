@@ -1,6 +1,5 @@
 ﻿using Domain.MongoEntities;
 using Microsoft.EntityFrameworkCore;
-using MongoDB.Driver.Core.Configuration;
 using MongoDB.EntityFrameworkCore.Extensions;
 
 namespace CategoryInfrastructure

@@ -4,7 +4,6 @@ using Vault;
 using Vault.Client;
 using Vault.Model;
 using VaultService;
-using Polly;
 using Polly.Retry;
 
 public class VaultFactory : IVaultFactory
