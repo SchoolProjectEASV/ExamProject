@@ -65,10 +65,16 @@ namespace ProductApplication
 
         public async Task<bool> UpdateProductAsync(string id, UpdateProductDTO updateProductDTO)
         {
-            var updatedProduct = _mapper.Map<Product>(updateProductDTO);
-            updatedProduct._id = new MongoDB.Bson.ObjectId(id);
+            var existingProduct = await _productRepository.GetProductByIdAsync(id);
+            if (existingProduct == null)
+            {
+                throw new KeyNotFoundException($"Product with the id {id} was not found");
+            }
 
-            return await _productRepository.UpdateProductAsync(id, updatedProduct);
+            _mapper.Map(updateProductDTO, existingProduct);
+            existingProduct._id = new MongoDB.Bson.ObjectId(id);
+
+            return await _productRepository.UpdateProductAsync(id, existingProduct);
         }
 
     }

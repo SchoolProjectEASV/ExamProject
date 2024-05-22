@@ -46,11 +46,10 @@ public class ProductServiceUnitTest
             _mockConfiguration.Object
         );
     }
-    
+
     /// <summary>
     /// Test to ensure that the AddProduct adds a new product successfully
     /// </summary>
-    
     [Fact]
     public async Task AddProductAsync_Success()
     {
@@ -201,14 +200,68 @@ public class ProductServiceUnitTest
     [Fact]
     public async Task UpdateProductAsync_Success()
     {
-       //Arrange
-      
-       //Act 
+        // Arrange
+        var productId = ObjectId.GenerateNewId().ToString();
+        var updateProductDto = new UpdateProductDTO
+        {
+            Name = "Updated Product",
+            Description = "Updated Description",
+            Price = 1,
+            Quantity = 2
+        };
 
-       //Assert
+        var existingProduct = new Product
+        {
+            _id = new ObjectId(productId),
+            Name = "Test Product",
+            Description = "Test Description",
+            Price = 1,
+            Quantity = 2,
+            CreatedAt = DateTime.UtcNow
+        };
 
+        _mockProductRepository.Setup(repo => repo.GetProductByIdAsync(productId)).ReturnsAsync(existingProduct);
+        _mockProductRepository.Setup(repo => repo.UpdateProductAsync(productId, existingProduct)).ReturnsAsync(true);
+        _mockMapper.Setup(m => m.Map(updateProductDto, existingProduct)).Callback<UpdateProductDTO, Product>((dto, product) =>
+        {
+            product.Name = dto.Name;
+            product.Description = dto.Description;
+            product.Price = dto.Price;
+            product.Quantity = dto.Quantity;
+        });
+
+        // Act
+        var result = await _productService.UpdateProductAsync(productId, updateProductDto);
+
+        // Assert
+        Assert.True(result);
+        _mockProductRepository.Verify(repo => repo.GetProductByIdAsync(productId), Times.Once);
+        _mockProductRepository.Verify(repo => repo.UpdateProductAsync(productId, existingProduct), Times.Once);
+        _mockMapper.Verify(m => m.Map(updateProductDto, existingProduct), Times.Once);
     }
+    
+    /// <summary>
+    /// Tests update product failure
+    /// </summary>
+    [Fact]
+    public async Task UpdateProductAsync_Fails()
+    {
+        // Arrange
+        var productId = ObjectId.GenerateNewId().ToString();
+        var updateProductDto = new UpdateProductDTO
+        {
+            Name = "Updated Product",
+            Description = "Updated Description",
+            Price = 79.99f,
+            Quantity = 5
+        };
 
+        _mockProductRepository.Setup(repo => repo.GetProductByIdAsync(productId)).ReturnsAsync((Product?)null);
+
+        // Act & Assert
+        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(() => _productService.UpdateProductAsync(productId, updateProductDto));
+        Assert.Equal($"Product with the id {productId} was not found", exception.Message);
+    }
 
 }
 
