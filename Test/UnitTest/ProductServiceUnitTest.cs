@@ -252,8 +252,8 @@ public class ProductServiceUnitTest
         {
             Name = "Updated Product",
             Description = "Updated Description",
-            Price = 79.99f,
-            Quantity = 5
+            Price = 1,
+            Quantity = 2
         };
 
         _mockProductRepository.Setup(repo => repo.GetProductByIdAsync(productId)).ReturnsAsync((Product?)null);
