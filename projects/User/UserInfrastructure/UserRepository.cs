@@ -12,49 +12,51 @@ namespace UserInfrastructure
 
         private IVaultFactory _vaultFactory;
 
-        public UserRepository( IVaultFactory vaultFactory)
+        public UserRepository(IVaultFactory vaultFactory)
         {
             _vaultFactory = vaultFactory;
             _connectionString = GetConnectionStringFromVault();
             CreateUsersTableIfNotExists();
         }
 
-
         private string GetConnectionStringFromVault()
         {
             var connection = _vaultFactory.GetConnectionStringUser();
             return connection;
         }
+
         private IDbConnection CreateConnection()
         {
             return new NpgsqlConnection(_connectionString);
         }
-
 
         private void CreateUsersTableIfNotExists()
         {
             using (var connection = CreateConnection())
             {
                 var query = @"
-            CREATE TABLE IF NOT EXISTS users (
-                id SERIAL PRIMARY KEY,
-                name VARCHAR(255) NOT NULL,
-                email VARCHAR(255) NOT NULL UNIQUE
-            );
-        ";
+                    CREATE TABLE IF NOT EXISTS users (
+                        id SERIAL PRIMARY KEY,
+                        name VARCHAR(255) NOT NULL,
+                        email VARCHAR(255) NOT NULL UNIQUE
+                    );";
 
                 connection.Execute(query);
             }
         }
 
-
-
-
-            public async Task<IEnumerable<User>> GetAllUsersAsync()
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
             using (var connection = CreateConnection())
             {
-                return await connection.QueryAsync<User>("SELECT * FROM users");
+                var query = @"
+                    SELECT 
+                        id, 
+                        name, 
+                        email 
+                    FROM users";
+
+                return await connection.QueryAsync<User>(query);
             }
         }
 
@@ -62,7 +64,14 @@ namespace UserInfrastructure
         {
             using (var connection = CreateConnection())
             {
-                var query = "SELECT * FROM users WHERE id = @Id";
+                var query = @"
+                    SELECT 
+                        id, 
+                        name, 
+                        email 
+                    FROM users 
+                    WHERE id = @Id";
+
                 return (await connection.QueryAsync<User>(query, new { Id = id })).FirstOrDefault();
             }
         }
@@ -71,7 +80,11 @@ namespace UserInfrastructure
         {
             using (var connection = CreateConnection())
             {
-                var query = "INSERT INTO users (name, email) VALUES (@Name, @Email) RETURNING id;";
+                var query = @"
+                    INSERT INTO users (name, email) 
+                    VALUES (@Name, @Email) 
+                    RETURNING id;";
+
                 var userId = await connection.ExecuteScalarAsync<int>(query, user);
                 return userId;
             }
@@ -81,7 +94,11 @@ namespace UserInfrastructure
         {
             using (var connection = CreateConnection())
             {
-                var query = "UPDATE users SET name = @Name, email = @Email WHERE id = @Id";
+                var query = @"
+                    UPDATE users 
+                    SET name = @Name, email = @Email 
+                    WHERE id = @Id";
+
                 var affectedRows = await connection.ExecuteAsync(query, user);
                 return affectedRows > 0;
             }

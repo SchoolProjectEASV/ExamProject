@@ -32,10 +32,13 @@ builder.Services.AddScoped<IVaultFactory, VaultFactory>();
 var mapper = new MapperConfiguration(config =>
 {
     config.CreateMap<AddUserDTO, Domain.PostgressEntities.User>();
+    config.CreateMap<Domain.PostgressEntities.User, GetUserDTO>();
     config.CreateMap<GetUserDTO, Domain.PostgressEntities.User>();
 }).CreateMapper();
 builder.Services.AddSingleton(mapper);
+
 #endregion
+
 
 
 #region Logging

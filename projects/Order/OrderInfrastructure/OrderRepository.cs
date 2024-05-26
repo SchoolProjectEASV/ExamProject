@@ -53,15 +53,34 @@ namespace OrderInfrastructure
         {
             using (var connection = CreateConnection())
             {
-                var query = "SELECT * FROM orders";
-                return await connection.QueryAsync<Order>(query);
+                var query = @"
+            SELECT 
+                id, 
+                created_at AS CreatedAt, 
+                user_id AS UserId, 
+                total_price AS TotalPrice, 
+                shipping_address AS ShippingAddress 
+            FROM orders";
+
+                var orders = await connection.QueryAsync<Order>(query);
+                return orders;
             }
         }
+
         public async Task<Order> GetOrderByIdAsync(int id)
         {
             using (var connection = CreateConnection())
             {
-                var query = "SELECT * FROM orders WHERE id = @Id";
+                var query = @"
+            SELECT 
+                id, 
+                created_at AS CreatedAt, 
+                user_id AS UserId, 
+                total_price AS TotalPrice, 
+                shipping_address AS ShippingAddress 
+            FROM orders 
+            WHERE id = @Id";
+
                 return (await connection.QueryAsync<Order>(query, new { Id = id })).FirstOrDefault();
             }
         }
@@ -71,9 +90,9 @@ namespace OrderInfrastructure
             using (var connection = CreateConnection())
             {
                 var query = @"
-                    INSERT INTO orders (created_at, user_id, total_price, shipping_address)
-                    VALUES (@CreatedAt, @UserId, @TotalPrice, @ShippingAddress)
-                    RETURNING id;";
+            INSERT INTO orders (created_at, user_id, total_price, shipping_address)
+            VALUES (@CreatedAt, @UserId, @TotalPrice, @ShippingAddress)
+            RETURNING id;";
 
                 _logger.LogInformation("Executing query: {Query} with params: {Params}", query, order);
 
@@ -115,7 +134,16 @@ namespace OrderInfrastructure
         {
             using (var connection = CreateConnection())
             {
-                var query = "SELECT * FROM orders WHERE user_id = @UserId";
+                var query = @"
+            SELECT 
+                id, 
+                created_at AS CreatedAt, 
+                user_id AS UserId, 
+                total_price AS TotalPrice, 
+                shipping_address AS ShippingAddress 
+            FROM orders 
+            WHERE user_id = @UserId";
+
                 return await connection.QueryAsync<Order>(query, new { UserId = userId });
             }
         }
