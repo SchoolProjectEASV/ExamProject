@@ -32,6 +32,7 @@ builder.Services.AddScoped<IVaultFactory, VaultFactory>();
 var mapper = new MapperConfiguration(config =>
 {
     config.CreateMap<AddUserDTO, Domain.PostgressEntities.User>();
+    config.CreateMap<GetUserDTO, Domain.PostgressEntities.User>();
 }).CreateMapper();
 builder.Services.AddSingleton(mapper);
 #endregion
@@ -51,6 +52,10 @@ builder.Services.AddOpenTelemetry().Setup("UserService");
 builder.Services.AddSingleton(TracerProvider.Default.GetTracer("UserService"));
 #endregion
 
+
+#region httpclient
+builder.Services.AddHttpClient();
+#endregion
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -15,5 +15,7 @@ namespace OrderApplication.Interfaces
         Task<int> AddOrderAsync(AddOrderDTO orderDTO);
         Task<bool> DeleteOrderAsync(int id);
         Task<bool> UpdateOrderAsync(UpdateOrderDTO updateOrderDTO);
+
+        Task<IEnumerable<Order>> GetOrdersByUserIdAsync(int userId);
     }
 }

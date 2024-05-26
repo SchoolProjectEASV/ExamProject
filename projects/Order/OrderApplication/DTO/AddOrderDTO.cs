@@ -10,7 +10,8 @@ namespace OrderApplication.DTO
     public class AddOrderDTO
     {
         public int UserId { get; set; }
-        public decimal TotalPrice { get; set; }
+        public float TotalPrice { get; set; }
         public string ShippingAddress { get; set; }
+
     }
 }

@@ -11,7 +11,7 @@ namespace UserApplication
     public interface IUserService
     {
         public Task<IEnumerable<User>> GetAllUsersAsync();
-        public Task<User> GetUserByIdAsync(int id);
+        public Task<GetUserDTO> GetUserByIdAsync(int id);
 
         public Task<int> AddUserAsync(AddUserDTO userDTO);
 

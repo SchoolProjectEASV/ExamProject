@@ -30,6 +30,7 @@ namespace UserInfrastructure
             return new NpgsqlConnection(_connectionString);
         }
 
+
         private void CreateUsersTableIfNotExists()
         {
             using (var connection = CreateConnection())

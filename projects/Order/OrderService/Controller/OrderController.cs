@@ -125,5 +125,21 @@ namespace OrderService.Controllers
                 return StatusCode(500, new { Message = "Error deleting order", Error = ex.Message });
             }
         }
+
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetOrdersByUserId(int userId)
+        {
+            try
+            {
+                var orders = await _orderService.GetOrdersByUserIdAsync(userId);
+                Log.Information("Fetched orders for user: {UserId}", userId);
+                return Ok(orders);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error fetching orders for user: {UserId}, Error: {ErrorMessage}", userId, ex.Message);
+                return StatusCode(500, new { Message = "Error fetching orders", Error = ex.Message });
+            }
+        }
     }
 }

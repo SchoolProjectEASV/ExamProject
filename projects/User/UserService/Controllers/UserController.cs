@@ -40,15 +40,15 @@ namespace UserService.Controllers
         {
             try
             {
-                var user = await _userService.GetUserByIdAsync(id);
-                if (user == null)
+                var userDto = await _userService.GetUserByIdAsync(id);
+                if (userDto == null)
                 {
                     Log.Warning("User not found with ID: {UserId}", id);
                     return NotFound(new { Message = "User not found" });
                 }
 
                 Log.Information("User found: {UserId}", id);
-                return Ok(user);
+                return Ok(userDto);
             }
             catch (Exception ex)
             {

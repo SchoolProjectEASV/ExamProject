@@ -1,4 +1,5 @@
 using AutoMapper;
+using Domain;
 using OpenTelemetry.Trace;
 using OrderApplication.DTO;
 using OrderApplication.Interfaces;
@@ -28,8 +29,8 @@ builder.Services.AddScoped<IVaultFactory, VaultFactory>();
 #region AutoMapper
 var mapper = new MapperConfiguration(config =>
 {
-    config.CreateMap<AddOrderDTO, Domain.Order>();
-    config.CreateMap<UpdateOrderDTO, Domain.Order>();
+    config.CreateMap<AddOrderDTO, Order>();
+    config.CreateMap<UpdateOrderDTO, Order>();
 }).CreateMapper();
 builder.Services.AddSingleton(mapper);
 #endregion
