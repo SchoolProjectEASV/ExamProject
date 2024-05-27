@@ -10,7 +10,7 @@ using Domain.MongoEntities;
 using System.Text.Json;
 using StackExchange.Redis;
 using System.Threading.Tasks;
-using Domain;
+using Domain.HelperEntities;
 
 namespace OrderApplication
 {

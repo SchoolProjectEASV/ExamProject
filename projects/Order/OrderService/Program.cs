@@ -1,5 +1,5 @@
 using AutoMapper;
-using Domain;
+using Domain.HelperEntities;
 using Domain.PostgressEntities;
 using OpenTelemetry.Trace;
 using OrderApplication.DTO;
@@ -34,8 +34,6 @@ var mapper = new MapperConfiguration(config =>
     config.CreateMap<AddOrderDTO, Domain.PostgressEntities.Order>();
     config.CreateMap<UpdateOrderDTO, Domain.PostgressEntities.Order>();
     config.CreateMap<OrderProductDTO, OrderProduct>();
-    config.CreateMap<Domain.PostgressEntities.Order, OrderDTO>();
-    config.CreateMap<OrderDTO, Domain.PostgressEntities.Order>();
 }).CreateMapper();
 builder.Services.AddSingleton(mapper);
 #endregion

@@ -1,4 +1,6 @@
-﻿namespace Domain.PostgressEntities
+﻿using Domain.HelperEntities;
+
+namespace Domain.PostgressEntities
 {
     public class Order
     {
