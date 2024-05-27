@@ -5,6 +5,7 @@ using CategoryInfrastructure;
 using CategoryInfrastructure.Interfaces;
 using OpenTelemetry.Trace;
 using Serilog;
+using StackExchange.Redis;
 using TracingService;
 using VaultService;
 
@@ -49,6 +50,13 @@ Log.Logger = new LoggerConfiguration()
 builder.Services.AddOpenTelemetry().Setup("CategoryService");
 builder.Services.AddSingleton(TracerProvider.Default.GetTracer("CategoryService"));
 #endregion
+
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+    var configuration = ConfigurationOptions.Parse(builder.Configuration.GetSection("Redis:Configuration").Value, true);
+    configuration.AbortOnConnectFail = false;
+    return ConnectionMultiplexer.Connect(configuration);
+});
 
 #region httpclient
 builder.Services.AddHttpClient();

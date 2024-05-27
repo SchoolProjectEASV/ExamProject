@@ -4,6 +4,10 @@ using Microsoft.Extensions.Configuration;
 using ProductApplication.DTO;
 using ProductApplication.Interfaces;
 using ProductInfrastructure.Interfaces;
+using StackExchange.Redis;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace ProductApplication
 {
@@ -16,14 +20,16 @@ namespace ProductApplication
         private readonly IMapper _mapper;
         private readonly string _categoryServiceUrl;
         private readonly HttpClient _httpClient;
+        private readonly IConnectionMultiplexer _redis;
 
-        public ProductService(IProductRepository productRepository, IMapper mapper, IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public ProductService(IProductRepository productRepository, IMapper mapper, IHttpClientFactory httpClientFactory, IConfiguration configuration, IConnectionMultiplexer redis)
         {
             _productRepository = productRepository;
             _mapper = mapper;
             _httpClient = httpClientFactory.CreateClient();
             _categoryServiceUrl = configuration["CategoryService:Url"];
             _httpClient.BaseAddress = new Uri(_categoryServiceUrl);
+            _redis = redis;
         }
 
         public async Task<bool> AddProductAsync(CreateProductDTO createProductDTO)
@@ -31,7 +37,13 @@ namespace ProductApplication
             var product = _mapper.Map<Product>(createProductDTO);
             product.CreatedAt = DateTime.UtcNow;
 
-            return await _productRepository.AddProductAsync(product);
+            var result = await _productRepository.AddProductAsync(product);
+            if (result)
+            {
+                await CacheProductAsync(product);
+            }
+
+            return result;
         }
 
         public async Task<bool> DeleteProductAsync(string id)
@@ -48,7 +60,13 @@ namespace ProductApplication
                 throw new Exception($"Failed to remove product with id {id}");
             }
 
-            return await _productRepository.DeleteProductAsync(id);
+            var result = await _productRepository.DeleteProductAsync(id);
+            if (result)
+            {
+                await RemoveCachedProductAsync(id);
+            }
+
+            return result;
         }
 
         public async Task<IEnumerable<Product>> GetAllProductsAsync()
@@ -58,7 +76,19 @@ namespace ProductApplication
 
         public async Task<Product> GetProductByIdAsync(string id)
         {
-            return await _productRepository.GetProductByIdAsync(id);
+            var cachedProduct = await GetCachedProductAsync(id);
+            if (cachedProduct != null)
+            {
+                return cachedProduct;
+            }
+
+            var product = await _productRepository.GetProductByIdAsync(id);
+            if (product != null)
+            {
+                await CacheProductAsync(product);
+            }
+
+            return product;
         }
 
         public async Task<bool> UpdateProductAsync(string id, UpdateProductDTO updateProductDTO)
@@ -66,8 +96,41 @@ namespace ProductApplication
             var updatedProduct = _mapper.Map<Product>(updateProductDTO);
             updatedProduct._id = new MongoDB.Bson.ObjectId(id);
 
-            return await _productRepository.UpdateProductAsync(id, updatedProduct);
+            var result = await _productRepository.UpdateProductAsync(id, updatedProduct);
+            if (result)
+            {
+                await CacheProductAsync(updatedProduct);
+            }
+
+            return result;
         }
 
+        private async Task CacheProductAsync(Product product)
+        {
+            var db = _redis.GetDatabase();
+            await db.StringSetAsync(GetRedisKeyForProduct(product._id.ToString()), JsonSerializer.Serialize(product));
+        }
+
+        private async Task<Product> GetCachedProductAsync(string productId)
+        {
+            var db = _redis.GetDatabase();
+            var productJson = await db.StringGetAsync(GetRedisKeyForProduct(productId));
+            if (!string.IsNullOrEmpty(productJson))
+            {
+                return JsonSerializer.Deserialize<Product>(productJson);
+            }
+            return null;
+        }
+
+        private async Task RemoveCachedProductAsync(string productId)
+        {
+            var db = _redis.GetDatabase();
+            await db.KeyDeleteAsync(GetRedisKeyForProduct(productId));
+        }
+
+        private string GetRedisKeyForProduct(string productId)
+        {
+            return $"product:{productId}";
+        }
     }
 }

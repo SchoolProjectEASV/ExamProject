@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using OpenTelemetry.Trace;
 using Serilog;
+using StackExchange.Redis;
 using TracingService;
 using UserApplication;
 using UserApplication.DTO;
@@ -59,6 +60,14 @@ builder.Services.AddSingleton(TracerProvider.Default.GetTracer("UserService"));
 #region httpclient
 builder.Services.AddHttpClient();
 #endregion
+
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+    var configuration = ConfigurationOptions.Parse(builder.Configuration.GetSection("Redis:Configuration").Value, true);
+    configuration.AbortOnConnectFail = false;
+    return ConnectionMultiplexer.Connect(configuration);
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

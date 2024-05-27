@@ -57,7 +57,7 @@ builder.Services.AddSingleton(TracerProvider.Default.GetTracer("OrderService"));
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 {
     var configuration = ConfigurationOptions.Parse(builder.Configuration.GetSection("Redis:Configuration").Value, true);
-    configuration.AbortOnConnectFail = false; // Allow retrying to connect
+    configuration.AbortOnConnectFail = false;
     return ConnectionMultiplexer.Connect(configuration);
 });
 
