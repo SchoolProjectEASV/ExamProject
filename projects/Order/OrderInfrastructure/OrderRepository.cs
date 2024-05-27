@@ -3,7 +3,7 @@ using Npgsql;
 using OrderInfrastructure.Interfaces;
 using System.Data;
 using Microsoft.Extensions.Logging;
-using Domain;
+using Domain.PostgressEntities;
 
 namespace OrderInfrastructure
 {
@@ -11,12 +11,10 @@ namespace OrderInfrastructure
     {
         private readonly IVaultFactory _vaultFactory;
         private readonly string _connectionString;
-        private readonly ILogger<OrderRepository> _logger;
 
-        public OrderRepository(IVaultFactory vaultFactory, ILogger<OrderRepository> logger)
+        public OrderRepository(IVaultFactory vaultFactory)
         {
             _vaultFactory = vaultFactory;
-            _logger = logger;
             _connectionString = GetConnectionStringFromVault();
             CreateOrderTableIfNotExists();
         }
@@ -94,11 +92,9 @@ namespace OrderInfrastructure
             VALUES (@CreatedAt, @UserId, @TotalPrice, @ShippingAddress)
             RETURNING id;";
 
-                _logger.LogInformation("Executing query: {Query} with params: {Params}", query, order);
 
                 var orderId = await connection.ExecuteScalarAsync<int>(query, order);
 
-                _logger.LogInformation("Order added with ID: {OrderId}", orderId);
 
                 return orderId;
             }
@@ -122,8 +118,6 @@ namespace OrderInfrastructure
                     UPDATE orders 
                     SET user_id = @UserId, total_price = @TotalPrice, shipping_address = @ShippingAddress 
                     WHERE id = @Id";
-
-                _logger.LogInformation("Executing query: {Query} with params: {Params}", query, order);
 
                 var affectedRows = await connection.ExecuteAsync(query, order);
                 return affectedRows > 0;

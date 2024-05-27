@@ -126,6 +126,29 @@ namespace OrderService.Controllers
             }
         }
 
+        [HttpPost("addProduct")]
+        public async Task<IActionResult> AddProductToOrder([FromBody] AddProductToOrderDTO dto)
+        {
+            try
+            {
+                var success = await _orderService.AddProductToOrderAsync(dto);
+                if (!success)
+                {
+                    return BadRequest("Failed to add product to order");
+                }
+
+                return Ok("Product added to order successfully");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetOrdersByUserId(int userId)
         {

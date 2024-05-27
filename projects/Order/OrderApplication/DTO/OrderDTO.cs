@@ -1,4 +1,4 @@
-﻿using Domain.MongoEntities;
+﻿using Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,19 +7,13 @@ using System.Threading.Tasks;
 
 namespace OrderApplication.DTO
 {
-    public class AddOrderDTO
+    public class OrderDTO
     {
+        public int Id { get; set; }
+        public DateTime CreatedAt { get; set; }
         public int UserId { get; set; }
         public float TotalPrice { get; set; }
         public string ShippingAddress { get; set; }
-
-       public List<OrderProductDTO> Products { get; set; } = new List<OrderProductDTO>();
+        public List<OrderProduct> Products { get; set; } = new List<OrderProduct>();
     }
-
-    public class OrderProductDTO
-    {
-        public string ProductId { get; set; }
-        public int Quantity { get; set; }
-    }
-
 }

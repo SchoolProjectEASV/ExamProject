@@ -1,5 +1,5 @@
-﻿using Domain;
-using Domain.MongoEntities;
+﻿using Domain.MongoEntities;
+using Domain.PostgressEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

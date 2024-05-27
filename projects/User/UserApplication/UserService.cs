@@ -2,13 +2,13 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using AutoMapper;
-using Domain;
 using Domain.PostgressEntities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using UserApplication.DTO;
 using UserInfrastructure.Interfaces;
+
 
 namespace UserApplication
 {
@@ -44,7 +44,7 @@ namespace UserApplication
 
             if (user == null)
             {
-                return null; // Handle not found scenario appropriately
+                return null;
             }
 
             var orders = await GetOrdersByUserIdAsync(id);

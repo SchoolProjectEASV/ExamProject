@@ -1,4 +1,4 @@
-﻿namespace Domain
+﻿namespace Domain.PostgressEntities
 {
     public class Order
     {
@@ -7,5 +7,7 @@
         public int UserId { get; set; }
         public float TotalPrice { get; set; }
         public string ShippingAddress { get; set; }
+        public List<OrderProduct> Products { get; set; } = new List<OrderProduct>();
+
     }
 }
