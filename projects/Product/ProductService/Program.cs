@@ -7,6 +7,7 @@ using VaultService;
 using TracingService;
 using OpenTelemetry.Trace;
 using Serilog;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +47,12 @@ builder.Services.AddOpenTelemetry().Setup("ProductService");
 builder.Services.AddSingleton(TracerProvider.Default.GetTracer("ProductService"));
 #endregion
 
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+    var configuration = ConfigurationOptions.Parse(builder.Configuration.GetSection("Redis:Configuration").Value, true);
+    configuration.AbortOnConnectFail = false;
+    return ConnectionMultiplexer.Connect(configuration);
+});
 #region httpclient
 builder.Services.AddHttpClient();
 #endregion

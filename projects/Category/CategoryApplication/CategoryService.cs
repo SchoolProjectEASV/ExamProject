@@ -5,7 +5,10 @@ using CategoryInfrastructure.Interfaces;
 using Domain.MongoEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using StackExchange.Redis;
 using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace CategoryApplication
 {
@@ -18,16 +21,17 @@ namespace CategoryApplication
         private readonly IMapper _mapper;
         private readonly string? _productServiceUrl;
         private readonly HttpClient _httpClient;
+        private readonly IConnectionMultiplexer _redis;
 
-        public CategoryService(ICategoryRepository categoryRepository, IMapper mapper, IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public CategoryService(ICategoryRepository categoryRepository, IMapper mapper, IHttpClientFactory httpClientFactory, IConfiguration configuration, IConnectionMultiplexer redis)
         {
             _categoryRepository = categoryRepository;
             _mapper = mapper;
             _productServiceUrl = configuration["ProductService:Url"];
             _httpClient = httpClientFactory.CreateClient();
             _httpClient.BaseAddress = new Uri(_productServiceUrl);
+            _redis = redis;
         }
-
 
         public async Task AddProductToCategory(string categoryId, string productId)
         {
@@ -38,6 +42,7 @@ namespace CategoryApplication
             }
 
             await _categoryRepository.AddProductToCategory(categoryId, productId);
+            await RemoveCachedCategoryAsync(categoryId);
         }
 
         public async Task RemoveProductFromCategory(string categoryId, string productId)
@@ -47,8 +52,8 @@ namespace CategoryApplication
             {
                 throw new KeyNotFoundException($"Product with the id {productId} was not found in the category {categoryId}.");
             }
+            await RemoveCachedCategoryAsync(categoryId);
         }
-
 
         public async Task<bool> AddCategoryAsync(CreateCategoryDTO createCategoryDTO)
         {
@@ -60,8 +65,12 @@ namespace CategoryApplication
 
         public async Task<bool> DeleteCategoryAsync(string id)
         {
-            return await _categoryRepository.DeleteCategoryAsync(id);
-
+            var result = await _categoryRepository.DeleteCategoryAsync(id);
+            if (result)
+            {
+                await RemoveCachedCategoryAsync(id);
+            }
+            return result;
         }
 
         public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
@@ -71,7 +80,19 @@ namespace CategoryApplication
 
         public async Task<Category> GetCategoryByIdAsync(string id)
         {
-            return await _categoryRepository.GetCategoryByIdAsync(id);
+            var cachedCategory = await GetCachedCategoryAsync(id);
+            if (cachedCategory != null)
+            {
+                return cachedCategory;
+            }
+
+            var category = await _categoryRepository.GetCategoryByIdAsync(id);
+            if (category != null)
+            {
+                await CacheCategoryAsync(category);
+            }
+
+            return category;
         }
 
         public async Task<bool> UpdateCategoryAsync(string id, UpdateCategoryDTO updateCategoryDTO)
@@ -79,7 +100,13 @@ namespace CategoryApplication
             var updatedCategory = _mapper.Map<Category>(updateCategoryDTO);
             updatedCategory._id = new MongoDB.Bson.ObjectId(id);
 
-            return await _categoryRepository.UpdateCategoryAsync(id, updatedCategory);
+            var result = await _categoryRepository.UpdateCategoryAsync(id, updatedCategory);
+            if (result)
+            {
+                await CacheCategoryAsync(updatedCategory);
+            }
+
+            return result;
         }
 
         public async Task RemoveProductFromAllCategories(string productId)
@@ -90,8 +117,37 @@ namespace CategoryApplication
                 if (category.ProductIds.Contains(new MongoDB.Bson.ObjectId(productId)))
                 {
                     await _categoryRepository.RemoveProductFromCategory(category._id.ToString(), productId);
+                    await RemoveCachedCategoryAsync(category._id.ToString());
                 }
             }
+        }
+
+        private async Task CacheCategoryAsync(Category category)
+        {
+            var db = _redis.GetDatabase();
+            await db.StringSetAsync(GetRedisKeyForCategory(category._id.ToString()), JsonSerializer.Serialize(category));
+        }
+
+        private async Task<Category> GetCachedCategoryAsync(string categoryId)
+        {
+            var db = _redis.GetDatabase();
+            var categoryJson = await db.StringGetAsync(GetRedisKeyForCategory(categoryId));
+            if (!string.IsNullOrEmpty(categoryJson))
+            {
+                return JsonSerializer.Deserialize<Category>(categoryJson);
+            }
+            return null;
+        }
+
+        private async Task RemoveCachedCategoryAsync(string categoryId)
+        {
+            var db = _redis.GetDatabase();
+            await db.KeyDeleteAsync(GetRedisKeyForCategory(categoryId));
+        }
+
+        private string GetRedisKeyForCategory(string categoryId)
+        {
+            return $"category:{categoryId}";
         }
     }
 }

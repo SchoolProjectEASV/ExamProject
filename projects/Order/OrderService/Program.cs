@@ -1,10 +1,13 @@
 using AutoMapper;
+using Domain.HelperEntities;
+using Domain.PostgressEntities;
 using OpenTelemetry.Trace;
 using OrderApplication.DTO;
 using OrderApplication.Interfaces;
 using OrderInfrastructure;
 using OrderInfrastructure.Interfaces;
 using Serilog;
+using StackExchange.Redis;
 using TracingService;
 using VaultService;
 
@@ -28,8 +31,9 @@ builder.Services.AddScoped<IVaultFactory, VaultFactory>();
 #region AutoMapper
 var mapper = new MapperConfiguration(config =>
 {
-    config.CreateMap<AddOrderDTO, Domain.Order>();
-    config.CreateMap<UpdateOrderDTO, Domain.Order>();
+    config.CreateMap<AddOrderDTO, Domain.PostgressEntities.Order>();
+    config.CreateMap<UpdateOrderDTO, Domain.PostgressEntities.Order>();
+    config.CreateMap<OrderProductDTO, OrderProduct>();
 }).CreateMapper();
 builder.Services.AddSingleton(mapper);
 #endregion
@@ -48,6 +52,20 @@ builder.Services.AddOpenTelemetry().Setup("OrderService");
 builder.Services.AddSingleton(TracerProvider.Default.GetTracer("OrderService"));
 #endregion
 
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+    var configuration = ConfigurationOptions.Parse(builder.Configuration.GetSection("Redis:Configuration").Value, true);
+    configuration.AbortOnConnectFail = false;
+    return ConnectionMultiplexer.Connect(configuration);
+});
+
+
+#region httpclient
+builder.Services.AddHttpClient();
+#endregion
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -56,6 +74,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 app.UseHttpsRedirection();
 

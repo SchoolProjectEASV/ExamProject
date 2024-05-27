@@ -15,14 +15,14 @@ namespace ProductInfrastructure
             _context = dbContext;
         }
 
-        public async Task<bool> AddProductAsync(Product product)
+        public async Task<bool> AddProduct(Product product)
         {
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
             return true;
         }
 
-        public async Task<bool> DeleteProductAsync(string id)
+        public async Task<bool> DeleteProduct(string id)
         {
             if (!ObjectId.TryParse(id, out var objectId))
             {
@@ -42,21 +42,21 @@ namespace ProductInfrastructure
             return true;
         }
 
-        public async Task<IEnumerable<Product>> GetAllProductsAsync()
+        public async Task<IEnumerable<Product>> GetAllProducts()
         {
             return await _context.Products.ToListAsync();
         }
 
-        public async Task<Product> GetProductByIdAsync(string id)
+        public async Task<Product> GetProductById(string id)
         {
             var objectId = new ObjectId(id);
             var product = await _context.Products.FirstOrDefaultAsync(p => p._id == objectId);
             return product ?? throw new KeyNotFoundException($"No product could be found with the given id {id}");
         }
 
-        public async Task<bool> UpdateProductAsync(string id, Product updatedProduct)
+        public async Task<bool> UpdateProduct(string id, Product updatedProduct)
         {
-            var productToUpdate = await GetProductByIdAsync(id);
+            var productToUpdate = await GetProductById(id);
             if (productToUpdate == null)
             {
                 throw new KeyNotFoundException($"No product found with the given ID: {id}");

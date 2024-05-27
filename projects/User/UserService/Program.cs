@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using OpenTelemetry.Trace;
 using Serilog;
+using StackExchange.Redis;
 using TracingService;
 using UserApplication;
 using UserApplication.DTO;
@@ -32,9 +33,13 @@ builder.Services.AddScoped<IVaultFactory, VaultFactory>();
 var mapper = new MapperConfiguration(config =>
 {
     config.CreateMap<AddUserDTO, Domain.PostgressEntities.User>();
+    config.CreateMap<Domain.PostgressEntities.User, GetUserDTO>();
+    config.CreateMap<GetUserDTO, Domain.PostgressEntities.User>();
 }).CreateMapper();
 builder.Services.AddSingleton(mapper);
+
 #endregion
+
 
 
 #region Logging
@@ -50,6 +55,18 @@ Log.Logger = new LoggerConfiguration()
 builder.Services.AddOpenTelemetry().Setup("UserService");
 builder.Services.AddSingleton(TracerProvider.Default.GetTracer("UserService"));
 #endregion
+
+
+#region httpclient
+builder.Services.AddHttpClient();
+#endregion
+
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+    var configuration = ConfigurationOptions.Parse(builder.Configuration.GetSection("Redis:Configuration").Value, true);
+    configuration.AbortOnConnectFail = false;
+    return ConnectionMultiplexer.Connect(configuration);
+});
 
 var app = builder.Build();
 

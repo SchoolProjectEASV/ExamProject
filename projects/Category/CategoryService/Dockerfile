@@ -15,6 +15,7 @@ COPY ["packages/TracingService/TracingService.csproj", "packages/TracingService/
 COPY ["projects/Category/CategoryApplication/CategoryApplication.csproj", "projects/Category/CategoryApplication/"]
 COPY ["projects/Category/CategoryInfrastructure/CategoryInfrastructure.csproj", "projects/Category/CategoryInfrastructure/"]
 COPY ["Domain/Domain.csproj", "Domain/"]
+COPY ["packages/VaultService/VaultService.csproj", "packages/VaultService/"]
 RUN dotnet restore "./projects/Category/CategoryService/CategoryService.csproj"
 COPY . .
 WORKDIR "/src/projects/Category/CategoryService"

@@ -24,7 +24,7 @@ namespace UserService.Controllers
         {
             try
             {
-                var users = await _userService.GetAllUsersAsync();
+                var users = await _userService.GetAllUsers();
                 Log.Information("Fetched users", users);
                 return Ok(users);
             }
@@ -40,15 +40,15 @@ namespace UserService.Controllers
         {
             try
             {
-                var user = await _userService.GetUserByIdAsync(id);
-                if (user == null)
+                var userDto = await _userService.GetUserById(id);
+                if (userDto == null)
                 {
                     Log.Warning("User not found with ID: {UserId}", id);
                     return NotFound(new { Message = "User not found" });
                 }
 
                 Log.Information("User found: {UserId}", id);
-                return Ok(user);
+                return Ok(userDto);
             }
             catch (Exception ex)
             {
@@ -68,7 +68,7 @@ namespace UserService.Controllers
 
             try
             {
-                var userId = await _userService.AddUserAsync(userDTO);
+                var userId = await _userService.AddUser(userDTO);
                 Log.Information("User added successfully: {UserId}", userId);
                 return CreatedAtAction(nameof(GetUserById), new { id = userId }, userId);
             }
@@ -90,7 +90,7 @@ namespace UserService.Controllers
 
             try
             {
-                var success = await _userService.UpdateUserAsync(user);
+                var success = await _userService.UpdateUser(user);
                 if (!success)
                 {
                     Log.Warning("User not found for update with ID: {UserId}", id);
@@ -112,7 +112,7 @@ namespace UserService.Controllers
         {
             try
             {
-                var success = await _userService.DeleteUserAsync(id);
+                var success = await _userService.DeleteUser(id);
                 if (!success)
                 {
                     Log.Warning("User not found for deletion with ID: {UserId}", id);
