@@ -45,7 +45,7 @@ namespace UserInfrastructure
             }
         }
 
-        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        public async Task<IEnumerable<User>> GetAllUsers()
         {
             using (var connection = CreateConnection())
             {
@@ -60,7 +60,7 @@ namespace UserInfrastructure
             }
         }
 
-        public async Task<User> GetUserByIdAsync(int id)
+        public async Task<User> GetUserById(int id)
         {
             using (var connection = CreateConnection())
             {
@@ -76,7 +76,7 @@ namespace UserInfrastructure
             }
         }
 
-        public async Task<int> AddUserAsync(User user)
+        public async Task<int> AddUser(User user)
         {
             using (var connection = CreateConnection())
             {
@@ -90,7 +90,7 @@ namespace UserInfrastructure
             }
         }
 
-        public async Task<bool> UpdateUserAsync(User user)
+        public async Task<bool> UpdateUser(User user)
         {
             using (var connection = CreateConnection())
             {
@@ -104,7 +104,7 @@ namespace UserInfrastructure
             }
         }
 
-        public async Task<bool> DeleteUserAsync(int id)
+        public async Task<bool> DeleteUser(int id)
         {
             using (var connection = CreateConnection())
             {

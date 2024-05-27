@@ -90,15 +90,15 @@ namespace ProductService.UnitTest
             };
 
             _mockMapper.Setup(m => m.Map<Product>(createProductDto)).Returns(product);
-            _mockProductRepository.Setup(repo => repo.AddProductAsync(product)).ReturnsAsync(true);
+            _mockProductRepository.Setup(repo => repo.AddProduct(product)).ReturnsAsync(true);
 
             // Act
-            var result = await _productService.AddProductAsync(createProductDto);
+            var result = await _productService.AddProduct(createProductDto);
 
             // Assert
             Assert.True(result);
             _mockMapper.Verify(m => m.Map<Product>(createProductDto), Times.Once);
-            _mockProductRepository.Verify(repo => repo.AddProductAsync(product), Times.Once);
+            _mockProductRepository.Verify(repo => repo.AddProduct(product), Times.Once);
         }
 
         [Fact]
@@ -108,8 +108,8 @@ namespace ProductService.UnitTest
             var productId = ObjectId.GenerateNewId().ToString();
             var product = new Product { _id = new ObjectId(productId) };
 
-            _mockProductRepository.Setup(repo => repo.GetProductByIdAsync(productId)).ReturnsAsync(product);
-            _mockProductRepository.Setup(repo => repo.DeleteProductAsync(productId)).ReturnsAsync(true);
+            _mockProductRepository.Setup(repo => repo.GetProductById(productId)).ReturnsAsync(product);
+            _mockProductRepository.Setup(repo => repo.DeleteProduct(productId)).ReturnsAsync(true);
 
             var response = new HttpResponseMessage
             {
@@ -122,12 +122,12 @@ namespace ProductService.UnitTest
                 .ReturnsAsync(response);
 
             // Act
-            var result = await _productService.DeleteProductAsync(productId);
+            var result = await _productService.DeleteProduct(productId);
 
             // Assert
             Assert.True(result);
-            _mockProductRepository.Verify(repo => repo.GetProductByIdAsync(productId), Times.Once);
-            _mockProductRepository.Verify(repo => repo.DeleteProductAsync(productId), Times.Once);
+            _mockProductRepository.Verify(repo => repo.GetProductById(productId), Times.Once);
+            _mockProductRepository.Verify(repo => repo.DeleteProduct(productId), Times.Once);
         }
 
         [Fact]
@@ -156,15 +156,15 @@ namespace ProductService.UnitTest
                 }
             };
 
-            _mockProductRepository.Setup(repo => repo.GetAllProductsAsync()).ReturnsAsync(products);
+            _mockProductRepository.Setup(repo => repo.GetAllProducts()).ReturnsAsync(products);
 
             // Act
-            var result = await _productService.GetAllProductsAsync();
+            var result = await _productService.GetAllProducts();
 
             // Assert
             Assert.NotNull(result);
             Assert.Equal(2, result.Count());
-            _mockProductRepository.Verify(repo => repo.GetAllProductsAsync(), Times.Once);
+            _mockProductRepository.Verify(repo => repo.GetAllProducts(), Times.Once);
         }
 
         [Fact]
@@ -182,10 +182,10 @@ namespace ProductService.UnitTest
                 CreatedAt = DateTime.UtcNow
             };
 
-            _mockProductRepository.Setup(repo => repo.GetProductByIdAsync(productId)).ReturnsAsync(product);
+            _mockProductRepository.Setup(repo => repo.GetProductById(productId)).ReturnsAsync(product);
 
             // Act
-            var result = await _productService.GetProductByIdAsync(productId);
+            var result = await _productService.GetProductById(productId);
 
             // Assert
             Assert.NotNull(result);
@@ -195,7 +195,7 @@ namespace ProductService.UnitTest
             Assert.Equal(1, result.Price);
             Assert.Equal(2, result.Quantity);
             Assert.Equal(product.CreatedAt, result.CreatedAt);
-            _mockProductRepository.Verify(repo => repo.GetProductByIdAsync(productId), Times.Once);
+            _mockProductRepository.Verify(repo => repo.GetProductById(productId), Times.Once);
         }
 
         //[Fact]

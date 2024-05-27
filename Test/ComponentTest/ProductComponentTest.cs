@@ -81,19 +81,19 @@ public class ProductComponentTest : IAsyncLifetime
         var productId = MongoDB.Bson.ObjectId.GenerateNewId().ToString();
         var product = new Domain.MongoEntities.Product { _id = new MongoDB.Bson.ObjectId(productId) };
             
-        _mockProductRepo.Setup(repo => repo.GetProductByIdAsync(productId)).ReturnsAsync(product);
-        _mockProductRepo.Setup(repo => repo.DeleteProductAsync(productId)).ReturnsAsync(true);
+        _mockProductRepo.Setup(repo => repo.GetProductById(productId)).ReturnsAsync(product);
+        _mockProductRepo.Setup(repo => repo.DeleteProduct(productId)).ReturnsAsync(true);
             
         _categoryServiceMock.Given(Request.Create().WithPath($"/Category/removeProduct/{productId}").UsingDelete())
             .RespondWith(Response.Create().WithStatusCode(200));
 
         // Act
-        var result = await _productService.DeleteProductAsync(productId);
+        var result = await _productService.DeleteProduct(productId);
 
         // Assert
         Assert.True(result);
-        _mockProductRepo.Verify(repo => repo.GetProductByIdAsync(productId), Times.Once);
-        _mockProductRepo.Verify(repo => repo.DeleteProductAsync(productId), Times.Once);
+        _mockProductRepo.Verify(repo => repo.GetProductById(productId), Times.Once);
+        _mockProductRepo.Verify(repo => repo.DeleteProduct(productId), Times.Once);
     }
     
     /// <summary>
@@ -106,17 +106,17 @@ public class ProductComponentTest : IAsyncLifetime
         var productId = MongoDB.Bson.ObjectId.GenerateNewId().ToString();
         var product = new Domain.MongoEntities.Product { _id = new MongoDB.Bson.ObjectId(productId) };
             
-        _mockProductRepo.Setup(repo => repo.GetProductByIdAsync(productId)).ReturnsAsync(product);
+        _mockProductRepo.Setup(repo => repo.GetProductById(productId)).ReturnsAsync(product);
             
         _categoryServiceMock.Given(Request.Create().WithPath($"/Category/removeProduct/{productId}").UsingDelete())
             .RespondWith(Response.Create().WithStatusCode(404));
 
         // Act & Assert
-        var exception = await Assert.ThrowsAsync<Exception>(() => _productService.DeleteProductAsync(productId));
+        var exception = await Assert.ThrowsAsync<Exception>(() => _productService.DeleteProduct(productId));
         Assert.Equal($"Failed to remove product with id {productId}", exception.Message);
             
-        _mockProductRepo.Verify(repo => repo.GetProductByIdAsync(productId), Times.Once);
-        _mockProductRepo.Verify(repo => repo.DeleteProductAsync(productId), Times.Never);
+        _mockProductRepo.Verify(repo => repo.GetProductById(productId), Times.Once);
+        _mockProductRepo.Verify(repo => repo.DeleteProduct(productId), Times.Never);
     }
 
 }

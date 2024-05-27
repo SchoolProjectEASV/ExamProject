@@ -32,7 +32,7 @@ namespace OrderApplication
             _redis = redis;
         }
 
-        public async Task<IEnumerable<Domain.PostgressEntities.Order>> GetAllOrdersAsync()
+        public async Task<IEnumerable<Domain.PostgressEntities.Order>> GetAllOrders()
         {
             var orders = await _orderRepository.GetAllOrdersAsync();
             var orderDTOs = new List<Domain.PostgressEntities.Order>();
@@ -47,7 +47,7 @@ namespace OrderApplication
             return orderDTOs;
         }
 
-        public async Task<Domain.PostgressEntities.Order> GetOrderByIdAsync(int id)
+        public async Task<Domain.PostgressEntities.Order> GetOrderById(int id)
         {
             var order = await _orderRepository.GetOrderByIdAsync(id);
             if (order == null)
@@ -60,7 +60,7 @@ namespace OrderApplication
             return orderDTO;
         }
 
-        public async Task<int> AddOrderAsync(AddOrderDTO orderDTO)
+        public async Task<int> AddOrder(AddOrderDTO orderDTO)
         {
             var order = _mapper.Map<Domain.PostgressEntities.Order>(orderDTO);
             order.CreatedAt = DateTime.UtcNow;
@@ -75,7 +75,7 @@ namespace OrderApplication
             return orderId;
         }
 
-        public async Task<bool> AddProductToOrderAsync(AddProductToOrderDTO dto)
+        public async Task<bool> AddProductToOrder(AddProductToOrderDTO dto)
         {
             var order = await _orderRepository.GetOrderByIdAsync(dto.OrderId);
             if (order == null)
@@ -99,7 +99,7 @@ namespace OrderApplication
             return success;
         }
 
-        public async Task<bool> DeleteOrderAsync(int id)
+        public async Task<bool> DeleteOrder(int id)
         {
             var success = await _orderRepository.DeleteOrderAsync(id);
             if (success)
@@ -110,14 +110,14 @@ namespace OrderApplication
             return success;
         }
 
-        public async Task<bool> UpdateOrderAsync(UpdateOrderDTO updateOrderDTO)
+        public async Task<bool> UpdateOrder(UpdateOrderDTO updateOrderDTO)
         {
             var order = _mapper.Map<Domain.PostgressEntities.Order>(updateOrderDTO);
             var success = await _orderRepository.UpdateOrderAsync(order);
             return success;
         }
 
-        public async Task<IEnumerable<Domain.PostgressEntities.Order>> GetOrdersByUserIdAsync(int userId)
+        public async Task<IEnumerable<Domain.PostgressEntities.Order>> GetOrdersByUserId(int userId)
         {
             var orders = await _orderRepository.GetOrdersByUserIdAsync(userId);
             var orderDTOs = new List<Domain.PostgressEntities.Order>();

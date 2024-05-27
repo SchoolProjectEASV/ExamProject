@@ -18,31 +18,31 @@ namespace ProductApplication.Interfaces
         /// </summary>
         /// <param name="createProductDTO"></param>
         /// <returns></returns>
-        Task<bool> AddProductAsync(CreateProductDTO createProductDTO);
+        Task<bool> AddProduct(CreateProductDTO createProductDTO);
         /// <summary>
         /// Gets all the products
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<Product>> GetAllProductsAsync();
+        Task<IEnumerable<Product>> GetAllProducts();
         /// <summary>
         /// Gets a product by its Id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<Product> GetProductByIdAsync(string id);
+        Task<Product> GetProductById(string id);
         /// <summary>
         /// Updates the product
         /// </summary>
         /// <param name="id"></param>
         /// <param name="updateProductDTO"></param>
         /// <returns></returns>
-        Task<bool> UpdateProductAsync(string id, UpdateProductDTO updateProductDTO);
+        Task<bool> UpdateProduct(string id, UpdateProductDTO updateProductDTO);
         /// <summary>
         /// Deletes a product
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<bool> DeleteProductAsync(string id);
+        Task<bool> DeleteProduct(string id);
 
     }
 }

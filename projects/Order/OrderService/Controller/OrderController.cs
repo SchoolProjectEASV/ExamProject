@@ -21,7 +21,7 @@ namespace OrderService.Controllers
         {
             try
             {
-                var orders = await _orderService.GetAllOrdersAsync();
+                var orders = await _orderService.GetAllOrders();
                 Log.Information("Fetched orders", orders);
                 return Ok(orders);
             }
@@ -37,7 +37,7 @@ namespace OrderService.Controllers
         {
             try
             {
-                var order = await _orderService.GetOrderByIdAsync(id);
+                var order = await _orderService.GetOrderById(id);
                 if (order == null)
                 {
                     Log.Warning("Order not found with ID: {OrderId}", id);
@@ -65,7 +65,7 @@ namespace OrderService.Controllers
 
             try
             {
-                var orderId = await _orderService.AddOrderAsync(orderDTO);
+                var orderId = await _orderService.AddOrder(orderDTO);
                 Log.Information("Order added successfully: {OrderId}", orderId);
                 return CreatedAtAction(nameof(GetOrderById), new { id = orderId }, orderId);
             }
@@ -87,7 +87,7 @@ namespace OrderService.Controllers
 
             try
             {
-                var success = await _orderService.UpdateOrderAsync(updateOrderDTO);
+                var success = await _orderService.UpdateOrder(updateOrderDTO);
                 if (!success)
                 {
                     Log.Warning("Order not found for update with ID: {OrderId}", id);
@@ -109,7 +109,7 @@ namespace OrderService.Controllers
         {
             try
             {
-                var success = await _orderService.DeleteOrderAsync(id);
+                var success = await _orderService.DeleteOrder(id);
                 if (!success)
                 {
                     Log.Warning("Order not found for deletion with ID: {OrderId}", id);
@@ -131,7 +131,7 @@ namespace OrderService.Controllers
         {
             try
             {
-                var success = await _orderService.AddProductToOrderAsync(dto);
+                var success = await _orderService.AddProductToOrder(dto);
                 if (!success)
                 {
                     return BadRequest("Failed to add product to order");
@@ -154,7 +154,7 @@ namespace OrderService.Controllers
         {
             try
             {
-                var orders = await _orderService.GetOrdersByUserIdAsync(userId);
+                var orders = await _orderService.GetOrdersByUserId(userId);
                 Log.Information("Fetched orders for user: {UserId}", userId);
                 return Ok(orders);
             }

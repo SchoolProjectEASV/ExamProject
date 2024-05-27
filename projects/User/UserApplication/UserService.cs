@@ -29,12 +29,12 @@ namespace UserApplication
             _redis = redis;
         }
 
-        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        public async Task<IEnumerable<User>> GetAllUsers()
         {
-            return await _userRepository.GetAllUsersAsync();
+            return await _userRepository.GetAllUsers();
         }
 
-        public async Task<GetUserDTO> GetUserByIdAsync(int id)
+        public async Task<GetUserDTO> GetUserById(int id)
         {
             var cachedUser = await GetCachedUserAsync(id);
             if (cachedUser != null)
@@ -42,13 +42,13 @@ namespace UserApplication
                 return cachedUser;
             }
 
-            var user = await _userRepository.GetUserByIdAsync(id);
+            var user = await _userRepository.GetUserById(id);
             if (user == null)
             {
                 return null;
             }
 
-            var orders = await GetOrdersByUserIdAsync(id);
+            var orders = await GetOrdersByUserId(id);
             var userDto = _mapper.Map<GetUserDTO>(user);
             userDto.orders = orders;
 
@@ -57,19 +57,19 @@ namespace UserApplication
             return userDto;
         }
 
-        public async Task<int> AddUserAsync(AddUserDTO userDTO)
+        public async Task<int> AddUser(AddUserDTO userDTO)
         {
             var user = _mapper.Map<User>(userDTO);
-            var userId = await _userRepository.AddUserAsync(user);
+            var userId = await _userRepository.AddUser(user);
             return userId;
         }
 
-        public async Task<bool> UpdateUserAsync(User user)
+        public async Task<bool> UpdateUser(User user)
         {
-            var success = await _userRepository.UpdateUserAsync(user);
+            var success = await _userRepository.UpdateUser(user);
             if (success)
             {
-                var updatedUser = await _userRepository.GetUserByIdAsync(user.Id);
+                var updatedUser = await _userRepository.GetUserById(user.Id);
                 if (updatedUser != null)
                 {
                     var userDto = _mapper.Map<GetUserDTO>(updatedUser);
@@ -80,9 +80,9 @@ namespace UserApplication
             return success;
         }
 
-        public async Task<bool> DeleteUserAsync(int id)
+        public async Task<bool> DeleteUser(int id)
         {
-            var success = await _userRepository.DeleteUserAsync(id);
+            var success = await _userRepository.DeleteUser(id);
             if (success)
             {
                 await RemoveCachedUserAsync(id);
@@ -90,7 +90,7 @@ namespace UserApplication
             return success;
         }
 
-        public async Task<List<Domain.PostgressEntities.Order>> GetOrdersByUserIdAsync(int userId)
+        public async Task<List<Domain.PostgressEntities.Order>> GetOrdersByUserId(int userId)
         {
             var response = await _httpClient.GetAsync($"Order/user/{userId}");
             response.EnsureSuccessStatusCode();

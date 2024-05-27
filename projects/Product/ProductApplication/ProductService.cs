@@ -32,12 +32,12 @@ namespace ProductApplication
             _redis = redis;
         }
 
-        public async Task<bool> AddProductAsync(CreateProductDTO createProductDTO)
+        public async Task<bool> AddProduct(CreateProductDTO createProductDTO)
         {
             var product = _mapper.Map<Product>(createProductDTO);
             product.CreatedAt = DateTime.UtcNow;
 
-            var result = await _productRepository.AddProductAsync(product);
+            var result = await _productRepository.AddProduct(product);
             if (result)
             {
                 await CacheProductAsync(product);
@@ -47,9 +47,9 @@ namespace ProductApplication
         }
 
 
-        public async Task<bool> DeleteProductAsync(string id)
+        public async Task<bool> DeleteProduct(string id)
         {
-            var product = await _productRepository.GetProductByIdAsync(id);
+            var product = await _productRepository.GetProductById(id);
             if (product == null)
             {
                 throw new KeyNotFoundException($"Product with the id {id} was not found");
@@ -61,7 +61,7 @@ namespace ProductApplication
                 throw new Exception($"Failed to remove product with id {id}");
             }
 
-            var result = await _productRepository.DeleteProductAsync(id);
+            var result = await _productRepository.DeleteProduct(id);
             if (result)
             {
                 await RemoveCachedProductAsync(id);
@@ -70,12 +70,12 @@ namespace ProductApplication
             return result;
         }
 
-        public async Task<IEnumerable<Product>> GetAllProductsAsync()
+        public async Task<IEnumerable<Product>> GetAllProducts()
         {
-            return await _productRepository.GetAllProductsAsync();
+            return await _productRepository.GetAllProducts();
         }
 
-        public async Task<Product> GetProductByIdAsync(string id)
+        public async Task<Product> GetProductById(string id)
         {
             var cachedProduct = await GetCachedProductAsync(id);
             if (cachedProduct != null)
@@ -83,7 +83,7 @@ namespace ProductApplication
                 return cachedProduct;
             }
 
-            var product = await _productRepository.GetProductByIdAsync(id);
+            var product = await _productRepository.GetProductById(id);
             if (product != null)
             {
                 await CacheProductAsync(product);
@@ -92,12 +92,12 @@ namespace ProductApplication
             return product;
         }
 
-        public async Task<bool> UpdateProductAsync(string id, UpdateProductDTO updateProductDTO)
+        public async Task<bool> UpdateProduct(string id, UpdateProductDTO updateProductDTO)
         {
             var updatedProduct = _mapper.Map<Product>(updateProductDTO);
             updatedProduct._id = new MongoDB.Bson.ObjectId(id);
 
-            var result = await _productRepository.UpdateProductAsync(id, updatedProduct);
+            var result = await _productRepository.UpdateProduct(id, updatedProduct);
             if (result)
             {
                 await CacheProductAsync(updatedProduct);

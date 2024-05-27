@@ -32,7 +32,7 @@ namespace ProductService.Controllers
 
             try
             {
-                bool success = await _productService.AddProductAsync(productDTO);
+                bool success = await _productService.AddProduct(productDTO);
                 if (success)
                 {
                     Log.Information("Product added successfully.");
@@ -55,7 +55,7 @@ namespace ProductService.Controllers
         [Route("all")]
         public async Task<IActionResult> GetAllProducts()
         {
-            var products = await _productService.GetAllProductsAsync();
+            var products = await _productService.GetAllProducts();
             Log.Information("Fetched {ProductCount} products", products.Count());
             return Ok(products);
         }
@@ -66,7 +66,7 @@ namespace ProductService.Controllers
         {
             try
             {
-                var product = await _productService.GetProductByIdAsync(id);
+                var product = await _productService.GetProductById(id);
                 if (product != null)
                 {
                     Log.Information("Product found: {ProductId}", product._id);
@@ -96,7 +96,7 @@ namespace ProductService.Controllers
 
             try
             {
-                bool updated = await _productService.UpdateProductAsync(id, updateProductDTO);
+                bool updated = await _productService.UpdateProduct(id, updateProductDTO);
                 if (updated)
                 {
                     Log.Information("Product updated successfully: {ProductId}", id);
@@ -125,7 +125,7 @@ namespace ProductService.Controllers
         {
             try
             {
-                bool deleted = await _productService.DeleteProductAsync(id);
+                bool deleted = await _productService.DeleteProduct(id);
                 if (deleted)
                 {
                     Log.Information("Product deleted successfully: {ProductId}", id);
