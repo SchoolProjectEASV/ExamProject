@@ -13,6 +13,9 @@ using Xunit;
 
 namespace ProductService.UnitTest
 {
+    /// <summary>
+    /// Contains the unit tests for product service
+    /// </summary>
     public class ProductServiceUnitTest
     {
         private readonly Mock<IProductRepository> _mockProductRepository;
@@ -66,6 +69,9 @@ namespace ProductService.UnitTest
             );
         }
 
+        /// <summary>
+        /// Tests to ensure that the AddProduct method successfully adds a product
+        /// </summary>
         [Fact]
         public async Task AddProductAsync_Success()
         {
@@ -100,6 +106,9 @@ namespace ProductService.UnitTest
             _mockProductRepository.Verify(repo => repo.AddProduct(product), Times.Once);
         }
 
+        /// <summary>
+        /// Testing successfull product deletion
+        /// </summary>
         [Fact]
         public async Task DeleteProductAsync_Success()
         {
@@ -130,6 +139,9 @@ namespace ProductService.UnitTest
             _mockProductRepository.Verify(repo => repo.DeleteProduct(productId), Times.Once);
         }
 
+        /// <summary>
+        /// Gets all products successfully
+        /// </summary>
         [Fact]
         public async Task GetAllProductsAsync_Success()
         {
@@ -167,6 +179,9 @@ namespace ProductService.UnitTest
             _mockProductRepository.Verify(repo => repo.GetAllProducts(), Times.Once);
         }
 
+        /// <summary>
+        /// Gets a product by its id successfully
+        /// </summary>
         [Fact]
         public async Task GetProductByIdAsync_Success()
         {
@@ -198,6 +213,9 @@ namespace ProductService.UnitTest
             _mockProductRepository.Verify(repo => repo.GetProductById(productId), Times.Once);
         }
 
+        /// <summary>
+        /// Tests that UpdateProduct successfully updates a product with new values 
+        /// </summary>
         [Fact]
         public async Task UpdateProduct_Success()
         {
@@ -253,6 +271,9 @@ namespace ProductService.UnitTest
                     It.IsAny<bool>(), It.IsAny<When>(), It.IsAny<CommandFlags>()), Times.Once);
         }
         
+        /// <summary>
+        /// Scenario where the update product fails
+        /// </summary>
         [Fact]
         public async Task UpdateProductAsync_Failure()
         {
