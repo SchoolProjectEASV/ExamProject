@@ -46,6 +46,7 @@ namespace ProductApplication
             return result;
         }
 
+
         public async Task<bool> DeleteProductAsync(string id)
         {
             var product = await _productRepository.GetProductByIdAsync(id);
