@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Domain.MongoEntities;
 using Microsoft.Extensions.Configuration;
 using ProductApplication.DTO;
