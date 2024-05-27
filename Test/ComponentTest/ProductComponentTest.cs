@@ -24,7 +24,7 @@ public class ProductComponentTest : IAsyncLifetime
     private ProductApplication.ProductService _productService;
     private Mock<IHttpClientFactory> _httpClientFactory;
     private Mock<IMapper> _mockMapper;
-
+    private Mock<IDatabase> _mockDatabase;
 
     public async Task InitializeAsync()
     {
@@ -38,6 +38,17 @@ public class ProductComponentTest : IAsyncLifetime
         _httpClientFactory = new Mock<IHttpClientFactory>();
 
         var redisMock = new Mock<IConnectionMultiplexer>();
+        _mockDatabase = new Mock<IDatabase>();
+
+
+        _mockDatabase.Setup(db => db.StringGetAsync(It.IsAny<RedisKey>(), It.IsAny<CommandFlags>()))
+            .ReturnsAsync((RedisValue)string.Empty);
+
+        _mockDatabase.Setup(db => db.KeyDeleteAsync(It.IsAny<RedisKey>(), It.IsAny<CommandFlags>()))
+            .ReturnsAsync(true);
+
+        redisMock.Setup(r => r.GetDatabase(It.IsAny<int>(), It.IsAny<object>())).Returns(_mockDatabase.Object);
+
         _redis = redisMock.Object;
 
         _httpClient = new HttpClient { BaseAddress = new Uri(_categoryServiceMock.Urls[0]) };
@@ -46,9 +57,14 @@ public class ProductComponentTest : IAsyncLifetime
 
         _mockConfiguration = new Mock<IConfiguration>();
         _mockConfiguration.Setup(config => config["CategoryService:Url"]).Returns(_categoryServiceMock.Urls[0]);
-        _productService = new ProductApplication.ProductService(_mockProductRepo.Object, _mockMapper.Object, _httpClientFactory.Object, _mockConfiguration.Object, _redis);
-    }
 
+        _productService = new ProductApplication.ProductService(
+            _mockProductRepo.Object,
+            _mockMapper.Object,
+            _httpClientFactory.Object,
+            _mockConfiguration.Object,
+            _redis);
+    }
 
     public async Task DisposeAsync()
     {

@@ -22,6 +22,7 @@ public class ProductServiceUnitTest
     private readonly Mock<HttpMessageHandler> _mockHttpMessageHandler;
     private readonly ProductApplication.ProductService _productService;
     private readonly Mock<IConnectionMultiplexer> _mockRedis;
+    private readonly Mock<IDatabase> _mockDatabase;
 
     public ProductServiceUnitTest()
     {
@@ -33,11 +34,21 @@ public class ProductServiceUnitTest
         _mockHttpMessageHandler = new Mock<HttpMessageHandler>();
 
         _mockRedis = new Mock<IConnectionMultiplexer>();
+        _mockDatabase = new Mock<IDatabase>();
 
         var httpClient = new HttpClient(_mockHttpMessageHandler.Object)
         {
             BaseAddress = new Uri("http://localhost")
         };
+
+        _mockDatabase.Setup(db => db.StringGetAsync(It.IsAny<RedisKey>(), It.IsAny<CommandFlags>()))
+            .ReturnsAsync((RedisValue)string.Empty);
+
+        _mockDatabase.Setup(db => db.KeyDeleteAsync(It.IsAny<RedisKey>(), It.IsAny<CommandFlags>()))
+            .ReturnsAsync(true);
+
+        // Setup the GetDatabase method to return the mocked database
+        _mockRedis.Setup(r => r.GetDatabase(It.IsAny<int>(), It.IsAny<object>())).Returns(_mockDatabase.Object);
 
         _mockHttpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
@@ -49,7 +60,6 @@ public class ProductServiceUnitTest
             _mockHttpClientFactory.Object,
             _mockConfiguration.Object,
             _mockRedis.Object
-
         );
     }
 
