@@ -199,7 +199,7 @@ namespace ProductService.UnitTest
         }
 
         [Fact]
-        public async Task UpdateProductAsync_Success()
+        public async Task UpdateProduct_Success()
         {
             // Arrange
             var productId = ObjectId.GenerateNewId().ToString();
@@ -252,5 +252,57 @@ namespace ProductService.UnitTest
                 db => db.StringSetAsync(It.IsAny<RedisKey>(), It.IsAny<RedisValue>(), It.IsAny<TimeSpan?>(),
                     It.IsAny<bool>(), It.IsAny<When>(), It.IsAny<CommandFlags>()), Times.Once);
         }
+        
+        [Fact]
+        public async Task UpdateProductAsync_Failure()
+        {
+            // Arrange
+            var productId = ObjectId.GenerateNewId().ToString();
+            var updateProductDto = new UpdateProductDTO
+            {
+                Name = "Updated Product",
+                Description = "Updated Description",
+                Price = 1,
+                Quantity = 2
+            };
+
+            var existingProduct = new Product
+            {
+                _id = new ObjectId(productId),
+                Name = "Test Product",
+                Description = "Test Description",
+                Price = 1,
+                Quantity = 2,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            var updatedProduct = new Product
+            {
+                _id = new ObjectId(productId),
+                Name = "Updated Product",
+                Description = "Updated Description",
+                Price = 1,
+                Quantity = 2,
+                CreatedAt = existingProduct.CreatedAt
+            };
+
+            _mockProductRepository.Setup(repo => repo.GetProductById(productId)).ReturnsAsync(existingProduct);
+
+            _mockProductRepository.Setup(repo => repo.UpdateProduct(productId, updatedProduct)).ReturnsAsync(false);
+
+            _mockMapper.Setup(m => m.Map<Product>(updateProductDto)).Returns(updatedProduct);
+            
+            // Act
+            var result = await _productService.UpdateProduct(productId, updateProductDto);
+
+            // Assert
+            Assert.False(result);
+            _mockProductRepository.Verify(repo => repo.UpdateProduct(productId, updatedProduct), Times.Once);
+            _mockMapper.Verify(m => m.Map<Product>(updateProductDto), Times.Once);
+            _mockDatabase.Verify(
+                db => db.StringSetAsync(It.IsAny<RedisKey>(), It.IsAny<RedisValue>(), It.IsAny<TimeSpan?>(),
+                    It.IsAny<bool>(), It.IsAny<When>(), It.IsAny<CommandFlags>()), Times.Never);
+        }
+
     }
 }
