@@ -8,6 +8,7 @@ using Moq;
 using Moq.Protected;
 using ProductApplication.DTO;
 using ProductInfrastructure.Interfaces;
+using StackExchange.Redis;
 
 
 namespace ProductService.UnitTest;
@@ -20,6 +21,7 @@ public class ProductServiceUnitTest
     private readonly Mock<IConfiguration> _mockConfiguration;
     private readonly Mock<HttpMessageHandler> _mockHttpMessageHandler;
     private readonly ProductApplication.ProductService _productService;
+    private readonly Mock<IConnectionMultiplexer> _mockRedis;
 
     public ProductServiceUnitTest()
     {
@@ -29,6 +31,8 @@ public class ProductServiceUnitTest
         _mockConfiguration = new Mock<IConfiguration>();
 
         _mockHttpMessageHandler = new Mock<HttpMessageHandler>();
+
+        _mockRedis = new Mock<IConnectionMultiplexer>();
 
         var httpClient = new HttpClient(_mockHttpMessageHandler.Object)
         {
@@ -43,7 +47,9 @@ public class ProductServiceUnitTest
             _mockProductRepository.Object,
             _mockMapper.Object,
             _mockHttpClientFactory.Object,
-            _mockConfiguration.Object
+            _mockConfiguration.Object,
+            _mockRedis.Object
+
         );
     }
 

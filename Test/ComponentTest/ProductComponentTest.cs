@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Moq;
 using ProductApplication.Interfaces;
 using ProductInfrastructure.Interfaces;
+using StackExchange.Redis;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using WireMock.Server;
@@ -19,10 +20,11 @@ public class ProductComponentTest : IAsyncLifetime
     private Mock<IConfiguration> _mockConfiguration;
     private Mock<IProductRepository> _mockProductRepo;
     private HttpClient _httpClient;
+    private IConnectionMultiplexer _redis;
     private ProductApplication.ProductService _productService;
     private Mock<IHttpClientFactory> _httpClientFactory;
     private Mock<IMapper> _mockMapper;
-    
+
 
     public async Task InitializeAsync()
     {
@@ -31,18 +33,22 @@ public class ProductComponentTest : IAsyncLifetime
             Urls = new[] { "http://localhost:8080" }
         });
 
-
         _mockProductRepo = new Mock<IProductRepository>();
-            
-        _httpClientFactory = new Mock<IHttpClientFactory>(); 
+
+        _httpClientFactory = new Mock<IHttpClientFactory>();
+
+        var redisMock = new Mock<IConnectionMultiplexer>();
+        _redis = redisMock.Object;
+
         _httpClient = new HttpClient { BaseAddress = new Uri(_categoryServiceMock.Urls[0]) };
         _httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(_httpClient);
         _mockMapper = new Mock<IMapper>();
 
         _mockConfiguration = new Mock<IConfiguration>();
         _mockConfiguration.Setup(config => config["CategoryService:Url"]).Returns(_categoryServiceMock.Urls[0]);
-        _productService = new ProductApplication.ProductService(_mockProductRepo.Object,  _mockMapper.Object, _httpClientFactory.Object, _mockConfiguration.Object);
+        _productService = new ProductApplication.ProductService(_mockProductRepo.Object, _mockMapper.Object, _httpClientFactory.Object, _mockConfiguration.Object, _redis);
     }
+
 
     public async Task DisposeAsync()
     {
