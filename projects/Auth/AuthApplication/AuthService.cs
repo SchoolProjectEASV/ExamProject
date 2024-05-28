@@ -1,5 +1,4 @@
-﻿using AuthApplication;
-using Domain.PostgressEntities;
+﻿using Domain.PostgressEntities;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -21,7 +20,7 @@ namespace AuthApplication
             _configuration = configuration;
         }
 
-        public async Task<Login> AuthenticateAsync(string username, string password)
+        public async Task<Login> AuthenticateUser(string username, string password)
         {
             var login = _authRepo.GetUsersByUsername(username);
             if (login == null || !VerifyPasswordHash(password, login.Password))
@@ -73,6 +72,11 @@ namespace AuthApplication
             return user.Id;
         }
 
+        /// <summary>
+        /// Generates a sal and hashes the password using PBKDF2 and HMACSHA1, and returns the salt and hashed password as a string.
+        /// </summary>
+        /// <param name="password">password being hashed</param>
+        /// <returns></returns>
         private string HashPassword(string password)
         {
             byte[] salt = new byte[128 / 8];
@@ -92,6 +96,12 @@ namespace AuthApplication
             return $"{saltString}:{hashed}";
         }
 
+        /// <summary>
+        /// Verifies the password hash
+        /// </summary>
+        /// <param name="password">The password being given</param>
+        /// <param name="storedHash">the stored hash</param>
+        /// <returns></returns>
         private bool VerifyPasswordHash(string password, string storedHash)
         {
             var parts = storedHash.Split(':');

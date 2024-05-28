@@ -16,7 +16,7 @@ public class AuthController : ControllerBase
     [HttpPost("token")]
     public async Task<IActionResult> GenerateToken([FromBody] UserCredential userCredential)
     {
-        var user = await _authService.AuthenticateAsync(userCredential.Username, userCredential.Password);
+        var user = await _authService.AuthenticateUser(userCredential.Username, userCredential.Password);
         if (user == null)
         {
             return Unauthorized();
