@@ -50,7 +50,6 @@ services:
       - orderdb
       - gatewayservice
 
-
   categoryservice:
     image: categoryservice
     build:
@@ -108,7 +107,6 @@ services:
     volumes:
       - orderdb_data:/var/lib/postgresql/data
 
-
   userdb:
     image: postgres
     restart: always
@@ -142,7 +140,33 @@ services:
     ports:
       - '6379:6379'
 
+  authdb:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRESS_PASSWORD: example
+      POSTGRESS_DB: Auth_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - authdb_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
+  authservice:
+    image: authservice
+    build:
+      context: .
+      dockerfile: ./projects/Auth/AuthService/Dockerfile
+    ports:
+      - "8081:8080"
+      - "8446:443"
+    depends_on:
+      authdb:
+        condition: service_healthy
 volumes:
   mongodb_data: {}
   categorydb_data: {}
@@ -151,3 +175,4 @@ volumes:
   orderdb_data: {}
   vault_data: {}
   vault_logs: {}
+  authdb_data: {}
