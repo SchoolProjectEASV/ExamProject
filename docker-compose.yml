@@ -1,6 +1,13 @@
 version: '3.7'
 
 services:
+  gatewayservice:
+    image: gatewayservice
+    build:
+      context: .
+      dockerfile: ./packages/OcelotGateway/Dockerfile
+    ports:
+      - "8082:80"
   productdb:
     image: 'mongo:latest'
     container_name: product_mongodb
@@ -29,6 +36,7 @@ services:
       - "8443:443"
     depends_on:
       - productdb
+      - gatewayservice
 
   orderservice:
     image: orderservice
@@ -39,6 +47,7 @@ services:
       - "8091:8080"
     depends_on:
       - orderdb
+      - gatewayservice
 
 
   categoryservice:
@@ -51,6 +60,7 @@ services:
       - "8444:443"
     depends_on:
       - categorydb
+      - gatewayservice
 
   zipkin:
     image: openzipkin/zipkin:latest
@@ -118,6 +128,7 @@ services:
       - "8445:443"
     depends_on:
       - userdb
+      - gatewayservice
 
   redis:
     image: 'redislabs/redisearch:latest'

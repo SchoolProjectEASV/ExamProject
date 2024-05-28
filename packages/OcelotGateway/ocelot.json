@@ -1,0 +1,16 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/product",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamPathTemplate": "/productservice",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "productservice",
+          "Port": 80
+        }
+      ]
+    }
+  ]
+}
