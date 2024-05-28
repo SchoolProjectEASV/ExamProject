@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OrderApplication.DTO;
 using OrderApplication.Interfaces;
 using Serilog;
@@ -6,6 +7,7 @@ using Serilog;
 namespace OrderService.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class OrderController : ControllerBase
     {
@@ -17,6 +19,7 @@ namespace OrderService.Controllers
         }
 
         [HttpGet]
+
         public async Task<IActionResult> GetAllOrders()
         {
             try

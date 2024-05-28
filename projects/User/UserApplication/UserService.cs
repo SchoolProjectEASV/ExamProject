@@ -8,6 +8,8 @@ using Newtonsoft.Json;
 using UserApplication.DTO;
 using UserInfrastructure.Interfaces;
 using StackExchange.Redis;
+using System.Text;
+using Microsoft.Extensions.Logging;
 
 namespace UserApplication
 {
@@ -18,8 +20,11 @@ namespace UserApplication
         private readonly HttpClient _httpClient;
         private readonly string _orderServiceUrl;
         private readonly IConnectionMultiplexer _redis;
+        private readonly HttpClient _authHttpClient;
+        private readonly string _authServiceUrl;
+        private readonly ILogger<UserService> _logger;
 
-        public UserService(IUserRepository userRepository, IMapper mapper, IHttpClientFactory httpClientFactory, IConfiguration configuration, IConnectionMultiplexer redis)
+        public UserService(IUserRepository userRepository, IMapper mapper, IHttpClientFactory httpClientFactory, IConfiguration configuration, IConnectionMultiplexer redis, ILogger<UserService> logger)
         {
             _userRepository = userRepository;
             _mapper = mapper;
@@ -27,6 +32,10 @@ namespace UserApplication
             _orderServiceUrl = configuration["OrderService:Url"];
             _httpClient.BaseAddress = new Uri(_orderServiceUrl);
             _redis = redis;
+            _authHttpClient = httpClientFactory.CreateClient();
+            _authServiceUrl = configuration["AuthService:Url"];
+            _authHttpClient.BaseAddress = new Uri(_authServiceUrl);
+            _logger = logger;
         }
 
         public async Task<IEnumerable<User>> GetAllUsers()
@@ -59,10 +68,52 @@ namespace UserApplication
 
         public async Task<int> AddUser(AddUserDTO userDTO)
         {
-            var user = _mapper.Map<User>(userDTO);
-            var userId = await _userRepository.AddUser(user);
-            return userId;
+            var registrationDto = new UserRegistrationDTO
+            {
+                Username = userDTO.Username,
+                Password = userDTO.Password
+            };
+
+            try
+            {
+                _logger.LogInformation("Sending request to Auth Service to register user.");
+                var response = await _authHttpClient.PostAsync($"Auth/register", new StringContent(JsonConvert.SerializeObject(registrationDto), Encoding.UTF8, "application/json"));
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    _logger.LogError($"Error registering user with Auth Service: {response.StatusCode} - {errorContent}");
+                    throw new Exception($"Error registering user with auth service: {response.ReasonPhrase}");
+                }
+
+                var responseString = await response.Content.ReadAsStringAsync();
+                _logger.LogInformation($"Response from Auth Service: {responseString}");
+
+                // Deserialize the response to get the userId
+                var responseObject = JsonConvert.DeserializeObject<dynamic>(responseString);
+                int userId = responseObject.userId;
+
+                _logger.LogInformation($"User registered successfully with ID: {userId}");
+
+                var user = _mapper.Map<User>(userDTO);
+                user.Id = userId;
+                await _userRepository.AddUser(user);
+                return userId;
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError($"HttpRequestException: {ex.Message}");
+                throw new Exception("A problem occurred while trying to register the user.", ex);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception: {ex.Message}");
+                throw;
+            }
         }
+
+
+
 
         public async Task<bool> UpdateUser(User user)
         {

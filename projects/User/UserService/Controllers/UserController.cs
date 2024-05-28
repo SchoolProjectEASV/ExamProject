@@ -5,6 +5,7 @@ using Domain.PostgressEntities;
 using UserApplication.DTO;
 using UserApplication;
 using Serilog;
+using Microsoft.AspNetCore.Authorization;
 
 namespace UserService.Controllers
 {
@@ -20,6 +21,7 @@ namespace UserService.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAllUsers()
         {
             try
@@ -36,6 +38,7 @@ namespace UserService.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetUserById(int id)
         {
             try
@@ -80,6 +83,7 @@ namespace UserService.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] User user)
         {
             if (id != user.Id)
@@ -108,6 +112,7 @@ namespace UserService.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteUser(int id)
         {
             try

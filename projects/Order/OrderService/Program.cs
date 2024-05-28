@@ -10,6 +10,9 @@ using Serilog;
 using StackExchange.Redis;
 using TracingService;
 using VaultService;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,13 +23,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.Configure<VaultSettings>(builder.Configuration.GetSection("Vault"));
 
-
 #region Dependency Injection
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderService, OrderApplication.OrderService>();
 builder.Services.AddScoped<IVaultFactory, VaultFactory>();
 #endregion
-
 
 #region AutoMapper
 var mapper = new MapperConfiguration(config =>
@@ -47,24 +48,47 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 #endregion
 
-#region
+#region OpenTelemetry
 builder.Services.AddOpenTelemetry().Setup("OrderService");
 builder.Services.AddSingleton(TracerProvider.Default.GetTracer("OrderService"));
 #endregion
 
+#region Redis
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 {
     var configuration = ConfigurationOptions.Parse(builder.Configuration.GetSection("Redis:Configuration").Value, true);
     configuration.AbortOnConnectFail = false;
     return ConnectionMultiplexer.Connect(configuration);
 });
+#endregion
 
-
-#region httpclient
+#region HttpClient
 builder.Services.AddHttpClient();
 #endregion
 
+#region JWT Authentication
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateLifetime = true,
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key)
+    };
+});
+
+builder.Services.AddAuthorization();
+#endregion
 
 var app = builder.Build();
 
@@ -75,8 +99,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 

@@ -9,10 +9,14 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["AuthService/AuthService.csproj", "AuthService/"]
-RUN dotnet restore "./AuthService/AuthService.csproj"
+COPY ["projects/Auth/AuthService/AuthService.csproj", "projects/Auth/AuthService/"]
+COPY ["projects/Auth/AuthApplication/AuthApplication.csproj", "projects/Auth/AuthApplication/"]
+COPY ["projects/Auth/AuthInfrastructure/AuthInfrastructure.csproj", "projects/Auth/AuthInfrastructure/"]
+COPY ["Domain/Domain.csproj", "Domain/"]
+COPY ["packages/VaultService/VaultService.csproj", "packages/VaultService/"]
+RUN dotnet restore "./projects/Auth/AuthService/AuthService.csproj"
 COPY . .
-WORKDIR "/src/AuthService"
+WORKDIR "/src/projects/Auth/AuthService"
 RUN dotnet build "./AuthService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
