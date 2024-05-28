@@ -1,4 +1,5 @@
 using AuthApplication;
+using AuthService.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -38,16 +39,4 @@ public class AuthController : ControllerBase
             return BadRequest(new { Message = ex.Message });
         }
     }
-}
-
-public class UserCredential
-{
-    public string Username { get; set; }
-    public string Password { get; set; }
-}
-
-public class UserRegistrationDTO
-{
-    public string Username { get; set; }
-    public string Password { get; set; }
 }
