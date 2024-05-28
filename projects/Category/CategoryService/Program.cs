@@ -3,12 +3,9 @@ using CategoryApplication.DTO;
 using CategoryApplication.Interfaces;
 using CategoryInfrastructure;
 using CategoryInfrastructure.Interfaces;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using OpenTelemetry.Trace;
 using Serilog;
 using StackExchange.Redis;
-using System.Text;
 using TracingService;
 using VaultService;
 
@@ -70,30 +67,6 @@ builder.Services.AddLogging(logBuilder =>
     logBuilder.AddSeq("http://seq:5341");
 });
 
-#region JWT Authentication
-var jwtSettings = builder.Configuration.GetSection("Jwt");
-var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
-
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateLifetime = true,
-        ValidateIssuer = false,
-        ValidateAudience = false,
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(key)
-    };
-});
-
-builder.Services.AddAuthorization();
-#endregion
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -102,8 +75,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseAuthentication();
 
 app.UseAuthorization();
 

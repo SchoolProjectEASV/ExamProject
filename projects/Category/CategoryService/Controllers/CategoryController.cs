@@ -1,7 +1,6 @@
 using CategoryApplication.DTO;
 using CategoryApplication.Interfaces;
 using CategoryInfrastructure.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
@@ -22,7 +21,6 @@ namespace CategoryService.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         [Route("add")]
         public async Task<IActionResult> AddCategory([FromBody] CreateCategoryDTO categoryDTO)
         {
@@ -87,7 +85,6 @@ namespace CategoryService.Controllers
         }
 
         [HttpPut]
-        [Authorize]
         [Route("{id}")]
         public async Task<IActionResult> UpdateCategory([FromRoute] string id, [FromBody] UpdateCategoryDTO updateCategoryDTO)
         {
@@ -123,7 +120,6 @@ namespace CategoryService.Controllers
         }
 
         [HttpDelete]
-        [Authorize]
         [Route("{id}")]
         public async Task<IActionResult> DeleteCategory([FromRoute] string id)
         {
@@ -148,7 +144,6 @@ namespace CategoryService.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         [Route("{categoryId}/add/{productId}")]
         public async Task<IActionResult> AddProductToCategory(string categoryId, string productId)
         {
@@ -171,7 +166,6 @@ namespace CategoryService.Controllers
         }
 
         [HttpDelete]
-        [Authorize]
         [Route("{categoryId}/remove/{productId}")]
         public async Task<IActionResult> RemoveProductFromCategory(string categoryId, string productId)
         {
@@ -194,7 +188,6 @@ namespace CategoryService.Controllers
         }
 
         [HttpDelete]
-        [Authorize]
         [Route("removeProduct/{productId}")]
         public async Task<IActionResult> RemoveProductFromAllCategories(string productId)
         {

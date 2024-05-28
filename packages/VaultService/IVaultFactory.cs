@@ -8,7 +8,5 @@ public interface IVaultFactory
 
     public string GetConnectionStringOrder();
 
-    public string GetConnectionStringAuth();
-
 
 }

@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using ProductApplication.DTO;
@@ -22,7 +21,6 @@ namespace ProductService.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         [Route("add")]
         public async Task<IActionResult> AddProduct([FromBody] CreateProductDTO productDTO)
         {
@@ -87,7 +85,6 @@ namespace ProductService.Controllers
         }
 
         [HttpPut]
-        [Authorize]
         [Route("{id}")]
         public async Task<IActionResult> UpdateProduct([FromRoute] string id, [FromBody] UpdateProductDTO updateProductDTO)
         {
@@ -123,7 +120,6 @@ namespace ProductService.Controllers
         }
 
         [HttpDelete]
-        [Authorize]
         [Route("{id}")]
         public async Task<IActionResult> DeleteProduct([FromRoute] string id)
         {
