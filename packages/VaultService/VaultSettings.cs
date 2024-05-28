@@ -21,6 +21,8 @@ namespace VaultService
 
         public string CONNECTIONSTRING_ORDER_POSTGRESS { get; set; }
 
+        public string CONNECTIONSTRING_AUTH_POSTGRESS { get; set; }
+
         public class UserPassSettings
         {
             public string Username { get; set; }

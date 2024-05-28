@@ -55,6 +55,17 @@ public class VaultFactory : IVaultFactory
         }).GetAwaiter().GetResult();
     }
 
+    public string GetConnectionStringAuth()
+    {
+        return _retryPolicy.ExecuteAsync(async () =>
+        {
+            VaultResponse<KvV2ReadResponse> response = await vaultClient.Secrets.KvV2ReadAsync("secretAuth", "connectionstring");
+            JObject data = (JObject)response.Data.Data;
+            _vaultSettings = data.ToObject<VaultSettings>();
+            return _vaultSettings.CONNECTIONSTRING_AUTH_POSTGRESS;
+        }).GetAwaiter().GetResult();
+    }
+
     public string GetConnectionStringOrder()
     {
         return _retryPolicy.ExecuteAsync(async () =>
