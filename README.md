@@ -28,24 +28,33 @@ To set up the vault do following:
 docker compose up --build
 ```
 2. Go into the vault interface through the docker engine.
-(Picture of the docker engine running with the vault)
+![Vault interface in docker](./Images/VaultInDockerEngine.png)
 
 3. Login with the provided token that the vault interface provides at the startup. Save the two tokens provided at the startup in a secure place, so you can find them again whenever you wish to use the vault.
+![LoginToVaultWithToken](./Images/loginwithtoken.png)
 
-4. Make a new secret engine called "connectionstring"
+4. Make a new secret engine called "connectionstring" with KV
+![AddNewSecretEngine](./Images/enablesecretengine.png) 
 
 5. Create 4 different secrets with the following names, with the provided connectionStrings inside the connectionstring secret engine: CONNECTIONSTRING_MONGODB, CONNECTIONSTRING_ORDER_POSTGRESS, CONNECTIONSTRING_AUTH_POSTGRESS and CONNECTIONSTRING_USER_POSTGRESS
+![CreateSecret](./Images/createSecret.png)
 
 6. Add a new authentication method and use the Username & Password authentication method.
+![AddAuthMethod](./Images/enableAuthMethod.png)
 
 7. Create a new user with the login credentials you wish.
+![CreateUser](,/Images/createUser.png)
 
 8. Login with the newly made user.
+![LoginWithUser](./Images/signInWithUser.png)
 
 9. Logout of the newly made user, and login through the token again.
 
-10. Add a policy to the user with the following script:
+10. Add a policy so the user can access the newly created secret engine:
+![AddPolicy](./Images/connectionStringPolicy.png)
 
+11. Add the policy to the user
+![AddPolicyToUser](./Images/addPolicyToUser.png)
 
 Now one should be able to get through the vault, if everything is set up correctly.
 
@@ -179,7 +188,9 @@ After the vault and the appsettings has been setup, one should be able to run th
 docker compose up --build
 ```
 
-One should note, that before making requests, one have to unseal the vault with the unseal token that was provided at the start.
+One should note, that before making requests, one have to unseal the vault with the unseal token that was provided at the start. This is shown in the picture below.
+
+![UnsealVault](,/Images/UnsealVault.png)
 
 ## Different nuget packages used in the application (The most vital ones)
 
