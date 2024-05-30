@@ -30,23 +30,21 @@ docker compose up --build
 2. Go into the vault interface through the docker engine.
 (Picture of the docker engine running with the vault)
 
-3. Login with the provided token that the vault interface provides at the startup.
+3. Login with the provided token that the vault interface provides at the startup. Save the two tokens provided at the startup in a secure place, so you can find them again whenever you wish to use the vault.
 
 4. Make a new secret engine called "connectionstring"
 
-5. Create 4 different secrets with the following names:
+5. Create 4 different secrets with the following names, with the provided connectionStrings inside the connectionstring secret engine: CONNECTIONSTRING_MONGODB, CONNECTIONSTRING_ORDER_POSTGRESS, CONNECTIONSTRING_AUTH_POSTGRESS and CONNECTIONSTRING_USER_POSTGRESS
 
-6. Add the different secrets with the provided connectionstrings.
+6. Add a new authentication method and use the Username & Password authentication method.
 
-7. Add a new authentication method and use the Username & Password authentication method.
+7. Create a new user with the login credentials you wish.
 
-8. Create a new user with the login credentials you wish.
+8. Login with the newly made user.
 
-9. Login with the newly made user.
+9. Logout of the newly made user, and login through the token again.
 
-10. Logout of the newly made user, and login through the token again.
-
-11. Add a policy to the user with the following script:
+10. Add a policy to the user with the following script:
 
 
 Now one should be able to get through the vault, if everything is set up correctly.
@@ -180,6 +178,8 @@ After the vault and the appsettings has been setup, one should be able to run th
 ```
 docker compose up --build
 ```
+
+One should note, that before making requests, one have to unseal the vault with the unseal token that was provided at the start.
 
 ## Different nuget packages used in the application (The most vital ones)
 
