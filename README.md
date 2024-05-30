@@ -43,7 +43,7 @@ docker compose up --build
 ![AddAuthMethod](./Images/enableAuthMethod.png)
 
 7. Create a new user with the login credentials you wish.
-![CreateUser](,/Images/createUser.png)
+![AddAuthMethod](./Images/createUser.png)
 
 8. Login with the newly made user.
 ![LoginWithUser](./Images/signInWithUser.png)
@@ -190,7 +190,7 @@ docker compose up --build
 
 One should note, that before making requests, one have to unseal the vault with the unseal token that was provided at the start. This is shown in the picture below.
 
-![UnsealVault](,/Images/UnsealVault.png)
+![UnsealVault](./Images/UnsealVault.png)
 
 ## Different nuget packages used in the application (The most vital ones)
 
