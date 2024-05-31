@@ -167,6 +167,8 @@ services:
     depends_on:
       authdb:
         condition: service_healthy
+      - gatewayservice
+
 volumes:
   mongodb_data: {}
   categorydb_data: {}

@@ -30,7 +30,13 @@
           "Host": "ProductService",
           "Port": 8080
         }
-      ]
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [
+          "pong.read"
+        ]
+      }
     },
     {
       "UpstreamPathTemplate": "/Product/{id}",
@@ -212,6 +218,19 @@
           "Port": 8080
         }
       ]
+    },
+    {
+      "UpstreamPathTemplate": "/AuthService",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamPathTemplate": "/AuthService",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authservice",
+          "Port": 80
+        }
+      ]
+
     }
   ]
 }
