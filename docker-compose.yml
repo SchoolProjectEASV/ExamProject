@@ -165,9 +165,9 @@ services:
       - "8445:443"
     depends_on:
       - userdb
+      - gatewayservice
     networks:
       - kong-net
-      - gatewayservice
 
   redis:
     image: 'redislabs/redisearch:latest'
