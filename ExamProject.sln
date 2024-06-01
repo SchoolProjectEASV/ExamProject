@@ -58,6 +58,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthInfrastructure", "proje
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CategoryApplication", "projects\Category\CategoryApplication\CategoryApplication.csproj", "{B115B2B6-8D88-45AE-B202-C6F61C851BBE}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KongSetup", "packages\KongConfiguration\KongSetup.csproj", "{30D9867D-A938-4700-A6C2-872A6D28E21F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -148,6 +150,10 @@ Global
 		{B115B2B6-8D88-45AE-B202-C6F61C851BBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B115B2B6-8D88-45AE-B202-C6F61C851BBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B115B2B6-8D88-45AE-B202-C6F61C851BBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30D9867D-A938-4700-A6C2-872A6D28E21F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30D9867D-A938-4700-A6C2-872A6D28E21F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30D9867D-A938-4700-A6C2-872A6D28E21F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30D9867D-A938-4700-A6C2-872A6D28E21F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -177,6 +183,7 @@ Global
 		{A0F1883F-DFE4-42D3-9C6D-F197ACB96992} = {72F74CEA-889B-48A0-9F0F-CB10716C3046}
 		{35CC71C9-CFA9-4017-B0AB-6DC1A289F4B7} = {72F74CEA-889B-48A0-9F0F-CB10716C3046}
 		{B115B2B6-8D88-45AE-B202-C6F61C851BBE} = {3BA33F9A-F545-44AB-93F2-43E9CB9E3563}
+		{30D9867D-A938-4700-A6C2-872A6D28E21F} = {C504A936-0C52-438B-9070-6AAF4D088290}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {04CAD979-FFFD-4BAB-95E1-F4A8F6F9AFAE}
