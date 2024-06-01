@@ -16,7 +16,14 @@
           "Host": "ProductService",
           "Port": 8080
         }
-      ]
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [
+          "ProductService.read",
+          "ProductService.write",
+        ]
+      }
     },
     {
       "UpstreamPathTemplate": "/Product/all",
@@ -46,7 +53,14 @@
           "Host": "ProductService",
           "Port": 8080
         }
-      ]
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [
+          "ProductService.read",
+          "ProductService.write",
+        ]
+      }
     },
     {
       "//CategoryService": "CategoryService",
@@ -61,7 +75,14 @@
           "Host": "CategoryService",
           "Port": 8080
         }
-      ]
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [
+          "CategoryService.read",
+          "CategoryService.write"
+        ]
+      }
     },
     {
       "UpstreamPathTemplate": "/Category/all",
@@ -91,7 +112,14 @@
           "Host": "CategoryService",
           "Port": 8080
         }
-      ]
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [
+          "CategoryService.read",
+          "CategoryService.write"
+        ]
+      }
     },
     {
       "UpstreamPathTemplate": "/Category/{ProductId}/add/{CategoryId}",
@@ -105,7 +133,14 @@
           "Host": "CategoryService",
           "Port": 8080
         }
-      ]
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [
+          "CategoryService.read",
+          "CategoryService.write"
+        ]
+      }
     },
     {
       "UpstreamPathTemplate": "/Category/{ProductId}/remove/{CategoryId}",
@@ -119,7 +154,14 @@
           "Host": "CategoryService",
           "Port": 8080
         }
-      ]
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [
+          "UserService.read",
+          "UserService.write"
+        ]
+      }
     },
     {
       "//UserService": "UserService",
@@ -135,7 +177,14 @@
           "Host": "UserService",
           "Port": 8080
         }
-      ]
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [
+          "UserService.read",
+          "UserService.write"
+        ]
+      }
     },
     {
       "UpstreamPathTemplate": "/User/{id}",
@@ -151,7 +200,14 @@
           "Host": "UserService",
           "Port": 8080
         }
-      ]
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [
+          "UserService.read",
+          "UserService.write"
+        ]
+      }
     },
     {
       "//OrderService": "OrderService",
@@ -212,6 +268,19 @@
           "Port": 8080
         }
       ]
+    },
+    {
+      "UpstreamPathTemplate": "/AuthService",
+      "UpstreamHttpMethod": ["Post"],
+      "DownstreamPathTemplate": "/AuthService",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authservice",
+          "Port": 80
+        }
+      ]
+
     }
   ]
 }

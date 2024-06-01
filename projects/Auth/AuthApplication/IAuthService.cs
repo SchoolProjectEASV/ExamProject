@@ -1,4 +1,5 @@
 ﻿using Domain.PostgressEntities;
+using Microsoft.AspNetCore.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace AuthApplication
         /// </summary>
         /// <param name="login">The login credentials</param>
         /// <returns>returns the generated JWT token</returns>
-        string GenerateToken(Login login);
+        AuthenticationToken GenerateToken(Login login);
 
         /// <summary>
         /// Registers a user by checking for existing username, hashing the password and adding the user to the database
