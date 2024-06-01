@@ -46,6 +46,7 @@ services:
       - "8443:443"
     depends_on:
       - productdb
+      - gatewayservice
     networks:
       - kong-net
 
@@ -58,6 +59,7 @@ services:
       - "8091:8080"
     depends_on:
       - orderdb
+      - gatewayservice
     networks:
       - kong-net
 
@@ -71,6 +73,7 @@ services:
       - "8444:443"
     depends_on:
       - categorydb
+      - gatewayservice
     networks:
       - kong-net
 
@@ -164,6 +167,7 @@ services:
       - userdb
     networks:
       - kong-net
+      - gatewayservice
 
   redis:
     image: 'redislabs/redisearch:latest'
@@ -207,6 +211,7 @@ services:
       - "8446:443"
     depends_on:
       - authdb
+      - gatewayservice
     networks:
       - kong-net
 
@@ -278,6 +283,9 @@ services:
     restart: "no"
     networks:
       - kong-net
+
+
+        
 
 volumes:
   mongodb_data: {}

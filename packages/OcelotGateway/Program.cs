@@ -1,8 +1,31 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using System.Text;
+
+const string SecurityKey = "PELLEDRAGSTEDSKALVÆREDANMARKSTATSMINISTER2024";
 
 var builder = WebApplication.CreateBuilder(args);
 #region ocelot configuration
+
+builder.Services.AddAuthentication(options => 
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(
+    JwtBearerDefaults.AuthenticationScheme, options =>
+    {
+        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecurityKey))
+        };
+    }
+    );
 builder.Configuration.AddJsonFile("ocelot.json");
 #endregion
 // Add services to the container.
