@@ -21,7 +21,7 @@ namespace KongSetup
             client = new HttpClient(handler);
         }
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             Console.WriteLine($"Current Directory: {Directory.GetCurrentDirectory()}");
 
@@ -32,15 +32,21 @@ namespace KongSetup
 
             foreach (var service in config.Services)
             {
-                AddOrUpdateService(kongAdminUrl, service.Name, service.Url).Wait();
+                await AddOrUpdateService(kongAdminUrl, service.Name, service.Url);
 
                 foreach (var route in service.Routes)
                 {
-                    AddOrUpdateRoute(kongAdminUrl, service.Name, route.Path, route.Methods).Wait();
+                    await AddOrUpdateRoute(kongAdminUrl, service.Name, route.Path, route.Methods, route.BypassAuth);
                 }
             }
 
-            Console.WriteLine("Services and routes have been ensured in Kong.");
+            // Enable global rate limiting
+            await EnableGlobalRateLimiting(kongAdminUrl);
+
+            // Set up JWT Authentication
+            await SetupJwtAuth(kongAdminUrl);
+
+            Console.WriteLine("Services, routes, global rate limiting, and JWT auth have been ensured in Kong.");
         }
 
         private static Config LoadConfig(string filePath)
@@ -48,7 +54,6 @@ namespace KongSetup
             var json = File.ReadAllText(filePath);
             return JsonConvert.DeserializeObject<Config>(json);
         }
-
 
         private static async Task AddOrUpdateService(string kongAdminUrl, string name, string url)
         {
@@ -84,7 +89,7 @@ namespace KongSetup
             }
         }
 
-        private static async Task AddOrUpdateRoute(string kongAdminUrl, string serviceName, string path, string[] methods)
+        private static async Task AddOrUpdateRoute(string kongAdminUrl, string serviceName, string path, string[] methods, bool bypassAuth)
         {
             var routeData = new
             {
@@ -123,8 +128,92 @@ namespace KongSetup
             {
                 var createResponse = await client.PostAsync($"{kongAdminUrl}/services/{serviceName}/routes", content);
                 createResponse.EnsureSuccessStatusCode();
+                var createResponseContent = await createResponse.Content.ReadAsStringAsync();
+                dynamic createResponseJson = JsonConvert.DeserializeObject(createResponseContent);
+                routeId = createResponseJson.id;
                 Console.WriteLine($"Route for service {serviceName} added at {path}.");
             }
+
+            if (!bypassAuth)
+            {
+                await EnsureJwtOnRoute(kongAdminUrl, routeId);
+            }
+        }
+
+        private static async Task EnableGlobalRateLimiting(string kongAdminUrl)
+        {
+            var rateLimitingData = new
+            {
+                name = "rate-limiting",
+                config = new
+                {
+                    minute = 5,
+                    policy = "local"
+                }
+            };
+
+            var content = new StringContent(JsonConvert.SerializeObject(rateLimitingData), Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync($"{kongAdminUrl}/plugins", content);
+            response.EnsureSuccessStatusCode();
+            Console.WriteLine("Global rate limiting enabled.");
+        }
+
+        private static async Task SetupJwtAuth(string kongAdminUrl)
+        {
+            // Create a new consumer
+            var consumerData = new
+            {
+                username = "luka"
+            };
+
+            var consumerContent = new StringContent(JsonConvert.SerializeObject(consumerData), Encoding.UTF8, "application/json");
+            var consumerResponse = await client.PostAsync($"{kongAdminUrl}/consumers", consumerContent);
+            consumerResponse.EnsureSuccessStatusCode();
+            Console.WriteLine("Consumer 'luka' created.");
+
+            // Create a JWT credential for the consumer
+            var jwtCredentialData = new
+            {
+                key = "luka-key",
+                secret = "PELLEDRAGSTEDSKALVÆREDANMARKSTATSMINISTER2024"
+            };
+
+            var jwtCredentialContent = new StringContent(JsonConvert.SerializeObject(jwtCredentialData), Encoding.UTF8, "application/json");
+            var jwtCredentialResponse = await client.PostAsync($"{kongAdminUrl}/consumers/luka/jwt", jwtCredentialContent);
+            jwtCredentialResponse.EnsureSuccessStatusCode();
+            Console.WriteLine("JWT credentials created for consumer 'luka'.");
+        }
+
+        private static async Task EnsureJwtOnRoute(string kongAdminUrl, string routeId)
+        {
+            var pluginsResponse = await client.GetAsync($"{kongAdminUrl}/routes/{routeId}/plugins");
+            var pluginsContent = await pluginsResponse.Content.ReadAsStringAsync();
+            dynamic plugins = JsonConvert.DeserializeObject(pluginsContent);
+
+            foreach (var plugin in plugins.data)
+            {
+                if (plugin.name == "jwt")
+                {
+                    Console.WriteLine($"JWT authentication is already enabled on route {routeId}.");
+                    return;
+                }
+            }
+
+            var jwtAuthData = new
+            {
+                name = "jwt",
+                config = new
+                {
+                    key_claim_name = "iss",
+                    secret_is_base64 = false
+                }
+            };
+
+            var jwtAuthContent = new StringContent(JsonConvert.SerializeObject(jwtAuthData), Encoding.UTF8, "application/json");
+            var jwtAuthResponse = await client.PostAsync($"{kongAdminUrl}/routes/{routeId}/plugins", jwtAuthContent);
+            jwtAuthResponse.EnsureSuccessStatusCode();
+            Console.WriteLine($"JWT authentication enabled on route {routeId}.");
         }
     }
 
@@ -144,5 +233,6 @@ namespace KongSetup
     {
         public string Path { get; set; }
         public string[] Methods { get; set; }
+        public bool BypassAuth { get; set; }
     }
 }

@@ -6,15 +6,18 @@
       "routes": [
         {
           "path": "/auth",
-          "methods": [ "GET", "POST" ]
+          "methods": [ "GET", "POST" ],
+          "bypass_auth": true
         },
         {
           "path": "/auth/token",
-          "methods": [ "POST" ]
+          "methods": [ "POST" ],
+          "bypass_auth": true
         },
         {
           "path": "/auth/register",
-          "methods": [ "POST" ]
+          "methods": [ "POST" ],
+          "bypass_auth": true
         }
       ]
     },
