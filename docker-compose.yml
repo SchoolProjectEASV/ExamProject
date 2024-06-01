@@ -144,8 +144,9 @@ services:
     image: postgres
     restart: always
     environment:
-      POSTGRESS_PASSWORD: example
-      POSTGRESS_DB: Auth_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: Auth_db
     ports:
       - "5434:5432"
     volumes:
@@ -165,9 +166,11 @@ services:
       - "8081:8080"
       - "8446:443"
     depends_on:
-      authdb:
-        condition: service_healthy
+      - authdb
       - gatewayservice
+
+        
+
 
 volumes:
   mongodb_data: {}

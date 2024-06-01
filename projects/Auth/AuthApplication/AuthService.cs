@@ -1,4 +1,5 @@
 ﻿using Domain.PostgressEntities;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -30,12 +31,18 @@ namespace AuthApplication
             return login;
         }
 
-        public string GenerateToken(Login login)
+        public AuthenticationToken GenerateToken(Login login)
         {
-            var claims = new[]
+            var claims = new List<Claim>()
             {
             new Claim(JwtRegisteredClaimNames.Sub, login.Username),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim("scope", "ProductService.read"),
+            new Claim("scope", "ProductService.write"),
+            new Claim("scope", "CategoryService.read"),
+            new Claim("scope", "CategoryService.write"),
+            new Claim("scope", "UserService.read"),
+            new Claim("scope", "UserService.write")
         };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -53,9 +60,13 @@ namespace AuthApplication
                 JwtToken = jwtToken,
                 ExpiryDate = token.ValidTo
             };
+            var authToken = new AuthenticationToken
+            {
+                Value = jwtToken
+            };
 
             _authRepo.AddTokenToLogin(tokenEntity);
-            return jwtToken;
+            return authToken;
         }
 
         public async Task<int> RegisterUser(string username, string password)

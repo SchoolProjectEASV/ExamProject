@@ -7,7 +7,6 @@ using Serilog;
 namespace OrderService.Controllers
 {
     [ApiController]
-    [Authorize]
     [Route("[controller]")]
     public class OrderController : ControllerBase
     {
