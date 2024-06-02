@@ -21,11 +21,12 @@
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [
           "ProductService.read",
-          "ProductService.write",
+          "ProductService.write"
         ]
       }
     },
     {
+      "Key": "GetProducts",
       "UpstreamPathTemplate": "/Product/all",
       "UpstreamHttpMethod": [
         "GET"
@@ -58,7 +59,7 @@
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [
           "ProductService.read",
-          "ProductService.write",
+          "ProductService.write"
         ]
       }
     },
@@ -85,6 +86,7 @@
       }
     },
     {
+      "Key": "GetCategories",
       "UpstreamPathTemplate": "/Category/all",
       "UpstreamHttpMethod": [
         "GET"
@@ -271,7 +273,7 @@
     },
     {
       "UpstreamPathTemplate": "/AuthService",
-      "UpstreamHttpMethod": ["Post"],
+      "UpstreamHttpMethod": [ "Post" ],
       "DownstreamPathTemplate": "/AuthService",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -280,7 +282,16 @@
           "Port": 80
         }
       ]
-
+    }
+  ],
+  "Aggregates": [
+    {
+      "//GetAllLists": "GetAllLists",
+      "UpstreamPathTemplate": "/api/status",
+      "RouteKeys": [
+        "GetProducts",
+        "GetCategories"
+      ]
     }
   ]
 }
