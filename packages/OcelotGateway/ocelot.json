@@ -1,13 +1,6 @@
 {
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:8082",
-    "RateLimitOptions": {
-      "ClientWhitelist": [], 
-      "EnableRateLimiting": true,
-      "Period": "1m", 
-      "PeriodTimespan": 1, 
-      "Limit": 100 
-    }
+    "BaseUrl": "http://localhost:8082"
   },
   "Routes": [
     {
@@ -24,6 +17,14 @@
           "Port": 8080
         }
       ],
+      "RateLimitOptions": {
+        "ClientIdHeader": "ClientId",
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "1m",
+        "PeriodTimespan": 1,
+        "Limit": 2
+      },
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [
@@ -68,6 +69,14 @@
           "ProductService.read",
           "ProductService.write"
         ]
+      },
+      "RateLimitOptions": {
+        "ClientIdHeader": "ClientId",
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "30s",
+        "PeriodTimespan": 1,
+        "Limit": 5
       }
     },
     {
@@ -90,6 +99,14 @@
           "CategoryService.read",
           "CategoryService.write"
         ]
+      },
+      "RateLimitOptions": {
+        "ClientIdHeader": "ClientId",
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "30s",
+        "PeriodTimespan": 1,
+        "Limit": 5
       }
     },
     {
@@ -128,6 +145,14 @@
           "CategoryService.read",
           "CategoryService.write"
         ]
+      },
+      "RateLimitOptions": {
+        "ClientIdHeader": "ClientId",
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "30s",
+        "PeriodTimespan": 1,
+        "Limit": 5
       }
     },
     {
@@ -149,6 +174,14 @@
           "CategoryService.read",
           "CategoryService.write"
         ]
+      },
+      "RateLimitOptions": {
+        "ClientIdHeader": "ClientId",
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "30s",
+        "PeriodTimespan": 1,
+        "Limit": 5
       }
     },
     {
@@ -170,6 +203,14 @@
           "UserService.read",
           "UserService.write"
         ]
+      },
+      "RateLimitOptions": {
+        "ClientIdHeader": "ClientId",
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "30s",
+        "PeriodTimespan": 1,
+        "Limit": 5
       }
     },
     {
@@ -193,6 +234,14 @@
           "UserService.read",
           "UserService.write"
         ]
+      },
+      "RateLimitOptions": {
+        "ClientIdHeader": "ClientId",
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "30s",
+        "PeriodTimespan": 1,
+        "Limit": 5
       }
     },
     {
@@ -216,6 +265,14 @@
           "UserService.read",
           "UserService.write"
         ]
+      },
+      "RateLimitOptions": {
+        "ClientIdHeader": "ClientId",
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "30s",
+        "PeriodTimespan": 1,
+        "Limit": 5
       }
     },
     {
