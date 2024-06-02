@@ -4,7 +4,7 @@ using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using System.Text;
 
-const string SecurityKey = "PELLEDRAGSTEDSKALVÆREDANMARKSTATSMINISTER2024";
+const string SecurityKey = "PelleDanmarksStatsministerI2024ogdetskalbareskenu";
 
 var builder = WebApplication.CreateBuilder(args);
 #region ocelot configuration

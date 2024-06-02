@@ -23,7 +23,6 @@ namespace KongSetup
 
         static async Task Main(string[] args)
         {
-            Console.WriteLine($"Current Directory: {Directory.GetCurrentDirectory()}");
 
             var kongAdminUrl = "http://kong:8001";
 
