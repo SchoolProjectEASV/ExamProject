@@ -1,6 +1,13 @@
 {
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:8082"
+    "BaseUrl": "http://localhost:8082",
+    "RateLimitOptions": {
+      "ClientWhitelist": [], 
+      "EnableRateLimiting": true,
+      "Period": "1m", 
+      "PeriodTimespan": 1, 
+      "Limit": 100 
+    }
   },
   "Routes": [
     {
@@ -287,7 +294,7 @@
   "Aggregates": [
     {
       "//GetAllLists": "GetAllLists",
-      "UpstreamPathTemplate": "/api/status",
+      "UpstreamPathTemplate": "/category/product/status",
       "RouteKeys": [
         "GetProducts",
         "GetCategories"
