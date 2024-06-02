@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "KongConfiguration": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}

@@ -2,7 +2,7 @@ version: '3.7'
 networks:
   kong-net:
     external: false
-    
+
 services:
   gatewayservice:
     image: gatewayservice
@@ -243,7 +243,8 @@ services:
       KONG_PASSWORD: test
       KONG_PG_PASSWORD: kongpass
     depends_on:
-      - kong-database
+      kong-database:
+        condition: service_healthy
     networks:
       - kong-net
 
@@ -268,7 +269,8 @@ services:
       - "8007:8002"
       - "8001:8001"
     depends_on:
-      - kong-migrations
+      kong-database:
+        condition: service_healthy
     restart: on-failure
     networks:
       - kong-net
@@ -283,9 +285,6 @@ services:
     restart: "no"
     networks:
       - kong-net
-
-
-        
 
 volumes:
   mongodb_data: {}

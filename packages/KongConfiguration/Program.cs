@@ -40,10 +40,8 @@ namespace KongSetup
                 }
             }
 
-            // Enable global rate limiting
             await EnableGlobalRateLimiting(kongAdminUrl);
 
-            // Set up JWT Authentication
             await SetupJwtAuth(kongAdminUrl);
 
             Console.WriteLine("Services, routes, global rate limiting, and JWT auth have been ensured in Kong.");
@@ -134,7 +132,7 @@ namespace KongSetup
                 Console.WriteLine($"Route for service {serviceName} added at {path}.");
             }
 
-            if (!bypassAuth)
+            if (!path.StartsWith("/auth") && !bypassAuth)
             {
                 await EnsureJwtOnRoute(kongAdminUrl, routeId);
             }
@@ -152,37 +150,74 @@ namespace KongSetup
                 }
             };
 
-            var content = new StringContent(JsonConvert.SerializeObject(rateLimitingData), Encoding.UTF8, "application/json");
+            var getResponse = await client.GetAsync($"{kongAdminUrl}/plugins");
+            var pluginsContent = await getResponse.Content.ReadAsStringAsync();
+            dynamic plugins = JsonConvert.DeserializeObject(pluginsContent);
 
+            foreach (var plugin in plugins.data)
+            {
+                if (plugin.name == "rate-limiting")
+                {
+                    Console.WriteLine("Global rate limiting is already enabled.");
+                    return;
+                }
+            }
+            var content = new StringContent(JsonConvert.SerializeObject(rateLimitingData), Encoding.UTF8, "application/json");
             var response = await client.PostAsync($"{kongAdminUrl}/plugins", content);
             response.EnsureSuccessStatusCode();
             Console.WriteLine("Global rate limiting enabled.");
         }
 
+
         private static async Task SetupJwtAuth(string kongAdminUrl)
         {
-            // Create a new consumer
-            var consumerData = new
+            var consumerUsername = "jens";
+
+            var consumerResponse = await client.GetAsync($"{kongAdminUrl}/consumers/{consumerUsername}");
+            if (consumerResponse.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                username = "luka"
-            };
+                var consumerData = new
+                {
+                    username = consumerUsername
+                };
 
-            var consumerContent = new StringContent(JsonConvert.SerializeObject(consumerData), Encoding.UTF8, "application/json");
-            var consumerResponse = await client.PostAsync($"{kongAdminUrl}/consumers", consumerContent);
-            consumerResponse.EnsureSuccessStatusCode();
-            Console.WriteLine("Consumer 'luka' created.");
-
-            // Create a JWT credential for the consumer
-            var jwtCredentialData = new
+                var consumerContent = new StringContent(JsonConvert.SerializeObject(consumerData), Encoding.UTF8, "application/json");
+                var createConsumerResponse = await client.PostAsync($"{kongAdminUrl}/consumers", consumerContent);
+                createConsumerResponse.EnsureSuccessStatusCode();
+                Console.WriteLine($"Consumer '{consumerUsername}' created.");
+            }
+            else
             {
-                key = "luka-key",
-                secret = "PELLEDRAGSTEDSKALVÆREDANMARKSTATSMINISTER2024"
-            };
+                Console.WriteLine($"Consumer '{consumerUsername}' already exists.");
+            }
 
-            var jwtCredentialContent = new StringContent(JsonConvert.SerializeObject(jwtCredentialData), Encoding.UTF8, "application/json");
-            var jwtCredentialResponse = await client.PostAsync($"{kongAdminUrl}/consumers/luka/jwt", jwtCredentialContent);
-            jwtCredentialResponse.EnsureSuccessStatusCode();
-            Console.WriteLine("JWT credentials created for consumer 'luka'.");
+            var jwtCredentialResponse = await client.GetAsync($"{kongAdminUrl}/consumers/{consumerUsername}/jwt");
+            var jwtCredentialContent = await jwtCredentialResponse.Content.ReadAsStringAsync();
+            dynamic jwtCredentials = JsonConvert.DeserializeObject(jwtCredentialContent);
+
+            bool jwtExists = false;
+            foreach (var jwtCredential in jwtCredentials.data)
+            {
+                if (jwtCredential.key == "jens-key")
+                {
+                    jwtExists = true;
+                    Console.WriteLine("JWT credential already exists for 'jens-key'.");
+                    break;
+                }
+            }
+            if (!jwtExists)
+            {
+                var jwtCredentialData = new
+                {
+                    key = "jens-key",
+                    secret = "PELLEDRAGSTEDSKALVÆREDANMARKSTATSMINISTER2024"
+                };
+
+                var jwtCredentialContentToAdd = new StringContent(JsonConvert.SerializeObject(jwtCredentialData), Encoding.UTF8, "application/json");
+                var createJwtCredentialResponse = await client.PostAsync($"{kongAdminUrl}/consumers/{consumerUsername}/jwt", jwtCredentialContentToAdd);
+                createJwtCredentialResponse.EnsureSuccessStatusCode();
+                Console.WriteLine("JWT credential created for consumer 'jens'.");
+            }
         }
 
         private static async Task EnsureJwtOnRoute(string kongAdminUrl, string routeId)
@@ -209,12 +244,13 @@ namespace KongSetup
                     secret_is_base64 = false
                 }
             };
-
             var jwtAuthContent = new StringContent(JsonConvert.SerializeObject(jwtAuthData), Encoding.UTF8, "application/json");
             var jwtAuthResponse = await client.PostAsync($"{kongAdminUrl}/routes/{routeId}/plugins", jwtAuthContent);
             jwtAuthResponse.EnsureSuccessStatusCode();
-            Console.WriteLine($"JWT authentication enabled on route {routeId}.");
         }
+
+
+
     }
 
     public class Config
