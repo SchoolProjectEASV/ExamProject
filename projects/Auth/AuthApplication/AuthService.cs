@@ -51,7 +51,7 @@ namespace AuthApplication
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
+                expires: DateTime.Now.AddDays(5),
                 signingCredentials: creds);
 
             var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
