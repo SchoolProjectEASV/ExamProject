@@ -5,6 +5,9 @@ using Newtonsoft.Json;
 
 namespace KongSetup
 {
+    /// <summary>
+    /// Class to setup the HTTPClient to interact with Kong Admin API
+    /// </summary>
     public class KongClient
     {
         private readonly HttpClient _client;
