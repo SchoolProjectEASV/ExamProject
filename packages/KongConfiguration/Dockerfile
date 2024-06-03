@@ -20,6 +20,6 @@ RUN dotnet publish "./KongSetup.csproj" -c $BUILD_CONFIGURATION -o /app/publish 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-# Copy the kong-config.json file to the final image
-COPY ["packages/KongConfiguration/kong-config.json", "packages/KongConfiguration/"]
+# Copy the kong-config.json and appsettings.json files to the final image
+COPY ["packages/KongConfiguration/kong-config.json", "packages/KongConfiguration/appsettings.json", "./"]
 ENTRYPOINT ["dotnet", "KongSetup.dll"]

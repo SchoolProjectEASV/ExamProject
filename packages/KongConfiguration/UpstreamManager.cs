@@ -5,11 +5,11 @@ using Newtonsoft.Json;
 
 namespace KongSetup
 {
-    public class ServiceManager
+    public class UpstreamManager
     {
         private readonly KongClient _kongClient;
 
-        public ServiceManager(KongClient kongClient)
+        public UpstreamManager(KongClient kongClient)
         {
             _kongClient = kongClient;
         }

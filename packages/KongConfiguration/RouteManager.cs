@@ -4,6 +4,9 @@ using Newtonsoft.Json;
 
 namespace KongSetup
 {
+    /// <summary>
+    /// Class that creates or updates routes in Kong.
+    /// </summary>
     public class RouteManager
     {
         private readonly KongClient _kongClient;
@@ -12,6 +15,15 @@ namespace KongSetup
         {
             _kongClient = kongClient;
         }
+
+        /// <summary>
+        /// Adds or updates a route
+        /// </summary>
+        /// <param name="serviceName">The service, that the route is being added to</param>
+        /// <param name="path">Path for the route</param>
+        /// <param name="methods">The methods the routes takes</param>
+        /// <param name="bypassAuth">Whether or not auth shall be placed on the specific route</param>
+        /// <returns></returns>
 
         public async Task AddOrUpdateRoute(string serviceName, string path, string[] methods, bool bypassAuth)
         {
@@ -62,6 +74,11 @@ namespace KongSetup
             }
         }
 
+        /// <summary>
+        /// Adds JWT authentication to a route if it is not already enabled.
+        /// </summary>
+        /// <param name="routeId">RouteID for the route</param>
+        /// <returns></returns>
         private async Task EnsureJwtOnRoute(string routeId)
         {
             var pluginsResponse = await _kongClient.GetAsync($"routes/{routeId}/plugins");

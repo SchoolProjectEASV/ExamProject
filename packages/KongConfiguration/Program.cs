@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using KongSetup.KongEntities;
-using Newtonsoft.Json;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 
 namespace KongSetup
@@ -10,15 +10,29 @@ namespace KongSetup
     {
         static async Task Main(string[] args)
         {
-            var kongAdminUrl = "http://kong:8001";
-            var configPath = "packages/KongConfiguration/kong-config.json";
+            // Load configuration
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
 
+            // Setup dependency injection
+            var serviceProvider = new ServiceCollection()
+                .AddSingleton<IConfiguration>(configuration)
+                .AddSingleton(sp => configuration.GetSection("KongSettings").Get<KongSettings>())
+                .AddSingleton(sp => new KongClient("http://kong:8001"))
+                .AddSingleton<UpstreamManager>() 
+                .AddSingleton<RouteManager>()
+                .AddSingleton<PluginManager>()
+                .BuildServiceProvider();
+
+            var kongClient = serviceProvider.GetService<KongClient>();
+            var configPath = "kong-config.json";
             var config = ConfigLoader.LoadConfig(configPath);
 
-            var kongClient = new KongClient(kongAdminUrl);
-            var serviceManager = new ServiceManager(kongClient);
-            var routeManager = new RouteManager(kongClient);
-            var authSetup = new AuthSetup(kongClient);
+            var serviceManager = serviceProvider.GetService<UpstreamManager>();
+            var routeManager = serviceProvider.GetService<RouteManager>();
+            var pluginManager = serviceProvider.GetService<PluginManager>();
 
             foreach (var service in config.Services)
             {
@@ -44,8 +58,8 @@ namespace KongSetup
                 }
             }
 
-            await authSetup.EnableGlobalRateLimiting();
-            await authSetup.SetupJwtAuth();
+            await pluginManager.EnableGlobalRateLimiting();
+            await pluginManager.SetupJwtAuth();
 
             Console.WriteLine("Services, routes, global rate limiting, and JWT auth have been ensured in Kong.");
         }

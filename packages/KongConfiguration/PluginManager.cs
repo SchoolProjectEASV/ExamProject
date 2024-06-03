@@ -4,15 +4,24 @@ using Newtonsoft.Json;
 
 namespace KongSetup
 {
-    public class AuthSetup
+    /// <summary>
+    /// Class to manage the Kong plugins.
+    /// </summary>
+    public class PluginManager
     {
         private readonly KongClient _kongClient;
+        private readonly KongSettings _kongSettings;
 
-        public AuthSetup(KongClient kongClient)
+        public PluginManager(KongClient kongClient, KongSettings kongSettings)
         {
             _kongClient = kongClient;
+            _kongSettings = kongSettings;
         }
 
+        /// <summary>
+        /// Enable global rate limiting plugin for all services.
+        /// </summary>
+        /// <returns></returns>
         public async Task EnableGlobalRateLimiting()
         {
             var rateLimitingData = new
@@ -42,6 +51,10 @@ namespace KongSetup
             Console.WriteLine("Global rate limiting enabled.");
         }
 
+        /// <summary>
+        /// Adds a consumer and a JWT credential for the consumer.
+        /// </summary>
+        /// <returns></returns>
         public async Task SetupJwtAuth()
         {
             var consumerUsername = "jens";
@@ -66,7 +79,7 @@ namespace KongSetup
             bool jwtExists = false;
             foreach (var jwtCredential in jwtCredentials.data)
             {
-                if (jwtCredential.key == "jens-key")
+                if (jwtCredential.key == _kongSettings.key)
                 {
                     jwtExists = true;
                     Console.WriteLine("JWT credential already exists for 'jens-key'.");
@@ -77,8 +90,8 @@ namespace KongSetup
             {
                 var jwtCredentialData = new
                 {
-                    key = "jens-key",
-                    secret = "PelleDanmarksStatsministerI2024ogdetskalbareskenu"
+                    _kongSettings.key,
+                    secret = _kongSettings.JwtSecret
                 };
                 var createJwtCredentialResponse = await _kongClient.PostAsync($"consumers/{consumerUsername}/jwt", jwtCredentialData);
                 createJwtCredentialResponse.EnsureSuccessStatusCode();
