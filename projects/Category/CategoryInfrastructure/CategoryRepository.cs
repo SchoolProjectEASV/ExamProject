@@ -54,7 +54,7 @@ namespace CategoryInfrastructure
         {
             var objectId = new ObjectId(id);
             var category = await _context.Categories.FirstOrDefaultAsync(c => c._id == objectId);
-            return category ?? throw new KeyNotFoundException($"No product could be found with the given id {id}");
+            return category ?? throw new KeyNotFoundException($"No category could be found with the given id {id}");
         }
 
         public async Task<bool> UpdateCategoryAsync(string id, Category updatedCategory)

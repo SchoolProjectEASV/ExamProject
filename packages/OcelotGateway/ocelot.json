@@ -52,8 +52,15 @@
         {
           "Host": "ProductService",
           "Port": 8080
+        },
+        {
+          "Host": "ProductService2",
+          "Port": 8080
         }
-      ]
+      ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
     },
     {
       "UpstreamPathTemplate": "/Product/{id}",
@@ -68,8 +75,15 @@
         {
           "Host": "ProductService",
           "Port": 8080
+        },
+        {
+          "Host": "ProductService2",
+          "Port": 8080
         }
       ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [
@@ -135,8 +149,15 @@
         {
           "Host": "CategoryService",
           "Port": 8080
+        },
+        {
+          "Host": "CategoryService2",
+          "Port": 8080
         }
-      ]
+      ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
     },
     {
       "UpstreamPathTemplate": "/Category/{id}",
@@ -151,8 +172,15 @@
         {
           "Host": "CategoryService",
           "Port": 8080
+        },
+        {
+          "Host": "CategoryService2",
+          "Port": 8080
         }
       ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [
@@ -180,8 +208,15 @@
         {
           "Host": "CategoryService",
           "Port": 8080
+        },
+        {
+          "Host": "CategoryService2",
+          "Port": 8080
         }
       ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [
@@ -209,8 +244,15 @@
         {
           "Host": "CategoryService",
           "Port": 8080
+        },
+        {
+          "Host": "CategoryService2",
+          "Port": 8080
         }
       ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [
@@ -240,8 +282,15 @@
         {
           "Host": "UserService",
           "Port": 8080
+        },
+        {
+          "Host": "UserService2",
+          "Port": 8080
         }
       ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [
@@ -271,8 +320,15 @@
         {
           "Host": "UserService",
           "Port": 8080
+        },
+        {
+          "Host": "UserService2",
+          "Port": 8080
         }
       ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [
@@ -302,8 +358,15 @@
         {
           "Host": "OrderService",
           "Port": 8080
+        },
+        {
+          "Host": "OrderService2",
+          "Port": 8080
         }
-      ]
+      ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
     },
     {
       "UpstreamPathTemplate": "/Order/{id}",
@@ -318,8 +381,15 @@
         {
           "Host": "OrderService",
           "Port": 8080
+        },
+        {
+          "Host": "OrderService2",
+          "Port": 8080
         }
-      ]
+      ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
     },
     {
       "UpstreamPathTemplate": "/Order/user/{id}",
@@ -332,8 +402,15 @@
         {
           "Host": "OrderService",
           "Port": 8080
+        },
+        {
+          "Host": "OrderService2",
+          "Port": 8080
         }
-      ]
+      ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
     },
     {
       "UpstreamPathTemplate": "/Order/addProduct",
@@ -346,8 +423,15 @@
         {
           "Host": "OrderService",
           "Port": 8080
+        },
+        {
+          "Host": "OrderService2",
+          "Port": 8080
         }
-      ]
+      ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
     },
     {
       "UpstreamPathTemplate": "/AuthService",
