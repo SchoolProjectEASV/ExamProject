@@ -15,8 +15,19 @@
         {
           "Host": "ProductService",
           "Port": 8080
+        },
+        {
+          "Host": "ProductService-2",
+          "Port": 8080
+        },
+        {
+          "Host": "ProductService-3",
+          "Port": 8080
         }
       ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
       "RateLimitOptions": {
         "ClientIdHeader": "ClientId",
         "ClientWhitelist": [],
@@ -91,8 +102,19 @@
         {
           "Host": "CategoryService",
           "Port": 8080
+        },
+        {
+          "Host": "ProductService",
+          "Port": 8080
+        },
+        {
+          "Host": "ProductService",
+          "Port": 8080
         }
       ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [
