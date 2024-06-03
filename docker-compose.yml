@@ -50,6 +50,22 @@ services:
     networks:
       - kong-net
 
+
+  productservice2:
+    image: productservice
+    build:
+      context: .
+      dockerfile: ./projects/Product/ProductService/Dockerfile
+    ports:
+      - "8083:8080"
+      - "8464:443"
+    depends_on:
+      - productdb
+      - gatewayservice
+    networks:
+      - kong-net
+
+        
   orderservice:
     image: orderservice
     build:
@@ -57,6 +73,19 @@ services:
       dockerfile: ./projects/Order/OrderService/Dockerfile
     ports:
       - "8091:8080"
+    depends_on:
+      - orderdb
+      - gatewayservice
+    networks:
+      - kong-net
+
+  orderservice2:
+    image: orderservice
+    build:
+      context: .
+      dockerfile: ./projects/Order/OrderService/Dockerfile
+    ports:
+      - "8092:8080"
     depends_on:
       - orderdb
       - gatewayservice
@@ -71,6 +100,21 @@ services:
     ports:
       - "8090:8080"
       - "8444:443"
+    depends_on:
+      - categorydb
+      - gatewayservice
+    networks:
+      - kong-net
+
+
+  categoryservice2:
+    image: categoryservice
+    build:
+      context: .
+      dockerfile: ./projects/Category/CategoryService/Dockerfile
+    ports:
+      - "8093:8080"
+      - "8452:443"
     depends_on:
       - categorydb
       - gatewayservice
@@ -161,8 +205,22 @@ services:
       context: .
       dockerfile: ./projects/User/UserService/Dockerfile
     ports:
-      - "8070:8080"
+      - "8071:8080"
       - "8445:443"
+    depends_on:
+      - userdb
+      - gatewayservice
+    networks:
+      - kong-net
+
+  userservice2:
+    image: userservice
+    build:
+      context: .
+      dockerfile: ./projects/User/UserService/Dockerfile
+    ports:
+      - "8072:8080"
+      - "8446:443"
     depends_on:
       - userdb
       - gatewayservice
@@ -208,7 +266,21 @@ services:
       dockerfile: ./projects/Auth/AuthService/Dockerfile
     ports:
       - "8081:8080"
-      - "8446:443"
+      - "8447:443"
+    depends_on:
+      - authdb
+      - gatewayservice
+    networks:
+      - kong-net
+
+  authservice2:
+    image: authservice
+    build:
+      context: .
+      dockerfile: ./projects/Auth/AuthService/Dockerfile
+    ports:
+      - "8084:8080"
+      - "8453:443" 
     depends_on:
       - authdb
       - gatewayservice
@@ -265,7 +337,7 @@ services:
       - "8005:8000"
       - "8449:8443"
       - "8006:8001"
-      - "8450:8444"
+      - "8451:8444"
       - "8007:8002"
       - "8001:8001"
     depends_on:

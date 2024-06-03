@@ -2,7 +2,13 @@
   "services": [
     {
       "name": "authservice",
-      "url": "http://authservice:8080",
+      "upstream": {
+        "name": "auth_upstream",
+        "targets": [
+          "authservice:8080",
+          "authservice2:8080"
+        ]
+      },
       "routes": [
         {
           "path": "/auth",
@@ -23,7 +29,13 @@
     },
     {
       "name": "userservice",
-      "url": "http://userservice:8080",
+      "upstream": {
+        "name": "user_upstream",
+        "targets": [
+          "userservice:8080",
+          "userservice2:8080"
+        ]
+      },
       "routes": [
         {
           "path": "/user",
@@ -49,7 +61,13 @@
     },
     {
       "name": "productservice",
-      "url": "http://productservice:8080",
+      "upstream": {
+        "name": "product_upstream",
+        "targets": [
+          "productservice:8080",
+          "productservice2:8080"
+        ]
+      },
       "routes": [
         {
           "path": "/product/all",
@@ -75,7 +93,13 @@
     },
     {
       "name": "orderservice",
-      "url": "http://orderservice:8080",
+      "upstream": {
+        "name": "order_upstream",
+        "targets": [
+          "orderservice:8080",
+          "orderservice2:8080"
+        ]
+      },
       "routes": [
         {
           "path": "/order",
@@ -97,7 +121,13 @@
     },
     {
       "name": "categoryservice",
-      "url": "http://categoryservice:8080",
+      "upstream": {
+        "name": "category_upstream",
+        "targets": [
+          "categoryservice:8080",
+          "categoryservice2:8080"
+        ]
+      },
       "routes": [
         {
           "path": "/category/all",
