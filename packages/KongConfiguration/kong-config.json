@@ -1,0 +1,167 @@
+{
+  "services": [
+    {
+      "name": "authservice",
+      "upstream": {
+        "name": "auth_upstream",
+        "targets": [
+          "authservice:8080",
+          "authservice2:8080"
+        ]
+      },
+      "routes": [
+        {
+          "path": "/auth",
+          "methods": [ "GET", "POST" ],
+          "bypass_auth": true
+        },
+        {
+          "path": "/auth/token",
+          "methods": [ "POST" ],
+          "bypass_auth": true
+        },
+        {
+          "path": "/auth/register",
+          "methods": [ "POST" ],
+          "bypass_auth": true
+        }
+      ]
+    },
+    {
+      "name": "userservice",
+      "upstream": {
+        "name": "user_upstream",
+        "targets": [
+          "userservice:8080",
+          "userservice2:8080"
+        ]
+      },
+      "routes": [
+        {
+          "path": "/user",
+          "methods": [ "GET" ]
+        },
+        {
+          "path": "/user/{id}",
+          "methods": [ "GET" ]
+        },
+        {
+          "path": "/user",
+          "methods": [ "POST" ]
+        },
+        {
+          "path": "/user/{id}",
+          "methods": [ "PUT" ]
+        },
+        {
+          "path": "/user/{id}",
+          "methods": [ "DELETE" ]
+        }
+      ]
+    },
+    {
+      "name": "productservice",
+      "upstream": {
+        "name": "product_upstream",
+        "targets": [
+          "productservice:8080",
+          "productservice2:8080"
+        ]
+      },
+      "routes": [
+        {
+          "path": "/product/all",
+          "methods": [ "GET" ]
+        },
+        {
+          "path": "/product/{id}",
+          "methods": [ "GET" ]
+        },
+        {
+          "path": "/product/add",
+          "methods": [ "POST" ]
+        },
+        {
+          "path": "/product/{id}",
+          "methods": [ "PUT" ]
+        },
+        {
+          "path": "/product/{id}",
+          "methods": [ "DELETE" ]
+        }
+      ]
+    },
+    {
+      "name": "orderservice",
+      "upstream": {
+        "name": "order_upstream",
+        "targets": [
+          "orderservice:8080",
+          "orderservice2:8080"
+        ]
+      },
+      "routes": [
+        {
+          "path": "/order",
+          "methods": [ "GET", "POST" ]
+        },
+        {
+          "path": "/order/{id}",
+          "methods": [ "GET", "PUT", "DELETE" ]
+        },
+        {
+          "path": "/order/addProduct",
+          "methods": [ "POST" ]
+        },
+        {
+          "path": "/order/user/{userId}",
+          "methods": [ "GET" ]
+        }
+      ]
+    },
+    {
+      "name": "categoryservice",
+      "upstream": {
+        "name": "category_upstream",
+        "targets": [
+          "categoryservice:8080",
+          "categoryservice2:8080"
+        ]
+      },
+      "routes": [
+        {
+          "path": "/category/all",
+          "methods": [ "GET" ]
+        },
+        {
+          "path": "/category/{id}",
+          "methods": [ "GET" ]
+        },
+        {
+          "path": "/category/add",
+          "methods": [ "POST" ]
+        },
+        {
+          "path": "/category/{id}",
+          "methods": [ "PUT" ]
+        },
+        {
+          "path": "/category/{id}",
+          "methods": [ "DELETE" ]
+        },
+        {
+          "path": "/category/{categoryId}/add/{productId}",
+          "methods": [ "POST" ]
+        },
+        {
+          "path": "/category/{categoryId}/remove/{productId}",
+          "methods": [ "DELETE" ]
+        },
+        {
+          "path": "/category/removeProduct/{productId}",
+          "methods": [ "DELETE" ]
+        }
+      ]
+    }
+  ]
+}
