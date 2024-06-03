@@ -4,9 +4,10 @@ using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using System.Text;
 
-const string SecurityKey = "PELLEDRAGSTEDSKALVÆREDANMARKSTATSMINISTER2024";
 
 var builder = WebApplication.CreateBuilder(args);
+var securityKey = builder.Configuration["Jwt:Key"];
+
 #region ocelot configuration
 
 builder.Services.AddAuthentication(options => 
@@ -22,7 +23,7 @@ builder.Services.AddAuthentication(options =>
             ValidateAudience = false,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecurityKey))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(securityKey))
         };
     }
     );
