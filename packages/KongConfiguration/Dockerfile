@@ -22,4 +22,4 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 # Copy the kong-config.json and appsettings.json files to the final image
 COPY ["packages/KongConfiguration/kong-config.json", "packages/KongConfiguration/appsettings.json", "./"]
-ENTRYPOINT ["dotnet", "KongSetup.dll"]
+ENTRYPOINT ["sh", "-c", "sleep 30 && dotnet KongSetup.dll"]

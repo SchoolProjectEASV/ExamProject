@@ -50,7 +50,6 @@ services:
     networks:
       - kong-net
 
-
   productservice2:
     image: productservice
     build:
@@ -65,7 +64,6 @@ services:
     networks:
       - kong-net
 
-        
   orderservice:
     image: orderservice
     build:
@@ -105,7 +103,6 @@ services:
       - gatewayservice
     networks:
       - kong-net
-
 
   categoryservice2:
     image: categoryservice
@@ -280,7 +277,7 @@ services:
       dockerfile: ./projects/Auth/AuthService/Dockerfile
     ports:
       - "8084:8080"
-      - "8453:443" 
+      - "8453:443"
     depends_on:
       - authdb
       - gatewayservice
@@ -351,9 +348,6 @@ services:
     build:
       context: .
       dockerfile: ./packages/KongConfiguration/Dockerfile
-    depends_on:
-      kong:
-        condition: service_healthy
     restart: "no"
     networks:
       - kong-net
