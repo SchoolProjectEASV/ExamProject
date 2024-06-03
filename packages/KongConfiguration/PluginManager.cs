@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using KongSetup.KongEntities;
 using Newtonsoft.Json;
 
 namespace KongSetup
@@ -10,9 +11,9 @@ namespace KongSetup
     public class PluginManager
     {
         private readonly KongClient _kongClient;
-        private readonly KongSettings _kongSettings;
+        private readonly Settings _kongSettings;
 
-        public PluginManager(KongClient kongClient, KongSettings kongSettings)
+        public PluginManager(KongClient kongClient, Settings kongSettings)
         {
             _kongClient = kongClient;
             _kongSettings = kongSettings;

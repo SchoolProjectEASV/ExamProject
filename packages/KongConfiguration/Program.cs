@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO;
+using KongSetup.KongEntities;
 
 namespace KongSetup
 {
@@ -10,16 +11,15 @@ namespace KongSetup
     {
         static async Task Main(string[] args)
         {
-            // Load configuration
+
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
 
-            // Setup dependency injection
             var serviceProvider = new ServiceCollection()
                 .AddSingleton<IConfiguration>(configuration)
-                .AddSingleton(sp => configuration.GetSection("KongSettings").Get<KongSettings>())
+                .AddSingleton(sp => configuration.GetSection("KongSettings").Get<Settings>())
                 .AddSingleton(sp => new KongClient("http://kong:8001"))
                 .AddSingleton<UpstreamManager>() 
                 .AddSingleton<RouteManager>()
