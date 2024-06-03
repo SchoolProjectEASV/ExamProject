@@ -4,3 +4,12 @@ GET {{AuthService_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+POST {{AuthService_HostAddress}}/auth/register
+Content-Type: application/json
+
+{
+  //UserRegistrationDTO
+}
+
+###

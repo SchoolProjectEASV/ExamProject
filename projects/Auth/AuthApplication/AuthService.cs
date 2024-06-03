@@ -38,6 +38,7 @@ namespace AuthApplication
             new Claim(JwtRegisteredClaimNames.Sub, login.Username),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim("scope", "ProductService.read"),
+            new Claim(JwtRegisteredClaimNames.Iss, _configuration["Jwt:Issuerkey"]),
             new Claim("scope", "ProductService.write"),
             new Claim("scope", "CategoryService.read"),
             new Claim("scope", "CategoryService.write"),
