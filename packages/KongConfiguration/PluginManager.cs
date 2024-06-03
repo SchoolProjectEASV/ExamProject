@@ -52,7 +52,9 @@ namespace KongSetup
         }
 
         /// <summary>
-        /// Adds a consumer and a JWT credential for the consumer.
+        /// Adds a consumer and a JWT credential for the consumer. If the consumer already exist, it logs a message indicating this.
+        /// It also checks if the JWT credential already exists for the consumer.
+        /// And if it doesn't exist, it creates a new JWT credential for the consumer.
         /// </summary>
         /// <returns></returns>
         public async Task SetupJwtAuth()

@@ -14,6 +14,12 @@ namespace KongSetup
             _kongClient = kongClient;
         }
 
+        /// <summary>
+        /// Adds or updates an upstream in Kong.
+        /// If the upstream already exists, it logs a message indicating this.
+        /// Otherwise, it creates a new upstream with the provided name.
+        /// </summary>
+        /// <param name="upstreamName">The name of the upstream to add or update.</param>
         public async Task AddOrUpdateUpstream(string upstreamName)
         {
             var upstreamData = new { name = upstreamName };
@@ -31,6 +37,14 @@ namespace KongSetup
             }
         }
 
+        /// <summary>
+        /// Adds a target to a specified upstream in Kong.
+        /// If the target already exists in the upstream, it logs a message indicating this.
+        /// Otherwise, it adds the new target to the upstream.
+        /// This is to create different targets to enable loadbalancing in Kong.
+        /// </summary>
+        /// <param name="upstreamName">The name of the upstream to which the target will be added.</param>
+        /// <param name="target">The target to add to the upstream.</param>
         public async Task AddTargetToUpstream(string upstreamName, string target)
         {
             var targetResponse = await _kongClient.GetAsync($"upstreams/{upstreamName}/targets");
@@ -53,6 +67,13 @@ namespace KongSetup
             Console.WriteLine($"Target {target} added to upstream {upstreamName}.");
         }
 
+        /// <summary>
+        /// Adds or updates a service in Kong.
+        /// If the service already exists, it updates the service with the new upstream information.
+        /// Otherwise, it creates a new service with the provided details.
+        /// </summary>
+        /// <param name="name">The name of the service to add or update.</param>
+        /// <param name="upstreamName">The upstream name to associate with the service.</param>
         public async Task AddOrUpdateService(string name, string upstreamName)
         {
             var serviceData = new

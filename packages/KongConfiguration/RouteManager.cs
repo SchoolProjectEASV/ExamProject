@@ -17,7 +17,7 @@ namespace KongSetup
         }
 
         /// <summary>
-        /// Adds or updates a route
+        /// Adds or updates a route. If it already exists, it updates the route.
         /// </summary>
         /// <param name="serviceName">The service, that the route is being added to</param>
         /// <param name="path">Path for the route</param>
