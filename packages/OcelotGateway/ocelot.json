@@ -366,6 +366,13 @@
       ],
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
+      },
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [
+          "UserService.read",
+          "UserService.write"
+        ]
       }
     },
     {
@@ -389,6 +396,13 @@
       ],
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
+      },
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [
+          "UserService.read",
+          "UserService.write"
+        ]
       }
     },
     {
@@ -410,6 +424,13 @@
       ],
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
+      },
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [
+          "UserService.read",
+          "UserService.write"
+        ]
       }
     },
     {
