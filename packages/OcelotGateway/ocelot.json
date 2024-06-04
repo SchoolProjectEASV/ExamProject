@@ -434,16 +434,42 @@
       }
     },
     {
-      "UpstreamPathTemplate": "/AuthService",
+      "UpstreamPathTemplate": "/Auth/token",
       "UpstreamHttpMethod": [ "Post" ],
-      "DownstreamPathTemplate": "/AuthService",
+      "DownstreamPathTemplate": "/Auth/token",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "authservice",
-          "Port": 80
+          "Host": "AuthService",
+          "Port": 8080
+        },
+        {
+          "Host": "AuthService2",
+          "Port": 8080
         }
-      ]
+      ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/Auth/register",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamPathTemplate": "/Auth/register",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "AuthService",
+          "Port": 8080
+        },
+        {
+          "Host": "AuthService2",
+          "Port": 8080
+        }
+      ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
     }
   ],
   "Aggregates": [
