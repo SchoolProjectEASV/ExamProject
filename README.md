@@ -74,7 +74,8 @@ The way that these appsettings.json look for each of the services is like this:
 ```
 {
   "Jwt": {
-    "Key": "YOUROWNJWTKEY"
+    "Key": "YOUROWNJWTKEY",
+    "Issuerkey": "YOURISSUERKEY"
   },
   "Vault": {
     "Address": "http://vault:8200/",
@@ -91,9 +92,6 @@ The way that these appsettings.json look for each of the services is like this:
 
 ```
 {
-  "Jwt": {
-    "Key": "YOUROWNJWTKEY"
-  },
   "ProductService": {
     "Url": "http://productservice:8080/"
   },
@@ -103,8 +101,8 @@ The way that these appsettings.json look for each of the services is like this:
   "Vault": {
     "Address": "http://vault:8200/",
     "UserPass": {
-      "Username": "The username you provided to the vault",
-      "Password": "The Password you provide to the vault"
+      "Username": "jens",
+      "Password": "123456"
     }
   }
 }
@@ -115,9 +113,6 @@ The way that these appsettings.json look for each of the services is like this:
 
 ```
 {
-  "Jwt": {
-    "Key": "YOUROWNJWTKEY"
-  },
   "ProductService": {
     "Url": "http://productservice:8080/"
   },
@@ -137,9 +132,6 @@ The way that these appsettings.json look for each of the services is like this:
 4. ProductService
 ```
 {
-  "Jwt": {
-    "Key": "YOUROWNJWTKEY"
-  },
   "CategoryService": {
     "Url": "http://categoryservice:8080/"
   },
@@ -169,9 +161,6 @@ The way that these appsettings.json look for each of the services is like this:
   "Redis": {
     "Configuration": "redis:6379"
   },
-  "Jwt": {
-    "Key": "YOUROWNJWTKEY"
-  },
   "Vault": {
     "Address": "http://vault:8200/",
     "UserPass": {
@@ -181,6 +170,26 @@ The way that these appsettings.json look for each of the services is like this:
   }
 }
 
+```
+
+6. KongGateway
+
+```
+{
+  "KongSettings": {
+    "JwtSecret": "YOUROWNJWTKEY",
+    "key":  "YOURISSUERKEY"
+  }
+}
+```
+
+7. OcelotGateway
+
+```
+{
+  "Jwt": {
+    "Key": "YOUROWNJWTKEY"
+  }
 ```
 
 ## Start up of the application
