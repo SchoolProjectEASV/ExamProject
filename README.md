@@ -20,7 +20,7 @@ The Order microservice is responsible for crud regarding the order. For this mic
 * User
 The Order microservice is responsible for crud regarding the order. For this microservice we have made use of PostgreSQL.
 
-The services are accessible through the different gateways (Ocelot and Kong) by the addresses: localhost:8005 (KongAPI gateway) and localhost:8082 (Ocelote).
+The services are accessible through the different gateways (Ocelot and Kong) by the addresses: localhost:8005 (KongAPI gateway) and localhost:8082 (Ocelot).
 
 ## Setting up the vault
 The way we store our secrets (connectionstrings) is through the hashicorp vault. 
@@ -222,3 +222,9 @@ Npgsql v. 8.0-3
 MongoDB.EntityFrameworkCore v. 8.0.0
 
 Microsoft.AspNetCore.Authentication.JwtBearer v. 8.0.5
+
+Ocelot v. 23.2.2
+
+Kong Admin API (Not a nuget package, communication with the Kong Admin API is done through a HTTPClient)
+
+
