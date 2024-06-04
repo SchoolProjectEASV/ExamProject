@@ -1,5 +1,6 @@
-# Exam project in the subject Database For Developers
-This is our final exam project where we make use of polyglot databases (Document, relational and key-value store) and compare use of different ORM Frameworks (EF Core and Dapper).
+# Exam project in the subjects Database For Developers, System Integration and Development of large systems.
+This is our final exam project where we for the Database For Developers subject make use of polyglot databases (Document, relational and key-value store) and compare use of different ORM Frameworks (EF Core and Dapper). 
+For our System Integration subject we will make use of two API Gateway solutions (Kong and Ocelot) and compare them.
 
 ## Authors
 
@@ -18,6 +19,8 @@ The Auth microservice is responsible for managing our user login and the differe
 The Order microservice is responsible for crud regarding the order. For this microservice we have made use of PostgreSQL. 
 * User
 The Order microservice is responsible for crud regarding the order. For this microservice we have made use of PostgreSQL.
+
+The services are accessible through the different gateways (Ocelot and Kong) by the addresses: localhost:8005 (KongAPI gateway) and localhost:8082 (Ocelote).
 
 ## Setting up the vault
 The way we store our secrets (connectionstrings) is through the hashicorp vault. 
