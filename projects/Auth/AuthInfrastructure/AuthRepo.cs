@@ -4,6 +4,9 @@ using System.Data;
 using Microsoft.Extensions.Configuration;
 using Domain.PostgressEntities;
 
+/// <summary>
+/// Responsible for the communication with the auth database
+/// </summary>
 public class AuthRepo : IAuthRepo
 {
     private readonly string _connectionString;

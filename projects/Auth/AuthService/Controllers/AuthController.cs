@@ -2,6 +2,9 @@ using AuthApplication;
 using AuthService.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
+/// <summary>
+/// Used for handling the http requests regarding the auth operations
+/// </summary>
 [ApiController]
 [Route("[controller]")]
 public class AuthController : ControllerBase

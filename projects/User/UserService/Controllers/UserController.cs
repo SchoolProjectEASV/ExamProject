@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace UserService.Controllers
 {
+    /// <summary>
+    /// Handles the http requests regarding the user crud operations
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class UserController : ControllerBase
