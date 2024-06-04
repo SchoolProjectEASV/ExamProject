@@ -10,6 +10,9 @@ using System.Text;
 
 namespace AuthApplication
 {
+    /// <summary>
+    /// Contains the logic for the auth operations
+    /// </summary>
     public class AuthService : IAuthService
     {
         private readonly IAuthRepo _authRepo;

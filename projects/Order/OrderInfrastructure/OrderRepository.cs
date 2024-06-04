@@ -7,6 +7,9 @@ using Domain.PostgressEntities;
 
 namespace OrderInfrastructure
 {
+    /// <summary>
+    /// Responsible for the communication with the Order database
+    /// </summary>
     public class OrderRepository : IOrderRepository
     {
         private readonly IVaultFactory _vaultFactory;
