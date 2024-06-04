@@ -14,6 +14,9 @@ using Domain.HelperEntities;
 
 namespace OrderApplication
 {
+    /// <summary>
+    /// Contains the logic for the order crud operations
+    /// </summary>
     public class OrderService : IOrderService
     {
         private readonly IOrderRepository _orderRepository;

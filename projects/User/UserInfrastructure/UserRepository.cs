@@ -6,6 +6,9 @@ using UserInfrastructure.Interfaces;
 
 namespace UserInfrastructure
 {
+    /// <summary>
+    /// User repository responsible for the communication with the user database
+    /// </summary>
     public class UserRepository : IUserRepository
     {
         private readonly string _connectionString;

@@ -6,6 +6,9 @@ using Serilog;
 
 namespace OrderService.Controllers
 {
+    /// <summary>
+    /// Used for handling the http requests regarding the Order crud operations
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class OrderController : ControllerBase

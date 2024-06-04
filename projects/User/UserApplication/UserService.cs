@@ -13,6 +13,9 @@ using Microsoft.Extensions.Logging;
 
 namespace UserApplication
 {
+    /// <summary>
+    /// Contains the logic for the User crud operations
+    /// </summary>
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
