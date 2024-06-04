@@ -482,3 +482,15 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+/vault
+projects/Product/ProductService/appsettings.json
+projects/Category/CategoryService/appsettings.json
+projects/Order/OrderService/appsettings.json
+projects/User/UserService/appsettings.json
+projects/Auth/AuthService/appsettings.json
+projects/Auth/AuthService/appsettings.json
+projects/Auth/AuthService/appsettings.json
+projects/Auth/AuthService/appsettings.json
+/projects/Auth/AuthService/appsettings.json
+packages/OcelotGateway/appsettings.json
+packages/OcelotGateway/appsettings.json
