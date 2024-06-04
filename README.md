@@ -1,5 +1,6 @@
-# Exam project in the subject Database For Developers
-This is our final exam project where we make use of polyglot databases (Document, relational and key-value store) and compare use of different ORM Frameworks (EF Core and Dapper).
+# Exam project in the subjects Database For Developers, System Integration and Development of large systems.
+This is our final exam project where we for the Database For Developers subject make use of polyglot databases (Document, relational and key-value store) and compare use of different ORM Frameworks (EF Core and Dapper). 
+For our System Integration subject we will make use of two API Gateway solutions (Kong and Ocelot) and compare them.
 
 ## Authors
 
@@ -18,6 +19,8 @@ The Auth microservice is responsible for managing our user login and the differe
 The Order microservice is responsible for crud regarding the order. For this microservice we have made use of PostgreSQL. 
 * User
 The Order microservice is responsible for crud regarding the order. For this microservice we have made use of PostgreSQL.
+
+The services are accessible through the different gateways (Ocelot and Kong) by the addresses: localhost:8005 (KongAPI gateway) and localhost:8082 (Ocelot).
 
 ## Setting up the vault
 The way we store our secrets (connectionstrings) is through the hashicorp vault. 
@@ -71,7 +74,8 @@ The way that these appsettings.json look for each of the services is like this:
 ```
 {
   "Jwt": {
-    "Key": "YOUROWNJWTKEY"
+    "Key": "YOUROWNJWTKEY",
+    "Issuerkey": "YOURISSUERKEY"
   },
   "Vault": {
     "Address": "http://vault:8200/",
@@ -88,9 +92,6 @@ The way that these appsettings.json look for each of the services is like this:
 
 ```
 {
-  "Jwt": {
-    "Key": "YOUROWNJWTKEY"
-  },
   "ProductService": {
     "Url": "http://productservice:8080/"
   },
@@ -100,8 +101,8 @@ The way that these appsettings.json look for each of the services is like this:
   "Vault": {
     "Address": "http://vault:8200/",
     "UserPass": {
-      "Username": "The username you provided to the vault",
-      "Password": "The Password you provide to the vault"
+      "Username": "jens",
+      "Password": "123456"
     }
   }
 }
@@ -112,9 +113,6 @@ The way that these appsettings.json look for each of the services is like this:
 
 ```
 {
-  "Jwt": {
-    "Key": "YOUROWNJWTKEY"
-  },
   "ProductService": {
     "Url": "http://productservice:8080/"
   },
@@ -134,9 +132,6 @@ The way that these appsettings.json look for each of the services is like this:
 4. ProductService
 ```
 {
-  "Jwt": {
-    "Key": "YOUROWNJWTKEY"
-  },
   "CategoryService": {
     "Url": "http://categoryservice:8080/"
   },
@@ -166,9 +161,6 @@ The way that these appsettings.json look for each of the services is like this:
   "Redis": {
     "Configuration": "redis:6379"
   },
-  "Jwt": {
-    "Key": "YOUROWNJWTKEY"
-  },
   "Vault": {
     "Address": "http://vault:8200/",
     "UserPass": {
@@ -178,6 +170,26 @@ The way that these appsettings.json look for each of the services is like this:
   }
 }
 
+```
+
+6. KongGateway
+
+```
+{
+  "KongSettings": {
+    "JwtSecret": "YOUROWNJWTKEY",
+    "key":  "YOURISSUERKEY"
+  }
+}
+```
+
+7. OcelotGateway
+
+```
+{
+  "Jwt": {
+    "Key": "YOUROWNJWTKEY"
+  }
 ```
 
 ## Start up of the application
@@ -210,3 +222,9 @@ Npgsql v. 8.0-3
 MongoDB.EntityFrameworkCore v. 8.0.0
 
 Microsoft.AspNetCore.Authentication.JwtBearer v. 8.0.5
+
+Ocelot v. 23.2.2
+
+Kong Admin API (Not a nuget package, communication with the Kong Admin API is done through a HTTPClient)
+
+
