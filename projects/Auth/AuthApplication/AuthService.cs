@@ -58,18 +58,11 @@ namespace AuthApplication
                 signingCredentials: creds);
 
             var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
-            var tokenEntity = new Token
-            {
-                LoginId = login.Id,
-                JwtToken = jwtToken,
-                ExpiryDate = token.ValidTo
-            };
             var authToken = new AuthenticationToken
             {
                 Value = jwtToken
             };
 
-            _authRepo.AddTokenToLogin(tokenEntity);
             return authToken;
         }
 

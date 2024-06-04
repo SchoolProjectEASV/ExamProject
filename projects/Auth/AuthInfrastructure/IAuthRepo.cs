@@ -8,17 +8,8 @@ public interface IAuthRepo
     /// <param name="login"></param>
     /// <returns></returns>
     Login AddLogin(Login login);
-    /// <summary>
-    /// Adds the token to the login
-    /// </summary>
-    /// <param name="token"></param>
-    void AddTokenToLogin(Token token);
-    /// <summary>
-    /// Gets a user by their token
-    /// </summary>
-    /// <param name="token"></param>
-    /// <returns></returns>
-    Login GetUserByToken(string token);
+
+
     /// <summary>
     /// Gets user by username
     /// </summary>
