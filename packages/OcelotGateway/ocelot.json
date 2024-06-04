@@ -15,8 +15,23 @@
         {
           "Host": "ProductService",
           "Port": 8080
+        },
+        {
+          "Host": "ProductService2",
+          "Port": 8080
         }
       ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "RateLimitOptions": {
+        "ClientIdHeader": "ClientId",
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "1m",
+        "PeriodTimespan": 1,
+        "Limit": 2
+      },
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [
@@ -37,8 +52,15 @@
         {
           "Host": "ProductService",
           "Port": 8080
+        },
+        {
+          "Host": "ProductService2",
+          "Port": 8080
         }
-      ]
+      ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
     },
     {
       "UpstreamPathTemplate": "/Product/{id}",
@@ -53,14 +75,29 @@
         {
           "Host": "ProductService",
           "Port": 8080
+        },
+        {
+          "Host": "ProductService2",
+          "Port": 8080
         }
       ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [
           "ProductService.read",
           "ProductService.write"
         ]
+      },
+      "RateLimitOptions": {
+        "ClientIdHeader": "ClientId",
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "30s",
+        "PeriodTimespan": 1,
+        "Limit": 5
       }
     },
     {
@@ -75,14 +112,29 @@
         {
           "Host": "CategoryService",
           "Port": 8080
+        },
+        {
+          "Host": "CategoryService2",
+          "Port": 8080
         }
       ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [
           "CategoryService.read",
           "CategoryService.write"
         ]
+      },
+      "RateLimitOptions": {
+        "ClientIdHeader": "ClientId",
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "30s",
+        "PeriodTimespan": 1,
+        "Limit": 5
       }
     },
     {
@@ -97,8 +149,15 @@
         {
           "Host": "CategoryService",
           "Port": 8080
+        },
+        {
+          "Host": "CategoryService2",
+          "Port": 8080
         }
-      ]
+      ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
     },
     {
       "UpstreamPathTemplate": "/Category/{id}",
@@ -113,14 +172,29 @@
         {
           "Host": "CategoryService",
           "Port": 8080
+        },
+        {
+          "Host": "CategoryService2",
+          "Port": 8080
         }
       ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [
           "CategoryService.read",
           "CategoryService.write"
         ]
+      },
+      "RateLimitOptions": {
+        "ClientIdHeader": "ClientId",
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "30s",
+        "PeriodTimespan": 1,
+        "Limit": 5
       }
     },
     {
@@ -134,14 +208,29 @@
         {
           "Host": "CategoryService",
           "Port": 8080
+        },
+        {
+          "Host": "CategoryService2",
+          "Port": 8080
         }
       ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [
           "CategoryService.read",
           "CategoryService.write"
         ]
+      },
+      "RateLimitOptions": {
+        "ClientIdHeader": "ClientId",
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "30s",
+        "PeriodTimespan": 1,
+        "Limit": 5
       }
     },
     {
@@ -155,14 +244,29 @@
         {
           "Host": "CategoryService",
           "Port": 8080
+        },
+        {
+          "Host": "CategoryService2",
+          "Port": 8080
         }
       ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [
           "UserService.read",
           "UserService.write"
         ]
+      },
+      "RateLimitOptions": {
+        "ClientIdHeader": "ClientId",
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "30s",
+        "PeriodTimespan": 1,
+        "Limit": 5
       }
     },
     {
@@ -178,14 +282,29 @@
         {
           "Host": "UserService",
           "Port": 8080
+        },
+        {
+          "Host": "UserService2",
+          "Port": 8080
         }
       ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [
           "UserService.read",
           "UserService.write"
         ]
+      },
+      "RateLimitOptions": {
+        "ClientIdHeader": "ClientId",
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "30s",
+        "PeriodTimespan": 1,
+        "Limit": 5
       }
     },
     {
@@ -201,14 +320,29 @@
         {
           "Host": "UserService",
           "Port": 8080
+        },
+        {
+          "Host": "UserService2",
+          "Port": 8080
         }
       ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [
           "UserService.read",
           "UserService.write"
         ]
+      },
+      "RateLimitOptions": {
+        "ClientIdHeader": "ClientId",
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "30s",
+        "PeriodTimespan": 1,
+        "Limit": 5
       }
     },
     {
@@ -224,8 +358,22 @@
         {
           "Host": "OrderService",
           "Port": 8080
+        },
+        {
+          "Host": "OrderService2",
+          "Port": 8080
         }
-      ]
+      ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [
+          "UserService.read",
+          "UserService.write"
+        ]
+      }
     },
     {
       "UpstreamPathTemplate": "/Order/{id}",
@@ -240,8 +388,22 @@
         {
           "Host": "OrderService",
           "Port": 8080
+        },
+        {
+          "Host": "OrderService2",
+          "Port": 8080
         }
-      ]
+      ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [
+          "UserService.read",
+          "UserService.write"
+        ]
+      }
     },
     {
       "UpstreamPathTemplate": "/Order/user/{id}",
@@ -254,8 +416,22 @@
         {
           "Host": "OrderService",
           "Port": 8080
+        },
+        {
+          "Host": "OrderService2",
+          "Port": 8080
         }
-      ]
+      ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [
+          "UserService.read",
+          "UserService.write"
+        ]
+      }
     },
     {
       "UpstreamPathTemplate": "/Order/addProduct",
@@ -268,26 +444,59 @@
         {
           "Host": "OrderService",
           "Port": 8080
+        },
+        {
+          "Host": "OrderService2",
+          "Port": 8080
         }
-      ]
+      ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
     },
     {
-      "UpstreamPathTemplate": "/AuthService",
+      "UpstreamPathTemplate": "/Auth/token",
       "UpstreamHttpMethod": [ "Post" ],
-      "DownstreamPathTemplate": "/AuthService",
+      "DownstreamPathTemplate": "/Auth/token",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "authservice",
-          "Port": 80
+          "Host": "AuthService",
+          "Port": 8080
+        },
+        {
+          "Host": "AuthService2",
+          "Port": 8080
         }
-      ]
+      ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/Auth/register",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamPathTemplate": "/Auth/register",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "AuthService",
+          "Port": 8080
+        },
+        {
+          "Host": "AuthService2",
+          "Port": 8080
+        }
+      ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
     }
   ],
   "Aggregates": [
     {
       "//GetAllLists": "GetAllLists",
-      "UpstreamPathTemplate": "/api/status",
+      "UpstreamPathTemplate": "/category/product/status",
       "RouteKeys": [
         "GetProducts",
         "GetCategories"
