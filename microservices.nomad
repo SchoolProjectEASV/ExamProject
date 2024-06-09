@@ -214,16 +214,15 @@ job "microservices" {
       port "seq-http" { to = 80 }
       port "seq-other" { to = 5341 }
     }
-
     task "docker-run" {
       driver = "docker"
       config {
         image = "datalust/seq:latest"
         ports = ["seq-http", "seq-other"]
         volumes = ["local/seq:/data"]
-        env {
-          ACCEPT_EULA = "Y"
-        }
+      }
+      env {
+        ACCEPT_EULA = "Y"
       }
       resources {
         cpu = 512
@@ -231,7 +230,6 @@ job "microservices" {
       }
     }
   }
-
 
   group "orderdb" {
     count = 1
@@ -249,11 +247,11 @@ job "microservices" {
         image = "postgres"
         ports = ["orderdb-port"]
         volumes = ["local/orderdb:/var/lib/postgresql/data"]
-        env {
-          POSTGRES_USER = "postgres"
-          POSTGRES_PASSWORD = "SuperSecret7!"
-          POSTGRES_DB = "Order_db"
-        }
+      }
+      env {
+        POSTGRES_USER = "postgres"
+        POSTGRES_PASSWORD = "SuperSecret7!"
+        POSTGRES_DB = "Order_db"
       }
       resources {
         cpu = 512
@@ -262,7 +260,7 @@ job "microservices" {
     }
   }
 
- group "userdb" {
+  group "userdb" {
     count = 1
     service {
       name = "userdb"
@@ -278,11 +276,11 @@ job "microservices" {
         image = "postgres"
         ports = ["userdb-port"]
         volumes = ["local/userdb:/var/lib/postgresql/data"]
-        env {
-          POSTGRES_USER = "postgres"
-          POSTGRES_PASSWORD = "example"
-          POSTGRES_DB = "userdb"
-        }
+      }
+      env {
+        POSTGRES_USER = "postgres"
+        POSTGRES_PASSWORD = "example"
+        POSTGRES_DB = "userdb"
       }
       resources {
         cpu = 512
@@ -363,11 +361,11 @@ job "microservices" {
         image = "postgres"
         ports = ["authdb-port"]
         volumes = ["local/authdb:/var/lib/postgresql/data"]
-        env {
-          POSTGRES_USER = "postgres"
-          POSTGRES_PASSWORD = "example"
-          POSTGRES_DB = "Auth_db"
-        }
+      }
+      env {
+        POSTGRES_USER = "postgres"
+        POSTGRES_PASSWORD = "example"
+        POSTGRES_DB = "Auth_db"
       }
       resources {
         cpu = 256
